@@ -16,9 +16,11 @@ class Settings(BaseSettings):
     # Qwen API 配置
     DASHSCOPE_API_KEY: str
     QWEN_MODEL_NAME: str = "qwen-turbo"
+    QWEN_MODEL: str = "qwen-turbo"  # 添加别名
 
-    # MinerU API 配置
-    MINERU_API_KEY: str
+    # MinerU API 配置（官方API https://mineru.net）
+    MINERU_API_KEY: str = ""
+    MINERU_TIMEOUT: int = 300
 
     # Tavily API 配置
     TAVILY_API_KEY: str = ""
@@ -40,8 +42,16 @@ class Settings(BaseSettings):
     REDIS_DB: int = 0
     REDIS_PASSWORD: str = ""
 
+    # MinIO 配置
+    MINIO_ENDPOINT: str = "localhost:9000"
+    MINIO_ACCESS_KEY: str = "minioadmin"
+    MINIO_SECRET_KEY: str = "minioadmin"
+    MINIO_BUCKET: str = "travel-documents"
+    MINIO_SECURE: bool = False
+
     # Embedding 模型配置
     EMBEDDING_MODEL: str = "./models/bge-base-zh-v1.5"
+    EMBEDDING_DIM: int = 768  # bge-base-zh-v1.5的维度
 
     # Rerank 模型配置
     RERANK_MODEL_PATH: str = "./models/BAAI--bge-reranker-v2-m3/snapshots/master"

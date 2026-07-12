@@ -1,7 +1,29 @@
 """
-Document Processing Workflow State
+Document Processing State with comprehensive fields
 """
-from typing import TypedDict, List, Dict, Any
+from typing import TypedDict, List, Dict, Any, Optional
+
+
+class Destination(TypedDict):
+    """Destination entity structure"""
+    name: str
+    city: str
+    province: str
+    type: str  # "Attraction", "Hotel", "Restaurant", etc.
+    description: str
+    tags: List[str]
+    best_season: List[str]
+    budget_range: List[float]  # [min, max]
+    suitable_for: List[str]
+    features: List[str]
+    rating: float
+    image_url: str
+    graph_id: str
+    category: str
+    address: str
+    opening_hours: str
+    ticket_price: str
+    visit_duration: str
 
 
 class DocumentProcessingState(TypedDict):
@@ -11,15 +33,28 @@ class DocumentProcessingState(TypedDict):
     task_id: str
     filename: str
     file_path: str
+    pages_count: int  # PDF页数
 
     # Processing steps
-    parsed_text: str
-    chunks: List[str]
-    destinations: List[Dict[str, Any]]
+    raw_text: str  # Raw text from MinerU
+    markdown_text: str  # Markdown format from MinerU
+    parsed_text: str  # Final parsed text
+    chunks: List[str]  # Text chunks
+    destinations: List[Destination]  # Extracted destinations
+
+    # MinIO info
+    minio_directory: str  # MinIO目录名
+    mineru_output_dir: Optional[str]  # MinerU输出目录
+    mineru_has_package: bool  # 是否有MinerU输出包
 
     # Step success flags
     minio_success: bool
     parse_success: bool
+    chunk_success: bool
     extract_success: bool
-    vector_success: bool
-    graph_vector_success: bool
+    vector_success: bool  # RAG vectorization
+    graph_vector_success: bool  # GraphRAG
+    finalize_success: bool
+
+    # Error tracking
+    errors: List[str]

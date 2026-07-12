@@ -1,7 +1,8 @@
 [
   {
     "name": "三清山",
-    "location": "江西省上饶市",
+    "city": "上饶市",
+    "province": '',
     "type": "Attraction",
     "description": "世界自然遗产，以奇峰怪石、云海日出著称",
     "tags": [

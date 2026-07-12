@@ -1,0 +1,202 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              前端没有调用 - 修改没生效，需要重启                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 问题确认
+
+**现象：** 完全没有 [Upload] 日志输出
+
+**原因：** 前端修改没有生效（热重载失败或浏览器缓存）
+
+---
+
+## ✅ 解决方案
+
+### 方案1: 重启前端开发服务器（推荐）
+
+```bash
+# 1. 停止当前前端服务
+按 Ctrl+C
+
+# 2. 进入前端目录
+cd frontend
+
+# 3. 重新启动
+npm run dev
+
+# 4. 等待编译完成
+看到 "ready in Xms" 提示
+
+# 5. 强制刷新浏览器
+按 Ctrl+Shift+R
+```
+
+---
+
+### 方案2: 清除浏览器缓存
+
+```
+1. F12 打开开发者工具
+2. 右键点击地址栏刷新按钮
+3. 选择 "清空缓存并硬性重新加载"
+```
+
+---
+
+### 方案3: 检查前端是否在运行
+
+```bash
+# 确认前端进程
+npm run dev
+
+# 应该看到类似输出：
+  VITE v4.x.x  ready in xxx ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+```
+
+---
+
+## 🧪 重启后测试步骤
+
+### 1. 确认修改生效
+
+**访问页面源代码：** 按 Ctrl+U
+
+**搜索：** `console.log('[Upload] Response'`
+
+**应该能找到：**
+```javascript
+console.log('[Upload] Response:', response)
+```
+
+如果找到了，说明代码已更新。
+
+---
+
+### 2. 上传PDF测试
+
+1. 访问 http://localhost:5173/documents
+2. F12 打开控制台
+3. 上传PDF
+4. 立即查看 Console
+
+**应该看到：**
+```javascript
+[Upload] Response: {task_id: "...", document_id: "...", ...}
+[Upload] Documents after fetch: [...]
+```
+
+---
+
+### 3. 检查网络请求
+
+**开发者工具 → Network 标签**
+
+1. 上传PDF
+2. 筛选 "documents"
+3. 查看 `/api/documents/upload` 的响应
+
+**响应应该包含：**
+```json
+{
+  "task_id": "uuid-xxx",
+  "document_id": "uuid-xxx",
+  "filename": "xxx.pdf",
+  "status": "processing"
+}
+```
+
+---
+
+## 🔍 如果重启后还是不行
+
+### 检查点1: 确认文件已保存
+
+```bash
+# 检查文件修改时间
+cd frontend/src/views
+ls -l DocumentManager.vue
+
+# 应该显示最近的修改时间
+```
+
+### 检查点2: 确认没有语法错误
+
+**查看前端控制台是否有错误：**
+- 红色错误信息
+- Vue警告信息
+
+### 检查点3: 手动添加测试日志
+
+在 `DocumentManager.vue` 的最顶部 script 区域添加：
+
+```javascript
+console.log('[DEBUG] DocumentManager.vue loaded')
+```
+
+刷新页面，如果看到这条日志，说明文件已加载。
+
+---
+
+## 🚀 完整重启流程
+
+```bash
+# 1. 停止前端
+Ctrl+C
+
+# 2. 停止后端
+Ctrl+C
+
+# 3. 重启后端
+cd backend
+python main.py
+
+# 4. 重启前端（新终端）
+cd frontend
+npm run dev
+
+# 5. 清除浏览器缓存
+Ctrl+Shift+Delete → 清除缓存
+
+# 6. 访问页面
+http://localhost:5173/documents
+
+# 7. F12 打开控制台
+
+# 8. 上传PDF测试
+```
+
+---
+
+## 📝 重启后立即告诉我
+
+1. **前端启动是否成功？** （显示 ready in Xms）
+2. **浏览器控制台是否有错误？** （红色错误）
+3. **是否看到 [Upload] 日志？** （有/没有）
+
+---
+
+## ⚡ 如果还是不行
+
+可能需要手动验证代码文件内容。请执行：
+
+```bash
+cd frontend/src/views
+cat DocumentManager.vue | grep -A 5 "handleUploadSuccess"
+```
+
+或在Windows PowerShell：
+```powershell
+cd frontend/src/views
+Select-String -Path DocumentManager.vue -Pattern "handleUploadSuccess" -Context 0,5
+```
+
+把输出发给我看。
+
+══════════════════════════════════════════════════════════════════════════════
+
+现在立即重启前端并测试！
+
+══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,260 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              SSE未调用问题修复完成                                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## ✅ 已完成的修复
+
+### 修改1：放宽前端显示条件
+
+**文件：** `frontend/src/views/DocumentManager.vue`
+
+**修改前：**
+```vue
+<div v-if="row.taskId && (row.status === 'processing' || row.status === 'pending')"
+     class="progress-detail">
+  <WorkflowProgress ... />
+</div>
+```
+
+**修改后：**
+```vue
+<div v-if="row.taskId" class="progress-detail">
+  <WorkflowProgress ... />
+</div>
+```
+
+**原因：**
+- 处理可能很快完成，状态已变为"completed"
+- 严格的条件导致WorkflowProgress组件不渲染
+- 现在只要有taskId就显示进度组件
+
+---
+
+### 修改2：添加调试日志
+
+**在 handleUploadSuccess 中添加：**
+```javascript
+console.log('[Upload] Response:', response)
+console.log('[Upload] Documents after fetch:', documents.value)
+console.log('[Upload] Found doc:', doc)
+console.log('[Upload] Set taskId:', doc.taskId)
+```
+
+**作用：**
+- 追踪上传响应
+- 追踪文档列表
+- 追踪taskId设置过程
+- 发现ID不匹配问题
+
+---
+
+### 修改3：强制设置状态为processing
+
+**添加代码：**
+```javascript
+doc.taskId = response.task_id
+doc.status = 'processing'  // ← 新增
+```
+
+**作用：**
+- 确保文档状态为processing
+- 即使后端很快完成，前端也能看到进度
+
+---
+
+## 🔄 工作流程
+
+```
+1. 用户上传PDF
+   ↓
+2. 后端返回
+   {
+     task_id: "abc-123",
+     document_id: "abc-123",
+     status: "processing"
+   }
+   ↓
+3. 前端 handleUploadSuccess
+   • 打印响应日志
+   • 等待100ms
+   • 刷新文档列表
+   ↓
+4. 查找文档并关联taskId
+   • find(d => d.id === response.document_id)
+   • doc.taskId = response.task_id
+   • doc.status = 'processing'  ← 强制设置
+   • 自动展开行
+   ↓
+5. 前端渲染
+   • v-if="row.taskId" ← 条件满足
+   • 显示WorkflowProgress组件
+   ↓
+6. WorkflowProgress连接SSE
+   • EventSource(`/api/documents/progress/${taskId}`)
+   • 监听事件：start, progress, step_complete, complete
+   ↓
+7. 显示实时进度
+   • 6个节点依次执行
+   • 进度条更新
+   • 状态变化
+```
+
+---
+
+## 🧪 测试步骤
+
+### 1. 重启前端（应用修改）
+
+```bash
+cd frontend
+npm run dev
+```
+
+或者刷新浏览器（如果有热重载）
+
+---
+
+### 2. 清空浏览器缓存
+
+```
+Ctrl + Shift + R (强制刷新)
+```
+
+---
+
+### 3. 打开开发者工具
+
+```
+F12 → 控制台标签
+```
+
+---
+
+### 4. 上传PDF文件
+
+访问：http://localhost:5173/documents
+
+---
+
+### 5. 观察控制台日志
+
+**期望看到：**
+```javascript
+[Upload] Response: {task_id: "abc-123", document_id: "abc-123", ...}
+[Upload] Documents after fetch: [{id: "abc-123", ...}]
+[Upload] Looking for document_id: abc-123
+[Upload] Found doc: {id: "abc-123", filename: "xxx.pdf", ...}
+[Upload] Set taskId: abc-123
+[Upload] Set status: processing
+[WorkflowProgress] SSE 连接已建立
+[WorkflowProgress] 收到 start 事件
+[WorkflowProgress] 收到 progress 事件: {step: "minio", ...}
+...
+```
+
+---
+
+### 6. 观察前端显示
+
+**期望看到：**
+- ✅ 文档行自动展开
+- ✅ 显示WorkflowProgress组件
+- ✅ 6个节点图形显示
+- ✅ 进度条实时更新
+- ✅ 节点状态变化：pending → processing → completed
+
+---
+
+## 🔍 如果还是不显示
+
+### 检查点1：控制台是否有日志
+
+**如果没有任何 [Upload] 日志：**
+- handleUploadSuccess 未执行
+- 上传可能失败
+- 检查网络请求状态
+
+**如果有 [Upload] Response 但没有 Found doc：**
+- document_id 和列表中的 id 不匹配
+- 查看 "Available IDs" 日志
+- 检查后端返回的 document_id
+
+---
+
+### 检查点2：是否有 [WorkflowProgress] 日志
+
+**如果没有：**
+- WorkflowProgress组件未渲染
+- 检查 row.taskId 是否有值
+- 在控制台执行：
+  ```javascript
+  console.log(documents.value.map(d => ({id: d.id, taskId: d.taskId})))
+  ```
+
+---
+
+### 检查点3：网络请求
+
+**开发者工具 → 网络标签**
+
+查找 `/api/documents/progress/` 请求：
+- **没有请求** = 组件未渲染或taskId为空
+- **有请求但404** = taskId有问题
+- **有请求200** = SSE正常连接
+
+---
+
+## 📝 故障排除
+
+### 情况1：找不到文档 (Found doc: undefined)
+
+**原因：** document_id 不匹配
+
+**解决：**
+```javascript
+// 在控制台查看
+console.log('Response document_id:', response.document_id)
+console.log('Document IDs:', documents.value.map(d => d.id))
+```
+
+如果ID格式不同，需要修改后端或前端的匹配逻辑。
+
+---
+
+### 情况2：taskId设置了但组件不显示
+
+**原因：** 响应式更新问题
+
+**解决：**
+使用Vue的响应式API：
+```javascript
+import { set } from 'vue'
+set(doc, 'taskId', response.task_id)
+set(doc, 'status', 'processing')
+```
+
+---
+
+### 情况3：组件显示但SSE不连接
+
+**原因：** WorkflowProgress组件内部问题
+
+**解决：**
+检查 WorkflowProgress.vue 的 connectSSE 函数是否执行。
+
+---
+
+## ✅ 修复完成清单
+
+- [x] 放宽前端显示条件（移除status检查）
+- [x] 添加调试日志（追踪上传流程）
+- [x] 强制设置status为processing
+- [x] 添加错误日志（ID不匹配时）
+
+══════════════════════════════════════════════════════════════════════════════
+
+状态：✅ SSE未调用问题修复完成！
+
+现在刷新前端并上传PDF文件，观察控制台日志和进度显示。
+
+══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,254 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              数据缺失问题 - 完整诊断指南                                    ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 🔍 当前问题
+
+### 问题1: 统计数据全为0
+```
+省份数: 0
+城市数: 0
+文本RAG: 0条
+图RAG: 0节点
+```
+
+### 问题2: 文档列表字段为空
+```
+省份: -
+城市: -
+提取景点数: 0
+```
+
+---
+
+## 📋 诊断步骤
+
+### 步骤1: 检查后端日志
+
+**查找以下关键字：**
+
+1. **实体提取日志**
+```
+[Extract] Total extracted: X destinations
+```
+- 如果X > 0：提取成功
+- 如果X = 0：提取失败，可能是Qwen API问题
+
+2. **向量化日志**
+```
+[Vector] Generating embeddings for X destinations
+[Vector] Hybrid vectorization complete: X destinations
+```
+- 如果有这些日志：向量化执行了
+- 如果没有：向量化节点没执行
+
+3. **图谱构建日志**
+```
+[Vector] GraphRAG completed with X entities
+```
+- 如果有：Neo4j插入执行了
+- 如果没有：图谱节点没执行
+
+---
+
+### 步骤2: 检查Milvus数据
+
+**在backend目录执行：**
+```bash
+cd backend
+
+python -c "
+import sys
+sys.path.insert(0, '.')
+
+from app.core.milvus_hybrid_client import get_milvus_hybrid_client
+
+milvus = get_milvus_hybrid_client()
+count = milvus.get_count()
+
+print(f'Milvus向量总数: {count}')
+
+if count == 0:
+    print('❌ Milvus是空的！向量化失败')
+else:
+    print(f'✓ Milvus有 {count} 条向量')
+"
+```
+
+---
+
+### 步骤3: 检查Neo4j数据
+
+**在backend目录执行：**
+```bash
+python -c "
+import sys
+sys.path.insert(0, '.')
+
+from app.core.neo4j_client import get_neo4j_client
+
+neo4j = get_neo4j_client()
+
+# 检查Destination节点
+result = neo4j.query('MATCH (n:Destination) RETURN count(n) as count')
+dest_count = result[0]['count'] if result else 0
+print(f'Neo4j Destination节点数: {dest_count}')
+
+# 检查Province节点
+result = neo4j.query('MATCH (n:Province) RETURN count(n) as count')
+province_count = result[0]['count'] if result else 0
+print(f'Neo4j Province节点数: {province_count}')
+
+# 检查City节点
+result = neo4j.query('MATCH (n:City) RETURN count(n) as count')
+city_count = result[0]['count'] if result else 0
+print(f'Neo4j City节点数: {city_count}')
+
+if dest_count == 0:
+    print('❌ Neo4j是空的！图谱构建失败')
+else:
+    print(f'✓ Neo4j有 {dest_count} 个景点节点')
+"
+```
+
+---
+
+## 🎯 可能的原因
+
+### 原因1: Milvus旧collection未删除
+**症状：** 向量化时报错 "expect 13 list, got 12"
+
+**解决：**
+```bash
+python -c "from pymilvus import connections, utility; connections.connect('default', host='localhost', port=19530); utility.drop_collection('travel_destinations'); print('✓ 已删除')"
+```
+
+---
+
+### 原因2: 实体提取失败
+**症状：** 日志显示 "Total extracted: 0 destinations"
+
+**可能原因：**
+- Qwen API调用失败
+- PDF解析内容为空
+- 提取Prompt不对
+
+**检查：**
+```bash
+# 查看PDF解析结果
+grep "[PDF]" logs/app.log
+grep "[Extract]" logs/app.log
+```
+
+---
+
+### 原因3: 缺少依赖
+**症状：** 向量化时报错
+
+**解决：**
+```bash
+pip install scikit-learn jieba
+```
+
+---
+
+### 原因4: Neo4j连接失败
+**症状：** 日志有 "Neo4j connection failed"
+
+**检查：**
+```bash
+# 检查Neo4j是否运行
+# 访问 http://localhost:7474
+# 用户名: neo4j
+# 密码: ..123456
+```
+
+---
+
+## 🔧 修复方案
+
+### 方案1: 完全重新处理
+
+1. **删除旧collection**
+```bash
+python -c "from pymilvus import connections, utility; connections.connect('default', host='localhost', port=19530'); utility.drop_collection('travel_destinations'); print('✓ 已删除')"
+```
+
+2. **清空Neo4j**
+```cypher
+// 在Neo4j Browser中执行
+MATCH (n) DETACH DELETE n
+```
+
+3. **重启后端**
+```bash
+python main.py
+```
+
+4. **重新上传PDF**
+
+---
+
+### 方案2: 检查workflow执行
+
+**查看完整workflow日志：**
+```bash
+# Windows PowerShell
+Select-String -Path "logs/app.log" -Pattern "\[Workflow\]|\[Extract\]|\[Vector\]"
+
+# 或直接查看日志文件最后100行
+Get-Content logs/app.log -Tail 100
+```
+
+---
+
+## 📝 请提供以下信息
+
+为了精确诊断，请告诉我：
+
+### 1. 后端日志
+**复制最近一次上传的完整日志，包含：**
+- [Workflow] Starting 6-step workflow
+- [Extract] Total extracted: X
+- [Vector] 开头的所有日志
+- 任何ERROR或WARNING
+
+### 2. Milvus检查结果
+运行步骤2的命令，告诉我输出
+
+### 3. Neo4j检查结果
+运行步骤3的命令，告诉我输出
+
+### 4. 依赖安装确认
+```bash
+pip list | grep -E "scikit-learn|jieba|sentence-transformers"
+```
+
+---
+
+## ✅ 预期的正常日志
+
+**完整的workflow应该看到：**
+```
+[Workflow] Starting 6-step workflow: xxx.pdf
+[MinIO] File saved: ./data/uploads/xxx.pdf
+[PDF] MinerU解析成功: 15000 字符
+[Chunk] Created 25 chunks
+[Extract] Total extracted: 28 destinations  ← 关键！
+[Extract] saving to Neo4j...
+[Embedding] Dense model loaded (dim=768)
+[Embedding] Generated 28 sparse vectors
+[Vector] Inserting 28 entries to Milvus
+[Milvus] Inserted 28 entries with complete metadata  ← 关键！
+[Vector] Hybrid vectorization complete: 28 destinations
+[Vector] GraphRAG completed with 28 entities  ← 关键！
+[Workflow] 6-step workflow completed
+```
+
+如果缺少这些日志，说明某个步骤失败了。
+
+══════════════════════════════════════════════════════════════════════════════
+
+请运行诊断步骤并告诉我结果！
+
+══════════════════════════════════════════════════════════════════════════════

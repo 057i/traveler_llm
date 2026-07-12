@@ -1,0 +1,381 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║        按照6步骤流程 + SSE交互标准完成修改                                   ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## ✅ 已完成的修改
+
+### 选项4：6步骤文档处理流程
+
+**更新文件：**
+- `workflow_service.py` - 6步骤工作流服务
+- `graph_builder.py` - 6步骤图构建器
+
+**6个步骤：**
+1. **MinIO存储** (15%) - 保存上传的PDF文件
+2. **PDF解析** (30%) - 使用MinerU API转换为Markdown
+3. **文本分块** (45%) - LangChain分块处理
+4. **实体提取** (60%) - Qwen提取景点信息
+5. **RAG向量化** (75%) - Milvus存储向量
+6. **GraphRAG** (90%) - Neo4j知识图谱
+7. **完成** (100%) - 统计汇总
+
+---
+
+### 选项2：前后端SSE交互标准
+
+**SSE事件格式（匹配前端WorkflowProgress组件）：**
+
+#### 1. start 事件
+```json
+event: start
+data: {
+  "message": "开始处理文档: xxx.pdf",
+  "filename": "xxx.pdf"
+}
+```
+
+#### 2. progress 事件（每个步骤开始时）
+```json
+event: progress
+data: {
+  "step": "minio",
+  "step_name": "MinIO存储",
+  "status": "processing",
+  "message": "正在保存文件到MinIO存储...",
+  "progress": 15
+}
+```
+
+#### 3. step_complete 事件（每个步骤完成时）
+```json
+event: step_complete
+data: {
+  "step": "minio",
+  "step_name": "MinIO存储",
+  "status": "completed",
+  "message": "文件保存成功",
+  "progress": 15
+}
+```
+
+#### 4. complete 事件（全部完成）
+```json
+event: complete
+data: {
+  "message": "处理完成: 提取了 8 个景点",
+  "destinations_count": 8,
+  "progress": 100
+}
+```
+
+#### 5. error 事件（出错时）
+```json
+event: error
+data: {
+  "message": "处理失败: 错误信息",
+  "error": "详细错误"
+}
+```
+
+---
+
+## 📊 完整工作流程
+
+```
+用户上传PDF
+    ↓
+后端接收：POST /api/documents/upload
+    返回：{task_id, document_id, filename, status: "processing"}
+    ↓
+后台任务启动：process_document_background()
+    ↓
+Workflow执行：workflow.process_document()
+    ↓
+Step 1: MinIO存储 (15%)
+    - save_to_minio()
+    - 写入Redis: document:progress:{task_id}
+    - SSE事件: progress → step_complete
+    ↓
+Step 2: PDF解析 (30%)
+    - parse_pdf_mineru()
+    - 调用MinerU API
+    - 轮询等待结果
+    - SSE事件: progress → step_complete
+    ↓
+Step 3: 文本分块 (45%)
+    - chunk_text()
+    - LangChain分块
+    - SSE事件: progress → step_complete
+    ↓
+Step 4: 实体提取 (60%)
+    - extract_entities()
+    - Qwen批量提取
+    - SSE事件: progress → step_complete
+    ↓
+Step 5: RAG向量化 (75%)
+    - vectorize_traditional()
+    - Milvus存储
+    - SSE事件: progress → step_complete
+    ↓
+Step 6: GraphRAG (90%)
+    - vectorize_graph()
+    - Neo4j图谱
+    - SSE事件: progress → step_complete
+    ↓
+Step 7: 完成 (100%)
+    - finalize()
+    - 统计汇总
+    - SSE事件: complete
+    ↓
+前端SSE监听：EventSource('/api/documents/progress/{task_id}')
+    - 接收事件
+    - 更新进度条
+    - 更新节点状态
+    - 显示日志
+    ↓
+前端显示：WorkflowProgress组件
+    - 6个节点图形化显示
+    - 进度条：0% → 100%
+    - 节点状态：pending → processing → completed
+```
+
+---
+
+## 🔧 关键配置
+
+### workflow_service.py
+
+**STEP_MAPPING（节点映射）：**
+```python
+{
+    "save_to_minio": "minio",
+    "parse_pdf_mineru": "parse",
+    "chunk_text": "chunk",
+    "extract_entities": "extract",
+    "vectorize_traditional": "vectorize_traditional",
+    "vectorize_graph": "vectorize_graph",
+    "finalize": "finalize"
+}
+```
+
+**STEP_NAMES（中文名称）：**
+```python
+{
+    "minio": "MinIO存储",
+    "parse": "PDF解析",
+    "chunk": "文本分块",
+    "extract": "实体提取",
+    "vectorize_traditional": "RAG向量化",
+    "vectorize_graph": "知识图谱构建"
+}
+```
+
+**STEP_PROGRESS（进度百分比）：**
+```python
+{
+    "minio": 15,
+    "parse": 30,
+    "chunk": 45,
+    "extract": 60,
+    "vectorize_traditional": 75,
+    "vectorize_graph": 90,
+    "finalize": 100
+}
+```
+
+---
+
+### graph_builder.py
+
+**6步骤流程图：**
+```
+save_to_minio
+    ↓
+parse_pdf_mineru
+    ↓
+chunk_text
+    ↓
+extract_entities
+    ↓
+vectorize_traditional
+    ↓
+vectorize_graph
+    ↓
+finalize
+    ↓
+END
+```
+
+**每个步骤都有fallback：**
+- save_to_minio → minio_fallback
+- parse_pdf_mineru → parse_fallback
+- extract_entities → extract_fallback
+- vectorize_traditional → vector_fallback
+- vectorize_graph → graph_vector_fallback
+
+---
+
+## 🎯 前端WorkflowProgress组件匹配
+
+### 步骤ID映射
+
+| 后端step_id | 前端step_id | 中文名称 | 进度 |
+|------------|-------------|---------|------|
+| minio | minio | MinIO存储 | 15% |
+| parse | parse | PDF解析 | 30% |
+| chunk | chunk | 文本分块 | 45% |
+| extract | extract | 实体提取 | 60% |
+| vectorize_traditional | vectorize_traditional | RAG向量化 | 75% |
+| vectorize_graph | vectorize_graph | 知识图谱构建 | 90% |
+
+### 前端监听代码
+
+```javascript
+// WorkflowProgress.vue
+const connectSSE = () => {
+  const url = `/api/documents/progress/${props.taskId}`
+  eventSource = new EventSource(url)
+
+  // 监听 start 事件
+  eventSource.addEventListener('start', (event) => {
+    const data = JSON.parse(event.data)
+    statusText.value = data.message
+    addLog(data.message)
+  })
+
+  // 监听 progress 事件（步骤开始）
+  eventSource.addEventListener('progress', (event) => {
+    const data = JSON.parse(event.data)
+    progress.value = data.progress
+    updateStepStatus(data.step, 'processing')
+    statusText.value = data.message
+  })
+
+  // 监听 step_complete 事件（步骤完成）
+  eventSource.addEventListener('step_complete', (event) => {
+    const data = JSON.parse(event.data)
+    updateStepStatus(data.step, 'completed')
+  })
+
+  // 监听 complete 事件（全部完成）
+  eventSource.addEventListener('complete', (event) => {
+    const data = JSON.parse(event.data)
+    completed.value = true
+    progress.value = 100
+    statusText.value = '处理完成！'
+    emit('complete')
+    eventSource.close()
+  })
+
+  // 监听 error 事件
+  eventSource.addEventListener('error', (event) => {
+    const data = JSON.parse(event.data)
+    errorMessage.value = data.message
+    eventSource.close()
+  })
+}
+```
+
+---
+
+## 📝 Redis数据结构
+
+### 进度数据
+```
+Key: document:progress:{task_id}
+Value: {
+  "step": "minio",
+  "step_name": "MinIO存储",
+  "status": "processing",
+  "message": "正在保存文件...",
+  "progress": 15
+}
+Expiry: 3600秒
+```
+
+### 事件数据
+```
+Key: document:event:{task_id}
+Value: {
+  "type": "start",
+  "message": "开始处理文档",
+  "filename": "xxx.pdf"
+}
+Expiry: 3600秒
+```
+
+---
+
+## 🧪 测试步骤
+
+1. **重启后端**（应用所有修改）
+   ```bash
+   cd backend
+   python main.py
+   ```
+
+2. **上传PDF文件**
+   ```
+   http://localhost:5173/documents
+   ```
+
+3. **观察后端日志**
+   ```
+   [Workflow] Starting 6-step workflow: xxx.pdf
+   [Workflow] Node executed: save_to_minio
+   [Progress] MinIO存储 (minio): processing - 正在保存文件... (15%)
+   [Progress] MinIO存储 (minio): completed - 文件保存成功 (15%)
+   [Workflow] Node executed: parse_pdf_mineru
+   [Progress] PDF解析 (parse): processing - 正在使用MinerU解析... (30%)
+   ... (更多步骤)
+   [Workflow] 6-step workflow completed: 8 destinations
+   ```
+
+4. **观察前端显示**
+   - 文档列表自动刷新
+   - 新文档行展开
+   - WorkflowProgress组件显示
+   - 6个节点依次执行：pending → processing → completed
+   - 进度条：15% → 30% → 45% → 60% → 75% → 90% → 100%
+   - 每个节点显示中文名称
+
+5. **检查浏览器控制台**
+   ```javascript
+   [WorkflowProgress] SSE 连接已建立
+   [WorkflowProgress] 收到 start 事件
+   [WorkflowProgress] 收到 progress 事件: {step: "minio", ...}
+   [WorkflowProgress] 更新步骤 minio 为 processing
+   [WorkflowProgress] 收到 step_complete 事件: {step: "minio", ...}
+   [WorkflowProgress] 更新步骤 minio 为 completed
+   ... (更多事件)
+   [WorkflowProgress] 收到 complete 事件
+   ```
+
+6. **检查网络请求**
+   - 开发者工具 → 网络 → EventStream
+   - 找到 `/api/documents/progress/{task_id}`
+   - 状态: 200
+   - 类型: text/event-stream
+   - 持续接收数据
+
+---
+
+## ✅ 完成清单
+
+- [x] 6步骤工作流配置
+- [x] SSE事件格式标准化
+- [x] 步骤ID映射（前后端一致）
+- [x] 中文名称显示
+- [x] 进度百分比配置
+- [x] Redis数据写入
+- [x] 完整的logger日志
+- [x] 错误处理和fallback
+- [x] 前端组件匹配
+
+══════════════════════════════════════════════════════════════════════════════
+
+状态：✅ 按照6步骤 + SSE交互标准完成修改！
+
+现在重启后端并上传PDF文件测试完整流程。
+
+══════════════════════════════════════════════════════════════════════════════

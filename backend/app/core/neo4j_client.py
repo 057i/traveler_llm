@@ -54,6 +54,51 @@ class Neo4jClient:
         if self.driver:
             self.driver.close()
 
+    def query(self, cypher: str, parameters: Dict[str, Any] = None) -> List[Dict[str, Any]]:
+        """
+        Execute a Cypher query and return results
+
+        Args:
+            cypher: Cypher query string
+            parameters: Query parameters
+
+        Returns:
+            List of result records as dictionaries
+        """
+        if parameters is None:
+            parameters = {}
+
+        with self.driver.session() as session:
+            result = session.run(cypher, parameters)
+            records = [record.data() for record in result]
+            return records
+
+    def create_destination(
+        self,
+        name: str,
+        description: str = "",
+        location: str = "",
+        properties: Optional[Dict[str, Any]] = None
+    ) -> str:
+        """
+        Create a Destination node (wrapper for create_destination_node)
+
+        Args:
+            name: Destination name
+            description: Description
+            location: Location string
+            properties: Additional properties
+
+        Returns:
+            Node ID
+        """
+        return self.create_destination_node(
+            name=name,
+            location=location,
+            description=description,
+            metadata=properties
+        )
+
     def create_destination_node(
         self,
         name: str,
@@ -81,6 +126,9 @@ class Neo4jClient:
             SET d.location = $location,
                 d.category = $category,
                 d.description = $description,
+                d.province = $province,
+                d.city = $city,
+                d.filename = $filename,
                 d.source = $source,
                 d.task_id = $task_id,
                 d.created_at = datetime()
@@ -93,6 +141,9 @@ class Neo4jClient:
                 location=location,
                 category=category,
                 description=description,
+                province=metadata.get('province', ''),
+                city=metadata.get('city', ''),
+                filename=metadata.get('filename', ''),
                 source=metadata.get('source', ''),
                 task_id=metadata.get('task_id', '')
             )

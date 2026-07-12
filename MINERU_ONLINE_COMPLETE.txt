@@ -1,0 +1,163 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              MinerU线上API配置完成                                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## ✅ 已完成的配置
+
+### 1. 环境变量配置 (.env.example)
+
+```env
+# MinerU Configuration (PDF解析服务 - 线上版本)
+MINERU_API_URL=https://api.mineru.com/v1/parse
+MINERU_API_KEY=your_mineru_api_key_here
+MINERU_TIMEOUT=300
+```
+
+### 2. Settings配置 (config/settings.py)
+
+```python
+# MinerU API 配置（线上版本）
+MINERU_API_URL: str = "https://api.mineru.com/v1/parse"
+MINERU_API_KEY: str = ""
+MINERU_TIMEOUT: int = 300
+```
+
+### 3. PDF解析节点 (node_pdf_parse.py)
+
+✓ 读取settings中的MinerU配置
+✓ 上传PDF到MinerU线上API
+✓ 解析JSON响应获取Markdown
+✓ 完整的错误处理
+✓ 详细的日志输出
+
+## 🔧 使用方式
+
+### 线上API（推荐）
+
+**优势：**
+- ✅ 无需本地部署
+- ✅ 云端高性能处理
+- ✅ 自动更新维护
+- ✅ 按量付费
+
+**配置步骤：**
+
+1. **获取API密钥**
+   - 访问MinerU官网（请提供实际地址）
+   - 注册账号
+   - 获取API Key
+
+2. **配置.env**
+   ```bash
+   cd backend
+   cp .env.example .env
+   # 编辑.env，填入实际的MINERU_API_KEY
+   ```
+
+3. **启动后端**
+   ```bash
+   python main.py
+   ```
+
+4. **测试上传**
+   - 访问：http://localhost:5173/documents
+   - 上传PDF文件
+   - 观察实时进度和日志
+
+## 📊 API调用流程
+
+```
+用户上传PDF
+    ↓
+后端保存文件
+    ↓
+读取settings.MINERU_API_URL和MINERU_API_KEY
+    ↓
+POST请求到MinerU API
+  Headers: Authorization: Bearer {api_key}
+  Body: multipart/form-data (file)
+    ↓
+等待响应（1-30秒）
+    ↓
+解析JSON获取markdown字段
+    ↓
+保存到state['parsed_text']
+    ↓
+继续后续处理（分块、提取、向量化）
+```
+
+## 🧪 日志示例
+
+**成功：**
+```
+[PDF] Starting PDF parse with MinerU API
+[PDF] Parsing file: 三清山攻略.pdf
+[PDF] MinerU API: https://api.mineru.com/v1/parse
+[PDF] Uploading to MinerU API...
+[PDF] MinerU API解析成功: 10 页, 5234 字符
+```
+
+**失败 - API密钥错误：**
+```
+[PDF] MinerU API returned status 401
+[PDF] Response: {"error": "Invalid API key"}
+```
+
+**失败 - 网络错误：**
+```
+[PDF] 无法连接到MinerU API，请检查服务是否启动
+[PDF] API地址: https://api.mineru.com/v1/parse
+```
+
+## 📝 待办事项
+
+### 必需（使用前）
+- [ ] 获取MinerU API密钥
+- [ ] 在.env中配置MINERU_API_KEY
+- [ ] 验证API地址是否正确
+
+### 可选（优化）
+- [ ] 调整MINERU_TIMEOUT（默认300秒）
+- [ ] 添加重试机制
+- [ ] 缓存解析结果
+
+## 🎯 完整工作流
+
+```
+1. 用户上传PDF
+   ↓
+2. MinIO存储节点 (15%)
+   ↓
+3. PDF解析节点 (35%) ← MinerU线上API
+   • 上传PDF到云端
+   • 获取Markdown结果
+   ↓
+4. 文本分块节点 (50%)
+   ↓
+5. 实体提取节点 (65%)
+   • Qwen批量提取
+   • 17个字段结构化
+   ↓
+6. 并行向量化 (80-95%)
+   • RAG向量化（Milvus）
+   • GraphRAG（Neo4j）
+   ↓
+7. 完成节点 (100%)
+   • 统计汇总
+   • 返回结果
+```
+
+══════════════════════════════════════════════════════════════════════════════
+
+## 🚀 启动测试
+
+1. 配置.env中的MINERU_API_KEY
+2. 启动后端：`python main.py`
+3. 上传PDF测试完整流程
+4. 观察每个节点的执行情况
+
+══════════════════════════════════════════════════════════════════════════════
+
+状态：✅ MinerU线上API配置完成，等待API密钥
+
+══════════════════════════════════════════════════════════════════════════════

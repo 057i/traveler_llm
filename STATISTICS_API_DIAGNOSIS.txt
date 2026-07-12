@@ -1,0 +1,160 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              统计API问题最终诊断报告                                         ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 🔍 问题现象
+
+前端显示：
+- 文本RAG: 0条
+- 图RAG: 0节点
+
+---
+
+## ✅ 后端验证结果
+
+### 1. 手动测试
+```
+[Milvus] 向量数: 175
+[Neo4j] 节点数: 206
+[API] 返回数据: {'textRAG': 175, 'graphRAG': 206}
+[成功] 数据正常
+```
+
+### 2. 后端日志
+```
+2026-07-13 00:10:52.931 | INFO | [Statistics] Milvus count: 175
+```
+
+### 3. API代码检查
+```python
+return {
+    "totalDocs": total_docs,
+    "processing": processing,
+    "completed": total_docs - processing,
+    "totalProvinces": total_provinces,
+    "totalCities": total_cities,
+    "totalDestinations": total_destinations,
+    "textRAG": total_destinations,      # 175
+    "graphRAG": graph_destinations      # 206
+}
+```
+
+**结论：后端API返回的数据完全正确！**
+
+---
+
+## 🐛 问题定位
+
+**问题在前端！**
+
+后端API正确返回了`textRAG: 175`和`graphRAG: 206`，但前端显示为0。
+
+---
+
+## 🔧 前端排查步骤
+
+### 步骤1: 检查API调用
+1. 打开浏览器开发者工具（F12）
+2. 切换到Network标签
+3. 刷新页面
+4. 查找`statistics`请求
+5. 点击查看Response
+
+**预期Response：**
+```json
+{
+  "totalDocs": 5,
+  "processing": 0,
+  "completed": 5,
+  "totalProvinces": 9,
+  "totalCities": 13,
+  "totalDestinations": 175,
+  "textRAG": 175,
+  "graphRAG": 206
+}
+```
+
+### 步骤2: 检查前端代码
+
+**需要检查的文件：**
+- `frontend/src/views/DocumentManager.vue`
+- 或其他显示统计的组件
+
+**需要确认：**
+1. 是否调用了`/api/documents/statistics`
+2. 是否正确读取`response.textRAG`和`response.graphRAG`
+3. 字段名是否匹配（大小写敏感）
+
+---
+
+## 💡 可能的前端问题
+
+### 问题1: 字段名不匹配
+```javascript
+// 错误示例
+const textRAG = response.text_rag  // 下划线，错误
+const graphRAG = response.graph_rag
+
+// 正确应该是
+const textRAG = response.textRAG  // 驼峰命名
+const graphRAG = response.graphRAG
+```
+
+### 问题2: API未调用
+```javascript
+// 可能没有调用statistics API
+// 或者调用的是其他API
+```
+
+### 问题3: 响应处理错误
+```javascript
+// 可能使用了错误的字段
+const textRAG = response.data.textRAG  // 多了一层.data?
+```
+
+---
+
+## 🚀 立即验证步骤
+
+### 1. 浏览器验证
+```
+1. F12打开开发者工具
+2. Network标签
+3. 刷新页面
+4. 找到statistics请求
+5. 查看Response是否包含textRAG: 175
+```
+
+### 2. 如果Response正确
+→ 前端代码读取字段有问题
+→ 需要修改前端组件代码
+
+### 3. 如果Response错误或不存在
+→ 前端没有调用正确的API
+→ 需要检查API调用代码
+
+---
+
+## 📋 下一步行动
+
+1. **立即打开浏览器开发者工具检查Network**
+2. **确认statistics API的Response数据**
+3. **根据Response结果决定：**
+   - Response正确 → 修改前端代码
+   - Response错误 → 检查API调用
+
+---
+
+## 🎯 关键结论
+
+- ✅ 后端API完全正常
+- ✅ 数据库有正确的数据
+- ❌ 前端显示逻辑有问题
+
+**需要用户在浏览器中检查Network，然后告知结果！**
+
+══════════════════════════════════════════════════════════════════════════════
+
+请打开浏览器F12，查看statistics请求的Response！
+
+══════════════════════════════════════════════════════════════════════════════

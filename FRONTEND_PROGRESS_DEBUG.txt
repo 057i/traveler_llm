@@ -1,0 +1,245 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              前端进度不显示 - 完整诊断和修复方案                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 🔍 问题现象
+
+**后端：** ✅ 有完整日志，workflow正常执行
+**前端：** ❌ 没有调用 `/api/documents/progress/` 接口
+
+**结论：** WorkflowProgress组件没有渲染
+
+---
+
+## 📋 已完成的前端修改
+
+### DocumentManager.vue
+
+**✅ 第101行 - 修改显示条件：**
+```vue
+<div v-if="row.taskId" class="progress-detail">
+```
+（已移除 `&& row.status === 'processing'` 检查）
+
+**✅ 第395-436行 - 添加调试日志：**
+```javascript
+const handleUploadSuccess = (response, file) => {
+  console.log('[Upload] Response:', response)
+  // ...
+  console.log('[Upload] Documents after fetch:', documents.value)
+  console.log('[Upload] Found doc:', doc)
+  console.log('[Upload] Set taskId:', doc.taskId)
+  // ...
+}
+```
+
+**✅ 第419行 - 强制设置状态：**
+```javascript
+doc.status = 'processing'
+```
+
+---
+
+## 🎯 立即执行的诊断步骤
+
+### 步骤1: 强制刷新浏览器
+```
+方法1: Ctrl + Shift + R
+方法2: F12 → 右键刷新按钮 → "清空缓存并硬性重新加载"
+方法3: Ctrl + Shift + Delete → 清除缓存
+```
+
+---
+
+### 步骤2: 上传PDF并查看控制台
+
+1. 打开 http://localhost:5173/documents
+2. 按 F12 打开开发者工具
+3. 切换到 **Console** 标签
+4. 上传一个PDF文件
+5. 立即查看控制台输出
+
+---
+
+### 步骤3: 检查日志输出
+
+**情况A: 看到 [Upload] 日志**
+
+```javascript
+[Upload] Response: {task_id: "...", document_id: "...", ...}
+[Upload] Documents after fetch: [...]
+[Upload] Looking for document_id: ...
+[Upload] Found doc: {...}
+[Upload] Set taskId: ...
+[Upload] Set status: processing
+```
+
+→ 说明前端代码正常，继续看是否有 [WorkflowProgress] 日志
+
+**如果没有 [WorkflowProgress] 日志：**
+- 检查 expandedRows.value 是否包含文档ID
+- 在控制台执行：`console.log('Expanded:', expandedRows.value)`
+
+---
+
+**情况B: 没有 [Upload] 日志**
+
+→ 说明前端修改没有生效
+
+**解决方案：**
+1. 检查前端是否有热重载提示
+2. 重启前端：
+   ```bash
+   # 停止前端 (Ctrl+C)
+   cd frontend
+   npm run dev
+   ```
+3. 再次测试
+
+---
+
+**情况C: 有 [Upload] 但找不到文档**
+
+```javascript
+[Upload] Document not found! document_id: abc-123
+[Upload] Available IDs: ["def-456", "ghi-789"]
+```
+
+→ 说明 document_id 和列表中的 id 不匹配
+
+**解决方案：**
+后端需要确保返回的 document_id 就是数据库中的文档ID
+
+---
+
+### 步骤4: 检查网络请求
+
+**开发者工具 → Network 标签**
+
+1. 筛选 "progress"
+2. 查看是否有 `/api/documents/progress/` 请求
+
+**如果有请求：**
+- 查看状态码（应该是200）
+- 查看类型（应该是text/event-stream）
+- SSE连接正常
+
+**如果没有请求：**
+- WorkflowProgress组件没有渲染
+- 检查 v-if 条件
+
+---
+
+## 🔧 终极修复方案
+
+如果上述步骤都不行，使用这个方法强制渲染：
+
+### 修改1: 简化显示条件
+
+**DocumentManager.vue 第101行：**
+```vue
+<!-- 当前 -->
+<div v-if="row.taskId" class="progress-detail">
+
+<!-- 改为：暂时去掉v-if，总是显示 -->
+<div class="progress-detail">
+  <WorkflowProgress
+    v-if="row.taskId"
+    :task-id="row.taskId"
+    :filename="row.filename"
+    @complete="handleProcessComplete"
+  />
+  <div v-else>
+    <el-alert type="info" :closable="false">
+      TaskId: {{ row.taskId || '空' }}
+      Status: {{ row.status || '空' }}
+    </el-alert>
+  </div>
+</div>
+```
+
+这样可以看到实际的 taskId 和 status 值
+
+---
+
+### 修改2: 手动触发测试
+
+**在浏览器控制台执行：**
+```javascript
+// 1. 检查当前数据
+console.log('Documents:', documents.value)
+console.log('Expanded:', expandedRows.value)
+
+// 2. 手动设置第一个文档
+const doc = documents.value[0]
+if (doc) {
+  doc.taskId = doc.id  // 或者使用一个测试ID
+  doc.status = 'processing'
+
+  // 3. 确保行展开
+  if (!expandedRows.value.includes(doc.id)) {
+    expandedRows.value.push(doc.id)
+  }
+
+  console.log('手动设置完成:', doc)
+}
+
+// 4. 等待几秒，查看网络请求
+// 应该看到 /api/documents/progress/ 请求
+```
+
+---
+
+### 修改3: 添加强制响应式更新
+
+**修改 handleUploadSuccess：**
+```javascript
+if (doc) {
+  // 使用Vue 3的响应式API确保更新
+  doc.taskId = response.task_id
+  doc.status = 'processing'
+
+  // 强制触发响应式更新
+  documents.value = [...documents.value]
+
+  // 展开行
+  if (!expandedRows.value.includes(doc.id)) {
+    expandedRows.value = [...expandedRows.value, doc.id]
+  }
+}
+```
+
+---
+
+## 📝 请提供以下信息
+
+为了精确诊断，请告诉我：
+
+1. **是否看到 [Upload] 日志？** （有/没有）
+   - 如果有，复制日志内容
+
+2. **是否看到 [WorkflowProgress] 日志？** （有/没有）
+
+3. **网络请求中是否有 progress 请求？** （有/没有）
+
+4. **执行 console.log(documents.value) 的输出？**
+
+5. **执行 console.log(expandedRows.value) 的输出？**
+
+---
+
+## ✅ 检查清单
+
+- [ ] 强制刷新浏览器 (Ctrl+Shift+R)
+- [ ] 上传PDF
+- [ ] 打开控制台 (F12)
+- [ ] 搜索 [Upload] 关键字
+- [ ] 查看网络请求中的 progress
+- [ ] 执行手动检查命令
+- [ ] 提供日志截图或文字
+
+---
+
+**完成上述检查后，告诉我结果，我会继续帮你修复！**
+
+══════════════════════════════════════════════════════════════════════════════

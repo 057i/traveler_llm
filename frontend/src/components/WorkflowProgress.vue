@@ -39,61 +39,49 @@
         </defs>
 
         <!-- 连接线 -->
-        <!-- 第一行：上传文件 -> MinIO存储 -> PDF解析 -->
-        <line x1="180" y1="60" x2="320" y2="60" :class="['link', getLinkClass('minio')]" />
-        <line x1="380" y1="60" x2="520" y2="60" :class="['link', getLinkClass('parse')]" />
+        <!-- 第一行：MinIO存储 -> PDF解析 -->
+        <line x1="180" y1="60" x2="320" y2="60" :class="['link', getLinkClass('parse')]" />
 
-        <!-- PDF解析到文本分块 -->
-        <path d="M 550 90 Q 550 125, 280 160" :class="['link', 'curved', getLinkClass('chunk')]" fill="none" />
+        <!-- PDF解析 → 文本分块 -->
+        <path d="M 350 90 Q 350 125, 250 130" :class="['link', 'curved', getLinkClass('chunk')]" fill="none" />
 
-        <!-- 文本分块到实体提取 -->
+        <!-- 文本分块 → 实体提取 -->
         <line x1="280" y1="160" x2="460" y2="160" :class="['link', getLinkClass('extract')]" />
 
-        <!-- 实体提取到两种向量化 -->
-        <path d="M 490 190 Q 370 235, 280 280" :class="['link', 'curved', getLinkClass('vectorize_traditional')]" fill="none" />
+        <!-- 实体提取 → 传统向量化 -->
+        <path d="M 490 190 Q 370 235, 250 250" :class="['link', 'curved', getLinkClass('vectorize_traditional')]" fill="none" />
+
+        <!-- 实体提取 → 图向量化 -->
         <path d="M 490 190 Q 490 235, 490 250" :class="['link', 'curved', getLinkClass('vectorize_graph')]" fill="none" />
 
         <!-- 两种向量化到完成 -->
-        <path d="M 250 310 Q 310 350, 340 390" :class="['link', 'curved', completed ? 'completed' : 'pending']" fill="none" />
-        <path d="M 490 310 Q 430 350, 400 390" :class="['link', 'curved', completed ? 'completed' : 'pending']" fill="none" />
+        <path d="M 250 310 Q 310 350, 340 390" :class="['link', 'curved', getLinkClass('finalize')]" fill="none" />
+        <path d="M 490 310 Q 430 350, 400 390" :class="['link', 'curved', getLinkClass('finalize')]" fill="none" />
 
         <!-- 节点 -->
         <!-- 第一行 -->
         <g class="node" :class="getNodeClass('minio')">
           <circle cx="150" cy="60" r="30" class="node-bg" />
           <circle cx="150" cy="60" r="28" class="node-circle" />
-          <!-- 状态图标 -->
           <g v-if="steps.minio === 'completed'" class="status-icon">
             <text x="150" y="67" class="check-icon">✓</text>
           </g>
           <g v-else-if="steps.minio === 'processing'" class="status-icon">
             <circle cx="150" cy="60" r="8" fill="white" opacity="0.9" />
           </g>
-          <text x="150" y="95" class="node-label">上传文件</text>
-        </g>
-
-        <g class="node" :class="getNodeClass('minio')">
-          <circle cx="350" cy="60" r="30" class="node-bg" />
-          <circle cx="350" cy="60" r="28" class="node-circle" />
-          <g v-if="steps.minio === 'completed'" class="status-icon">
-            <text x="350" y="67" class="check-icon">✓</text>
-          </g>
-          <g v-else-if="steps.minio === 'processing'" class="status-icon">
-            <circle cx="350" cy="60" r="8" fill="white" opacity="0.9" />
-          </g>
-          <text x="350" y="95" class="node-label">MinIO存储</text>
+          <text x="150" y="95" class="node-label">MinIO存储</text>
         </g>
 
         <g class="node" :class="getNodeClass('parse')">
-          <circle cx="550" cy="60" r="30" class="node-bg" />
-          <circle cx="550" cy="60" r="28" class="node-circle" />
+          <circle cx="350" cy="60" r="30" class="node-bg" />
+          <circle cx="350" cy="60" r="28" class="node-circle" />
           <g v-if="steps.parse === 'completed'" class="status-icon">
-            <text x="550" y="67" class="check-icon">✓</text>
+            <text x="350" y="67" class="check-icon">✓</text>
           </g>
           <g v-else-if="steps.parse === 'processing'" class="status-icon">
-            <circle cx="550" cy="60" r="8" fill="white" opacity="0.9" />
+            <circle cx="350" cy="60" r="8" fill="white" opacity="0.9" />
           </g>
-          <text x="550" y="95" class="node-label">PDF解析</text>
+          <text x="350" y="95" class="node-label">PDF解析</text>
         </g>
 
         <!-- 第二行 -->
@@ -132,7 +120,7 @@
             <circle cx="250" cy="280" r="8" fill="white" opacity="0.9" />
           </g>
           <text x="250" y="310" class="node-label">传统向量化</text>
-          <text x="250" y="325" class="node-sublabel">ChromaDB</text>
+          <text x="250" y="325" class="node-sublabel">Milvus</text>
         </g>
 
         <g class="node" :class="getNodeClass('vectorize_graph')">
@@ -149,10 +137,16 @@
         </g>
 
         <!-- 第四行：完成节点 -->
-        <g class="node" :class="completed ? 'completed' : 'pending'">
+        <g class="node" :class="getNodeClass('finalize')">
           <circle cx="370" cy="390" r="35" class="node-bg" />
           <circle cx="370" cy="390" r="33" class="node-circle" />
-          <text x="370" y="430" class="node-label finish-label">✓ 完成</text>
+          <g v-if="steps.finalize === 'completed'" class="status-icon">
+            <text x="370" y="397" class="check-icon">✓</text>
+          </g>
+          <g v-else-if="steps.finalize === 'processing'" class="status-icon">
+            <circle cx="370" cy="390" r="8" fill="white" opacity="0.9" />
+          </g>
+          <text x="370" y="430" class="node-label finish-label">完成</text>
         </g>
       </svg>
     </div>
@@ -220,7 +214,8 @@ const steps = ref({
   chunk: 'pending',
   extract: 'pending',
   vectorize_traditional: 'pending',
-  vectorize_graph: 'pending'
+  vectorize_graph: 'pending',
+  finalize: 'pending'
 })
 
 const logs = ref([])
@@ -306,13 +301,41 @@ const connectSSE = () => {
     }
   })
 
-  eventSource.addEventListener('step_complete', (event) => {
+  eventSource.addEventListener('node_start', (event) => {
     const data = JSON.parse(event.data)
-    console.log('[WorkflowProgress] 收到 step_complete 事件:', data)
+    console.log('[Workflow] NODE_START:', data)
 
     if (data.step) {
-      console.log(`[WorkflowProgress] 更新步骤 ${data.step} 为 completed`)
+      console.log(`[Workflow] 节点开始: ${data.step} - ${data.step_name}`)
+      updateStepStatus(data.step, 'processing')
+    }
+
+    if (data.progress !== undefined) {
+      progress.value = data.progress
+    }
+
+    if (data.message) {
+      statusText.value = data.message
+      addLog(`${data.step_name || data.step}: ${data.message}`)
+    }
+  })
+
+  eventSource.addEventListener('node_end', (event) => {
+    const data = JSON.parse(event.data)
+    console.log('[Workflow] NODE_END:', data)
+
+    if (data.step) {
+      console.log(`[Workflow] 节点完成: ${data.step} - ${data.step_name}`)
       updateStepStatus(data.step, 'completed')
+    }
+
+    if (data.progress !== undefined) {
+      progress.value = data.progress
+    }
+
+    if (data.message) {
+      statusText.value = data.message
+      addLog(`${data.step_name || data.step}: ${data.message}`)
     }
   })
 

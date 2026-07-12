@@ -38,7 +38,7 @@
           </el-statistic>
         </el-col>
         <el-col :span="3">
-          <el-statistic title="文本RAG" :value="statistics.chromaCount || 0">
+          <el-statistic title="文本RAG" :value="statistics.textRAG || 0">
             <template #prefix>
               <el-icon><Document /></el-icon>
             </template>
@@ -48,7 +48,7 @@
           </el-statistic>
         </el-col>
         <el-col :span="3">
-          <el-statistic title="图RAG" :value="statistics.neo4jNodeCount || 0">
+          <el-statistic title="图RAG" :value="statistics.graphRAG || 0">
             <template #prefix>
               <el-icon><Connection /></el-icon>
             </template>
@@ -91,15 +91,15 @@
         style="width: 100%"
         :loading="loading"
         stripe
-        row-key="id"
+        row-key="task_id"
         :expand-row-keys="expandedRows"
         @expand-change="handleExpandChange"
       >
         <!-- 展开列 -->
         <el-table-column type="expand">
           <template #default="{ row }">
-            <div v-if="row.taskId && (row.status === 'processing' || row.status === 'pending')" class="progress-detail">
-              <WorkflowProgress :task-id="row.taskId" :filename="row.filename" @complete="handleProcessComplete" />
+            <div v-if="row.status!='completed'" class="progress-detail">
+              <WorkflowProgress :task-id="row.task_id" :filename="row.filename" @complete="handleProcessComplete" />
             </div>
             <div v-else class="no-progress">
               <el-empty description="无处理进度信息" :image-size="60" />
@@ -139,7 +139,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="pages" label="页数" width="100" align="center" />
+        <el-table-column prop="pages_count" label="页数" width="100" align="center" />
 
         <el-table-column prop="status" label="状态" width="120">
           <template #default="{ row }">
@@ -331,7 +331,7 @@ const fetchDocuments = async () => {
     // 自动展开处理中的文档
     expandedRows.value = documents.value
       .filter(doc => doc.status === 'processing' || doc.status === 'pending')
-      .map(doc => doc.id)
+      .map(doc => doc.task_id)
   } catch (error) {
     ElMessage.error('获取文档列表失败')
     console.error(error)
@@ -359,7 +359,8 @@ const handleCurrentChange = (val) => {
 
 // 处理展开/折叠
 const handleExpandChange = (row, expandedRowsData) => {
-  expandedRows.value = expandedRowsData.map(r => r.id)
+  // 使用task_id作为key
+  expandedRows.value = expandedRowsData.map(r => r.task_id)
 }
 
 // 上传前验证
@@ -393,30 +394,46 @@ const clearFiles = () => {
 }
 
 const handleUploadSuccess = (response, file) => {
+  console.log('[Upload] Response:', response)
+
   ElMessage.success(`${file.name} 上传成功！`)
 
   uploading.value = false
   uploadDialogVisible.value = false
   clearFiles()
 
-  // 刷新列表后，将任务 ID 关联到文档
-  setTimeout(async () => {
-    await fetchDocuments()
-
-    // 在刷新后的列表中找到新文档并关联 taskId
-    if (response.document_id && response.task_id) {
-      const doc = documents.value.find(d => d.id === response.document_id)
-      if (doc) {
-        doc.taskId = response.task_id
-        // 自动展开新上传的文档
-        if (!expandedRows.value.includes(doc.id)) {
-          expandedRows.value.push(doc.id)
-        }
-      }
+  // 立即处理新文档：创建临时对象并展开，触发SSE连接
+  const taskId = response.task_id
+  if (taskId) {
+    // 创建临时文档对象
+    const tempDoc = {
+      task_id: taskId,
+      filename: file.name,
+      status: 'processing',
+      progress: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      destinations_count: 0,
+      pages_count: 0,
+      province: '-',
+      city: '-'
     }
 
-    fetchStatistics()
-  }, 100)
+    // 添加到文档列表顶部
+    documents.value.unshift(tempDoc)
+    // 不要增加total，因为后端会返回正确的total
+
+    // 立即展开该文档（触发WorkflowProgress挂载和SSE连接）
+    expandedRows.value = [taskId]
+
+    console.log('[Upload] Immediately expanded task:', taskId)
+  }
+
+  // 延迟刷新完整列表（更新真实数据，替换临时对象）
+  setTimeout(async () => {
+    await fetchDocuments()
+    await fetchStatistics()
+  }, 1000)
 }
 
 const handleUploadError = (error, file) => {
@@ -457,7 +474,8 @@ const deleteDocument = async (row) => {
       }
     )
 
-    await deleteDocumentApi(row.id)
+    // 使用task_id作为文档ID
+    await deleteDocumentApi(row.task_id)
     ElMessage.success('删除成功')
     fetchDocuments()
     fetchStatistics()

@@ -24,7 +24,8 @@ class DocumentTaskService:
         task_id: str,
         filename: str,
         file_path: str,
-        file_size: int
+        file_size: int,
+        pages_count: int = 0
     ) -> Dict:
         """
         创建文档处理任务
@@ -34,6 +35,7 @@ class DocumentTaskService:
             filename: 文件名
             file_path: 文件路径
             file_size: 文件大小
+            pages_count: PDF页数
 
         Returns:
             任务信息字典
@@ -43,10 +45,14 @@ class DocumentTaskService:
             "filename": filename,
             "file_path": file_path,
             "file_size": file_size,
-            "status": "processing",
+            "status": "pending",
             "progress": 0,
+            "message": "等待处理",
+            "destinations_count": 0,
+            "pages_count": pages_count,  # 使用传入的页数
             "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat()
+            "updated_at": datetime.now().isoformat(),
+            "upload_time": datetime.now().isoformat()  # 添加upload_time
         }
 
         # 存储到Redis
@@ -139,7 +145,7 @@ class DocumentTaskService:
         limit: int = 50
     ) -> List[Dict]:
         """
-        获取文档列表
+        获取文档列表（使用Pipeline优化）
 
         Args:
             skip: 跳过数量
@@ -152,13 +158,30 @@ class DocumentTaskService:
             # 从任务列表获取ID
             task_ids = self.redis_client.lrange("document:tasks", skip, skip + limit - 1)
 
-            documents = []
-            for task_id in task_ids:
-                task_key = f"document:task:{task_id}"
-                task_data = self.redis_client.get(task_key)
+            if not task_ids:
+                return []
 
-                if task_data:
-                    documents.append(json.loads(task_data))
+            # 使用Pipeline批量获取文档数据（性能优化）
+            documents = []
+            if self.redis_client.client:
+                pipeline = self.redis_client.client.pipeline()
+
+                for task_id in task_ids:
+                    task_key = f"document:task:{task_id}"
+                    pipeline.get(task_key)
+
+                results = pipeline.execute()
+
+                for task_data in results:
+                    if task_data:
+                        documents.append(json.loads(task_data))
+            else:
+                # Fallback: 逐个获取（当pipeline不可用时）
+                for task_id in task_ids:
+                    task_key = f"document:task:{task_id}"
+                    task_data = self.redis_client.get(task_key)
+                    if task_data:
+                        documents.append(json.loads(task_data))
 
             return documents
 

@@ -1,0 +1,143 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              Workflow节点和SSE推送完整修复方案                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 🔍 当前问题
+
+### 问题1: MinIO存储节点缺失
+**SSE事件中没有：**
+- `step: 'minio'` 或 `step: 'save_to_minio'`
+
+**原因：** workflow_service中没有为MinIO节点发送SSE事件
+
+### 问题2: 节点名称不匹配
+**后端节点ID：**
+- save_to_minio
+- parse_pdf_mineru
+- chunk_text
+- extract_entities
+- vectorize_traditional (显示为"传统向量化")
+- vectorize_graph (显示为"知识图谱构建")
+
+**前端期望：**
+- upload (上传文件)
+- minio (MinIO存储)
+- parse (PDF解析)
+- chunk (文本分块)
+- extract (实体提取)
+- vectorize_traditional (传统向量化)
+- vectorize_graph (图向量化)
+- finalize (完成)
+
+---
+
+## ✅ 修复方案
+
+### 任务1: 添加MinIO节点的SSE推送
+
+**文件：** `backend/app/workflows/document_processing/workflow_service.py`
+
+**修改STEP_MAPPING：**
+```python
+STEP_MAPPING = {
+    'save_to_minio': 'minio',      # 添加MinIO映射
+    'parse_pdf_mineru': 'parse',
+    'chunk_text': 'chunk',
+    'extract_entities': 'extract',
+    'vectorize_traditional': 'vectorize_traditional',
+    'vectorize_graph': 'vectorize_graph',
+    'finalize': 'finalize'
+}
+
+STEP_NAMES = {
+    'minio': 'MinIO存储',
+    'parse': 'PDF解析',
+    'chunk': '文本分块',
+    'extract': '实体提取',
+    'vectorize_traditional': '传统向量化',
+    'vectorize_graph': '图向量化',
+    'finalize': '完成'
+}
+
+STEP_PROGRESS = {
+    'minio': 15,
+    'parse': 30,
+    'chunk': 45,
+    'extract': 60,
+    'vectorize_traditional': 75,
+    'vectorize_graph': 90,
+    'finalize': 100
+}
+```
+
+---
+
+### 任务2: 修复前端节点显示
+
+**文件：** `frontend/src/components/WorkflowProgress.vue`
+
+**节点配置：**
+```javascript
+const steps = {
+  upload: { name: '上传文件', x: 150, y: 80 },
+  minio: { name: 'MinIO存储', x: 350, y: 80 },
+  parse: { name: 'PDF解析', x: 550, y: 80 },
+  chunk: { name: '文本分块', x: 250, y: 180 },
+  extract: { name: '实体提取', x: 490, y: 180 },
+  vectorize_traditional: { name: '传统向量化', x: 250, y: 295 },
+  vectorize_graph: { name: '图向量化', x: 490, y: 295 },
+  finalize: { name: '完成', x: 370, y: 380 }
+}
+```
+
+---
+
+### 任务3: 修复连线
+
+**连线配置：**
+```javascript
+const connections = [
+  { from: 'upload', to: 'minio' },      // 上传 → MinIO
+  { from: 'minio', to: 'parse' },       // MinIO → PDF解析
+  { from: 'parse', to: 'chunk' },       // PDF解析 → 文本分块
+  { from: 'parse', to: 'extract' },     // PDF解析 → 实体提取
+  { from: 'chunk', to: 'vectorize_traditional' },  // 文本分块 → 传统向量化
+  { from: 'extract', to: 'vectorize_graph' },      // 实体提取 → 图向量化
+  { from: 'vectorize_traditional', to: 'finalize' }, // 传统向量化 → 完成
+  { from: 'vectorize_graph', to: 'finalize' }        // 图向量化 → 完成
+]
+```
+
+---
+
+## 🎯 修复优先级
+
+### 优先级1: 添加MinIO的SSE推送（最重要）
+- 让MinIO节点在前端显示
+
+### 优先级2: 修复节点名称映射
+- 统一前后端节点ID
+
+### 优先级3: 修复连线
+- 按照正确的流程连接
+
+---
+
+## 📝 需要修改的文件
+
+1. `backend/app/workflows/document_processing/workflow_service.py`
+   - 添加STEP_MAPPING['save_to_minio']
+   - 添加STEP_NAMES和STEP_PROGRESS
+
+2. `frontend/src/components/WorkflowProgress.vue`
+   - 修复节点配置
+   - 修复连线配置
+   - 修复节点位置
+
+---
+
+## 🚀 立即开始修复？
+
+需要我立即修改这些文件吗？(是/否)
+
+══════════════════════════════════════════════════════════════════════════════

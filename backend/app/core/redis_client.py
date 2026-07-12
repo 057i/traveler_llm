@@ -67,6 +67,15 @@ class RedisClient:
             logger.error(f"Redis LPUSH失败: {e}")
             return 0
 
+    def rpush(self, key: str, *values: str) -> int:
+        try:
+            if self.client:
+                return self.client.rpush(key, *values)
+            return 0
+        except Exception as e:
+            logger.error(f"Redis RPUSH失败: {e}")
+            return 0
+
     def lrange(self, key: str, start: int, end: int) -> list:
         try:
             if self.client:
@@ -84,6 +93,15 @@ class RedisClient:
         except Exception as e:
             logger.error(f"Redis LLEN失败: {e}")
             return 0
+
+    def expire(self, key: str, time: int) -> bool:
+        try:
+            if self.client:
+                return self.client.expire(key, time)
+            return False
+        except Exception as e:
+            logger.error(f"Redis EXPIRE失败: {e}")
+            return False
 
     def lrem(self, key: str, count: int, value: str) -> int:
         try:

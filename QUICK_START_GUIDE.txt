@@ -1,0 +1,326 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              快速启动指南 - 智能旅行推荐系统                                 ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 🚀 快速启动步骤
+
+### 步骤1: 启动Docker服务
+```bash
+cd E:\大模型开发\代码\网站\travel_proj
+docker-compose -f docker-compose-milvus.yml up -d
+```
+
+**启动的服务：**
+- etcd (Milvus依赖)
+- minio (对象存储) - 端口9000, 9001
+- milvus (向量数据库) - 端口19530, 9091
+
+**验证：**
+```bash
+docker ps | grep -E "minio|milvus|etcd"
+```
+
+### 步骤2: 启动后端
+```bash
+cd backend
+python main.py
+```
+
+**观察健康检查日志：**
+```
+[健康检查] 检查服务连接...
+[1/4] ✓ Milvus连接成功 (当前向量数: 0)
+[2/4] ✓ Neo4j连接成功 (当前节点数: 139)
+[3/4] ✓ Redis连接成功
+[4/4] ✓ 存储可用
+[健康检查] 所有服务连接正常 ✓
+```
+
+### 步骤3: 启动前端
+```bash
+cd frontend
+npm run dev
+```
+
+**访问：** `http://localhost:5173`
+
+---
+
+## ✅ 功能验证
+
+### 1. 上传PDF测试
+1. 点击"上传文档"
+2. 选择PDF文件
+3. 观察workflow进度
+
+**预期显示：**
+```
+✓ MinIO存储 (15%)
+✓ PDF解析 (30%)
+✓ 文本分块 (45%)
+✓ 实体提取 (60%)
+✓ 传统向量化 (75%)
+✓ 图向量化 (90%)
+✓ 完成 (100%)
+```
+
+### 2. 查看文档列表
+**预期字段：**
+- 省份: 江西省
+- 城市: 上饶市
+- 提取景点数: 35
+- 页数: 15
+- 上传时间: 2026-07-12 22:xx
+- 状态: 完成
+
+### 3. 查看统计数据
+**预期显示：**
+- 总文档: 3
+- 省份数: 2+
+- 城市数: 2+
+- 总景点数: 139+
+- 文本RAG: 139+
+- 图RAG: 139+节点
+
+### 4. MinIO控制台验证
+**访问：** `http://localhost:9001`
+- 用户名: `minioadmin`
+- 密码: `minioadmin`
+- 查看`travel-documents` bucket
+
+---
+
+## 🔧 常见问题
+
+### 问题1: Milvus连接失败
+**错误：** `Failed to connect to Milvus`
+
+**解决：**
+```bash
+# 检查Milvus是否运行
+docker ps | grep milvus
+
+# 如果没有，启动它
+docker start milvus-standalone
+
+# 等待30秒
+```
+
+### 问题2: Neo4j连接失败
+**错误：** `Neo4j connection failed`
+
+**解决：**
+```bash
+# 检查Neo4j容器
+docker ps | grep neo4j
+
+# 或检查本地Neo4j服务
+# 访问 http://localhost:7474
+```
+
+### 问题3: Redis连接失败
+**错误：** `Redis connection failed`
+
+**解决：**
+```bash
+# 检查Redis
+docker ps | grep redis
+
+# 或启动Redis
+docker start travel_redis
+```
+
+### 问题4: MinIO连接失败
+**错误：** `MinIO connection failed`
+
+**解决：**
+```bash
+# 检查MinIO
+docker ps | grep minio
+
+# 启动MinIO
+docker start milvus-minio
+
+# 等待10秒
+```
+
+---
+
+## 📋 服务端口清单
+
+| 服务 | 端口 | 说明 |
+|------|------|------|
+| 后端API | 8000 | FastAPI服务 |
+| 前端 | 5173 | Vue3应用 |
+| Milvus | 19530 | 向量数据库API |
+| Milvus | 9091 | 健康检查 |
+| MinIO | 9000 | 对象存储API |
+| MinIO | 9001 | Web控制台 |
+| Neo4j | 7474 | HTTP接口 |
+| Neo4j | 7687 | Bolt协议 |
+| Redis | 6379 | 缓存服务 |
+
+---
+
+## 🛠️ 开发命令
+
+### 后端
+```bash
+# 安装依赖
+pip install -r requirements.txt
+
+# 启动开发服务器
+python main.py
+
+# 运行测试
+pytest
+
+# 清空Milvus数据
+python clean_milvus.py
+```
+
+### 前端
+```bash
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+
+# 构建生产版本
+npm run build
+
+# 预览生产版本
+npm run preview
+```
+
+---
+
+## 📊 数据库管理
+
+### Neo4j
+**访问：** `http://localhost:7474`
+- 用户名: `neo4j`
+- 密码: `..123456`
+
+**常用查询：**
+```cypher
+// 查看所有节点
+MATCH (n) RETURN n LIMIT 25
+
+// 统计景点数
+MATCH (n:Destination) RETURN count(n)
+
+// 清空数据库
+MATCH (n) DETACH DELETE n
+```
+
+### MinIO
+**访问：** `http://localhost:9001`
+- 用户名: `minioadmin`
+- 密码: `minioadmin`
+
+### Redis
+```bash
+# 连接Redis
+redis-cli
+
+# 查看所有keys
+keys *
+
+# 查看文档任务
+keys document:*
+
+# 清空数据
+flushdb
+```
+
+---
+
+## 🎯 配置文件
+
+### 后端配置
+**文件：** `backend/.env`
+
+**关键配置：**
+```env
+# API
+API_HOST=0.0.0.0
+API_PORT=8000
+
+# Milvus
+MILVUS_HOST=localhost
+MILVUS_PORT=19530
+
+# Neo4j
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=..123456
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+
+# MinIO
+MINIO_ENDPOINT=localhost:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+MINIO_BUCKET=travel-documents
+MINIO_SECURE=false
+```
+
+---
+
+## 🔄 重启所有服务
+
+```bash
+# 停止所有服务
+docker-compose -f docker-compose-milvus.yml down
+
+# 启动所有服务
+docker-compose -f docker-compose-milvus.yml up -d
+
+# 等待30秒
+sleep 30
+
+# 重启后端
+cd backend
+python main.py
+
+# 刷新前端
+Ctrl + Shift + R
+```
+
+---
+
+## 📝 日志查看
+
+### 后端日志
+```bash
+# 实时查看
+tail -f backend/logs/app.log
+
+# 查看错误
+grep ERROR backend/logs/app.log
+
+# 查看workflow日志
+grep "\[Workflow\]" backend/logs/app.log
+```
+
+### Docker日志
+```bash
+# Milvus日志
+docker logs milvus-standalone
+
+# MinIO日志
+docker logs milvus-minio
+
+# 跟踪日志
+docker logs -f milvus-standalone
+```
+
+══════════════════════════════════════════════════════════════════════════════
+
+一键启动：docker-compose up -d → python main.py → npm run dev
+
+══════════════════════════════════════════════════════════════════════════════

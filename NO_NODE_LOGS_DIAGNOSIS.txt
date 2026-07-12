@@ -1,0 +1,270 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              后端没有打印节点日志 - 诊断指南                                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 🔍 问题现象
+
+上传PDF后，后端只有上传日志，没有节点执行日志。
+
+## 📋 应该看到的日志
+
+```
+[INFO] 文件上传完成: xxx.pdf, 任务ID: abc-123
+[INFO] [Background] Starting document processing for task: abc-123
+[INFO] [Workflow] Starting 6-step workflow: xxx.pdf
+[INFO] [MinIO] Saving file to local storage
+[SUCCESS] [MinIO] Using file: ./data/uploads/abc-123.pdf
+[INFO] [Workflow] Node executed: save_to_minio
+[INFO] [Progress] MinIO存储 (minio): processing - 正在保存文件... (15%)
+[INFO] [Progress] MinIO存储 (minio): completed - 文件保存成功 (15%)
+[INFO] [PDF] Starting PDF parse with MinerU
+[INFO] [PDF] Parsing file: xxx.pdf
+... (更多节点日志)
+```
+
+## 🎯 立即检查
+
+### 检查1：是否有 [Background] 日志
+
+**上传PDF后，在后端日志中搜索：** `[Background]`
+
+#### 情况A：没有 [Background] 日志
+
+**原因：** `asyncio.create_task` 未执行或立即失败
+
+**可能性：**
+1. 上传函数本身出错
+2. `document_task_service.create_task()` 失败
+3. Python异步任务未启动
+
+**解决：**
+在 `documents.py` 的第96行后添加日志：
+
+```python
+# 启动后台处理任务
+logger.info(f"准备创建后台任务: {task_id}")
+asyncio.create_task(
+    process_document_background(task_id, file.filename, temp_file_path)
+)
+logger.info(f"后台任务已创建: {task_id}")
+```
+
+---
+
+#### 情况B：有 [Background] Starting，但没有 [Workflow]
+
+**原因：** `get_document_workflow()` 或 `workflow.process_document()` 失败
+
+**可能性：**
+1. workflow导入失败
+2. process_document方法不存在
+3. 执行出错但被try-catch捕获
+
+**解决：**
+检查是否有 `[Background] Document processing failed` 日志和错误堆栈
+
+---
+
+#### 情况C：有 [Workflow] Starting，但没有节点日志
+
+**原因：** `astream()` 循环未执行或Graph编译失败
+
+**可能性：**
+1. Graph编译有问题
+2. 状态初始化错误
+3. astream循环立即退出
+
+**解决：**
+在 `workflow_service.py` 添加更多日志
+
+---
+
+### 检查2：查看完整日志
+
+**上传文件后，复制从上传开始的所有日志，包括：**
+- INFO级别
+- ERROR级别
+- Traceback堆栈
+
+**如果日志很长，至少提供：**
+1. 上传成功的日志
+2. 第一个 [Background] 或 [Workflow] 日志
+3. 任何ERROR或Traceback
+
+---
+
+### 检查3：手动测试workflow
+
+**在Python中手动测试：**
+
+```python
+import asyncio
+from app.workflows.document_processing.workflow_service import get_document_workflow
+
+async def test():
+    workflow = get_document_workflow()
+
+    result = await workflow.process_document(
+        task_id='test-123',
+        filename='test.pdf',
+        file_path='./data/uploads/test.pdf'
+    )
+
+    print('Result:', result)
+
+asyncio.run(test())
+```
+
+**如果这个测试能看到日志，说明workflow本身没问题。**
+
+---
+
+## 🔧 快速修复方案
+
+### 方案1：添加详细日志
+
+**修改 `documents.py`：**
+
+```python
+# 在第96行前后添加
+logger.info(f"═══ 准备启动后台任务 ═══")
+logger.info(f"task_id: {task_id}")
+logger.info(f"filename: {file.filename}")
+logger.info(f"file_path: {temp_file_path}")
+
+try:
+    task = asyncio.create_task(
+        process_document_background(task_id, file.filename, temp_file_path)
+    )
+    logger.info(f"后台任务创建成功，task: {task}")
+except Exception as task_err:
+    logger.error(f"创建后台任务失败: {task_err}")
+    import traceback
+    traceback.print_exc()
+```
+
+---
+
+### 方案2：同步执行测试
+
+**临时改为同步执行，看是否有输出：**
+
+```python
+# 修改 documents.py 第96-99行
+# 从：
+asyncio.create_task(
+    process_document_background(task_id, file.filename, temp_file_path)
+)
+
+# 改为：
+await process_document_background(task_id, file.filename, temp_file_path)
+```
+
+**注意：** 这会阻塞上传响应，但能看到完整日志。测试后要改回去。
+
+---
+
+### 方案3：检查异步任务是否真的启动
+
+**添加一个简单的测试任务：**
+
+```python
+async def test_task():
+    import time
+    for i in range(5):
+        logger.info(f"[Test] Task running: {i}")
+        await asyncio.sleep(1)
+
+# 在上传接口中
+asyncio.create_task(test_task())  # 测试任务
+asyncio.create_task(
+    process_document_background(task_id, file.filename, temp_file_path)
+)
+```
+
+**如果看到 [Test] 日志，说明asyncio.create_task正常工作。**
+
+---
+
+## 📝 请提供以下信息
+
+为了帮你诊断，请提供：
+
+### 1. 后端日志
+
+上传PDF后的完整日志，从：
+```
+[INFO] 文件上传完成: xxx.pdf
+```
+到
+```
+（最后一条日志）
+```
+
+### 2. 搜索关键字
+
+在日志中搜索以下关键字，告诉我是否找到：
+- `[Background]` - 是/否，几条
+- `[Workflow]` - 是/否，几条
+- `ERROR` - 是/否，内容是什么
+- `Traceback` - 是/否，完整堆栈
+
+### 3. 文件是否存在
+
+检查文件是否真的保存了：
+```powershell
+dir backend\data\uploads
+```
+
+是否有新的PDF文件？文件名是UUID格式吗？
+
+### 4. Redis状态
+
+```python
+python -c "
+from app.core.redis_client import get_redis_client
+redis = get_redis_client()
+keys = redis.keys('document:*')
+print('Redis keys:', keys)
+for key in keys:
+    print(f'{key}: {redis.get(key)}')
+"
+```
+
+是否有 `document:progress:*` 或 `document:event:*` 键？
+
+---
+
+## 🎯 最可能的原因
+
+根据经验，最可能的原因是：
+
+### 1. asyncio.create_task未等待（70%可能）
+
+Python的 `asyncio.create_task` 创建的任务是后台执行的，如果主进程退出或有未捕获的异常，任务会被丢弃。
+
+### 2. workflow导入失败（20%可能）
+
+`get_document_workflow()` 或 `workflow.process_document()` 导入失败，但错误被捕获。
+
+### 3. 日志级别问题（10%可能）
+
+logger配置的级别太高，INFO日志没有显示。
+
+---
+
+## ✅ 下一步
+
+1. **上传PDF文件**
+2. **复制后端日志**（完整的）
+3. **发给我看**
+4. 我会根据日志精确定位问题
+
+或者
+
+1. **添加方案1的日志**
+2. **重启后端**
+3. **再次上传**
+4. **查看新的日志输出**
+
+══════════════════════════════════════════════════════════════════════════════

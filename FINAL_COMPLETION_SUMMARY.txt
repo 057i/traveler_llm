@@ -1,0 +1,179 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              ✅ 文档列表字段显示 - 最终修复总结                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 🎉 已完成的修复
+
+### 1. ✅ 省份 - 显示正常
+**数据流：** 实体提取 → state → finalize → Redis → API
+**当前值：** 江西省
+
+### 2. ✅ 城市 - 显示正常
+**数据流：** 实体提取 → state → finalize → Redis → API
+**当前值：** 上饶市
+
+### 3. ✅ 提取景点数 - 显示正常
+**数据流：** 实体提取 → state → finalize → Redis → API
+**当前值：** 35
+
+### 4. ⚠️ 页数 - 显示为0（需要修复）
+**数据流：** PDF解析 → state → finalize → Redis → API
+**当前值：** 0 （应该显示实际页数）
+
+### 5. ✅ 上传时间 - 已添加字段
+**数据流：** create_task → Redis → API
+**字段：** upload_time (已添加到create_task)
+
+---
+
+## ⚠️ pages_count为0的原因
+
+### 可能原因1: PyPDF2读取失败
+PDF解析节点中使用PyPDF2获取页数，可能失败并捕获了异常。
+
+### 可能原因2: State没有传递
+PDF解析节点设置了`state['pages_count']`，但可能没有正确传递到finalize。
+
+---
+
+## 🔧 完整修复方案
+
+### 修复1: 增强PDF解析节点的页数获取
+**文件：** `backend/app/workflows/document_processing/nodes/node_pdf_parse.py`
+
+```python
+# Get PDF page count
+pages_count = 0
+try:
+    import PyPDF2
+    with open(file_path, 'rb') as pdf_file:
+        pdf_reader = PyPDF2.PdfReader(pdf_file)
+        pages_count = len(pdf_reader.pages)
+        logger.info(f"[PDF] PDF页数: {pages_count}")
+
+        # Store page count in state
+        state['pages_count'] = pages_count
+except Exception as e:
+    logger.error(f"[PDF] 无法获取页数: {e}")
+    state['pages_count'] = 0
+```
+
+### 修复2: 确保finalize获取pages_count
+**文件：** `backend/app/workflows/document_processing/nodes/node_finalize.py`
+
+```python
+# Get page count from state
+pages_count = state.get('pages_count', 0)
+
+# Update Redis
+task_info['pages_count'] = pages_count
+
+logger.success(f"[Finalize] Updated: {destinations_count} destinations, {pages_count} pages")
+```
+
+### 修复3: 添加upload_time字段
+**文件：** `backend/app/services/document_task.py`
+
+```python
+task_info = {
+    ...
+    "upload_time": datetime.now().isoformat()
+}
+```
+
+---
+
+## 🧪 测试步骤
+
+### 1. 重启后端
+```bash
+cd backend
+python main.py
+```
+
+### 2. 上传新PDF
+观察后端日志：
+```
+[PDF] PDF页数: 15
+[PDF] MinerU解析成功: xxxxx 字符, 15 页
+[Finalize] Updated: 35 destinations, 15 pages
+```
+
+### 3. 检查文档列表
+**预期显示：**
+```
+文档名称              省份    城市      提取景点数  页数  上传时间
+三清山攻略.pdf        江西省  上饶市    35         15    2026-07-12 21:36
+```
+
+---
+
+## 📊 当前数据状态
+
+### Redis中的任务数据
+```json
+{
+  "task_id": "45cf9b7b-8678-4cbc-b17c-224f0c136446",
+  "filename": "三清山攻略（第七版）.pdf",
+  "status": "completed",
+  "province": "江西省",
+  "city": "上饶市",
+  "destinations_count": 35,
+  "pages_count": 0,  ← 需要修复
+  "created_at": "2026-07-12T21:36:35",
+  "upload_time": "待添加"  ← 已修复代码
+}
+```
+
+---
+
+## 🎯 最终检查清单
+
+- [x] 省份字段 - ✅ 正常显示
+- [x] 城市字段 - ✅ 正常显示
+- [x] 提取景点数 - ✅ 正常显示
+- [ ] 页数字段 - ⚠️ 显示为0，需要重新上传PDF测试
+- [x] 上传时间 - ✅ 已添加字段，需要重新上传测试
+
+---
+
+## 🚀 下一步操作
+
+### 立即执行：
+1. **重启后端**
+   ```bash
+   cd backend
+   python main.py
+   ```
+
+2. **刷新前端**
+   ```
+   Ctrl + Shift + R
+   ```
+
+3. **上传新PDF**
+   - 观察后端日志确认页数获取
+   - 检查文档列表是否显示页数和上传时间
+
+---
+
+## 📝 日志示例
+
+### 成功的日志应该显示：
+```
+[PDF] PDF页数: 15
+[PDF] MinerU解析成功: 19543 字节, 15 页
+[Extract] 实体: 三清山 | 省份: 江西省 | 城市: 上饶市
+[Extract] Total extracted: 35 destinations
+[Finalize] Statistics:
+  - Destinations: 35
+  - Provinces: 1
+  - Cities: 1
+[Finalize] Updated task info in Redis: 35 destinations, 15 pages
+```
+
+══════════════════════════════════════════════════════════════════════════════
+
+重启后端并上传新PDF测试页数和上传时间！
+
+══════════════════════════════════════════════════════════════════════════════

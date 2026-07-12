@@ -1,0 +1,180 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              🎯 SSE事件缺失问题 - 完整解决方案                               ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 🔍 问题确认
+
+### 后端日志分析
+```
+21:36:35 - [Workflow] Node executed: save_to_minio
+21:36:47 - [Workflow] Node executed: parse_pdf_mineru
+21:36:59 - [SSE] Client connected ← 前端SSE连接太晚！
+21:37:01 - [Workflow] Node executed: chunk_text
+21:37:22 - [Workflow] Node executed: extract_entities
+21:37:42 - [Workflow] Node executed: vectorize_traditional
+21:37:43 - [Workflow] Node executed: vectorize_graph
+21:37:43 - [Workflow] Node executed: finalize
+```
+
+### 根本原因
+**前端SSE连接在workflow开始后才建立，错过了前两个节点的事件！**
+
+- ❌ minio节点 (21:36:35执行) - SSE未连接，事件丢失
+- ❌ parse节点 (21:36:47执行) - SSE未连接，事件丢失
+- ✅ chunk节点 (21:37:01执行) - SSE已连接，收到事件
+- ✅ 其他节点 - 都收到了
+
+---
+
+## ✅ 解决方案
+
+### 方案1: 后端缓存所有事件（推荐）
+Redis不只保存最新事件，而是保存事件列表，前端连接时获取所有历史事件。
+
+**优点：** 无论前端何时连接，都能看到完整流程
+**实现：** 修改workflow_service.py和documents.py
+
+### 方案2: 前端提前连接SSE
+上传文件后立即建立SSE连接，不要等API返回。
+
+**优点：** 简单直接
+**缺点：** 仍可能错过极快的节点
+
+### 方案3: 前端显示假进度
+前端假设前两个节点已完成，只显示实际收到的节点。
+
+**优点：** 最简单
+**缺点：** 不真实
+
+---
+
+## 🔧 推荐实现：方案1（后端缓存事件列表）
+
+### 修改1: workflow_service.py - 保存事件列表
+
+```python
+async def _send_step_event(
+    self,
+    task_id: str,
+    step_id: str,
+    step_name: str,
+    status: str,
+    message: str,
+    progress: int
+):
+    """发送步骤事件并保存到事件列表"""
+    event_data = {
+        "step": step_id,
+        "step_name": step_name,
+        "status": status,
+        "message": message,
+        "progress": progress,
+        "timestamp": time.time()
+    }
+
+    from app.core.redis_client import get_redis_client
+    import json
+
+    redis_client = get_redis_client()
+
+    # 保存到事件列表（新增）
+    events_key = f"document:events:{task_id}"
+    redis_client.rpush(events_key, json.dumps(event_data, ensure_ascii=False))
+    redis_client.expire(events_key, 3600)  # 1小时
+
+    # 保存最新进度（原有）
+    progress_key = f"document:progress:{task_id}"
+    redis_client.set(progress_key, json.dumps(event_data, ensure_ascii=False), ex=3600)
+
+    logger.info(f"[Progress] {step_name} ({step_id}): {status} ({progress}%)")
+```
+
+### 修改2: documents.py - SSE发送历史事件
+
+```python
+async def event_generator():
+    """SSE事件生成器"""
+    import asyncio
+    import json
+
+    logger.info(f"[SSE] Client connected for task: {task_id}")
+
+    # 立即发送所有历史事件（新增）
+    events_key = f"document:events:{task_id}"
+    historical_events = redis_client.lrange(events_key, 0, -1)
+
+    if historical_events:
+        logger.info(f"[SSE] Sending {len(historical_events)} historical events")
+        for event_json in historical_events:
+            event = json.loads(event_json)
+            yield f"event: progress\ndata: {json.dumps(event, ensure_ascii=False)}\n\n"
+            await asyncio.sleep(0.05)  # 避免过快
+
+    # 继续监听新事件（原有逻辑）
+    last_progress = -1
+    timeout_count = 0
+    max_timeout = 300
+
+    while timeout_count < max_timeout:
+        # ... 原有的轮询逻辑 ...
+```
+
+---
+
+## 🚀 快速修复方案：方案3（前端假进度）
+
+如果暂时不想改后端，可以让前端自动补全前面的节点：
+
+**frontend/src/components/WorkflowProgress.vue**
+
+```javascript
+// 在收到第一个事件时，自动标记前面的节点为completed
+const firstEventReceived = ref(false)
+
+const handleProgress = (data) => {
+  // 第一次收到事件时，补全之前的节点
+  if (!firstEventReceived.value) {
+    firstEventReceived.value = true
+
+    const allSteps = ['minio', 'parse', 'chunk', 'extract', 'vectorize_traditional', 'vectorize_graph', 'finalize']
+    const currentIndex = allSteps.indexOf(data.step)
+
+    // 标记当前步骤之前的所有步骤为completed
+    for (let i = 0; i < currentIndex; i++) {
+      steps.value[allSteps[i]] = 'completed'
+    }
+  }
+
+  // 更新当前步骤
+  steps.value[data.step] = data.status
+}
+```
+
+---
+
+## 📝 完整测试步骤
+
+### 测试方案1（后端缓存）
+1. 修改workflow_service.py和documents.py
+2. 重启后端
+3. 上传PDF
+4. 观察前端应该显示完整的7个节点
+
+### 测试方案3（前端补全）
+1. 修改WorkflowProgress.vue
+2. 刷新前端
+3. 上传PDF
+4. 观察前端应该自动补全前面的节点
+
+---
+
+## 🎯 推荐顺序
+
+1. **立即实施方案3**（前端补全）- 5分钟快速修复
+2. **后续实施方案1**（后端缓存）- 完美解决方案
+
+══════════════════════════════════════════════════════════════════════════════
+
+选择一个方案立即实施！
+
+══════════════════════════════════════════════════════════════════════════════

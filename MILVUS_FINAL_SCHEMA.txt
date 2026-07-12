@@ -1,0 +1,136 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              Milvus混合检索 - 最终Schema                                    ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## ✅ 完整Schema结构
+
+```
+destination_id (主键)
+├── dense_vector (768维)      # bge-base-zh-v1.5稠密向量
+├── sparse_vector (稀疏)       # BM25稀疏向量
+├── name                       # 景点名称
+├── province                   # 省份
+├── city                       # 城市
+├── category                   # 分类
+├── description                # 描述
+├── filename ⭐                # 来源文件名（新增）
+├── entity_json ⭐             # 完整实体JSON（新增）
+├── full_text                  # 完整格式化文本
+└── rating                     # 评分
+```
+
+---
+
+## 📝 存储数据示例
+
+```json
+{
+  "destination_id": "三清山_江西省上饶市",
+  "dense_vector": [0.1, 0.2, ..., 768维],
+  "sparse_vector": {0: 0.5, 10: 0.3, ...},
+  "name": "三清山",
+  "province": "江西省",
+  "city": "上饶市",
+  "category": "山脉",
+  "description": "世界自然遗产，以奇峰怪石、云海日出著称",
+  "filename": "三清山攻略.pdf",
+  "entity_json": "{\"name\":\"三清山\",\"city\":\"上饶市\",\"province\":\"江西省\",\"type\":\"Attraction\",\"description\":\"世界自然遗产，以奇峰怪石、云海日出著称\",\"tags\":[\"自然风光\",\"世界遗产\"],\"best_season\":[\"春季\",\"秋季\"],\"budget_range\":[150,150],\"suitable_for\":[\"家庭\",\"情侣\",\"朋友\"],\"features\":[],\"rating\":4.0,\"image_url\":\"\",\"graph_id\":\"三清山_江西省上饶市\",\"category\":\"山脉\",\"address\":\"\",\"opening_hours\":\"全天\",\"ticket_price\":\"150\",\"visit_duration\":\"1天\"}",
+  "full_text": "三清山 | 类型: 景点 | 分类: 山脉 | 位置: 江西省上饶市 | 描述: 世界自然遗产，以奇峰怪石、云海日出著称 | 标签: 自然风光, 世界遗产 | 最佳季节: 春季, 秋季 | 适合人群: 家庭, 情侣, 朋友 | 门票: 150元 | 开放时间: 全天 | 游玩时长: 1天 | 评分: 4.0",
+  "rating": 4.0
+}
+```
+
+---
+
+## 🎯 新字段用途
+
+### filename (来源文件名)
+- **用途：** 追溯数据来源
+- **示例：** "三清山攻略.pdf"
+- **场景：**
+  - 数据审计
+  - 查看某个文件提取了哪些景点
+  - 按文件过滤/分组
+
+### entity_json (完整实体JSON)
+- **用途：** 保留完整原始数据
+- **格式：** JSON字符串
+- **包含：** 所有原始字段
+- **场景：**
+  - 数据重建
+  - 保留所有细节信息
+  - 支持复杂查询
+  - 前端展示完整信息
+
+---
+
+## 🔧 向量化节点需要修改
+
+在插入Milvus时，需要传入这两个新字段：
+
+```python
+import json
+
+# 准备数据
+data = []
+for i, dest in enumerate(destinations):
+    data.append({
+        "destination_id": dest.get('graph_id', f"dest_{i}"),
+        "dense_vector": dense_vectors[i],
+        "sparse_vector": sparse_vectors[i],
+        "name": dest.get('name', ''),
+        "province": dest.get('province', ''),
+        "city": dest.get('city', ''),
+        "category": dest.get('category', ''),
+        "description": dest.get('description', ''),
+        "filename": state.get('filename', ''),  # ⭐ 新增
+        "entity_json": json.dumps(dest, ensure_ascii=False),  # ⭐ 新增
+        "full_text": texts[i],
+        "rating": dest.get('rating', 0.0)
+    })
+```
+
+---
+
+## 📊 查询返回完整数据
+
+混合检索返回的每个结果包含：
+
+```python
+{
+    "destination_id": "三清山_江西省上饶市",
+    "name": "三清山",
+    "province": "江西省",
+    "city": "上饶市",
+    "category": "山脉",
+    "description": "世界自然遗产...",
+    "filename": "三清山攻略.pdf",  # ⭐ 可追溯来源
+    "entity_json": "{...}",  # ⭐ 完整原始数据
+    "full_text": "三清山 | ...",
+    "rating": 4.0,
+    "score": 0.95
+}
+```
+
+---
+
+## ✅ 完成状态
+
+- [x] 创建milvus_hybrid_client.py
+- [x] 支持双向量（稀疏+稠密）
+- [x] 添加完整元数据字段
+- [x] 添加filename字段
+- [x] 添加entity_json字段
+- [x] 实现混合检索
+- [x] 实现RRF融合
+- [ ] 修改向量化节点传入新字段
+- [ ] 添加稀疏向量生成
+- [ ] 完整测试
+
+---
+
+## 🚀 下一步
+
+需要我修改向量化节点，传入filename和entity_json吗？
+
+══════════════════════════════════════════════════════════════════════════════

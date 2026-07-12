@@ -1,0 +1,142 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              向量化SSE事件缺失问题 - 完整分析                                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 🔍 问题确认
+
+### 后端日志显示（最新上传 23:06:53）
+```
+23:06:47 - [Vector] Hybrid vectorization with Milvus
+23:06:49 - [Vector] Generating dense vectors for 23 destinations
+23:06:50 - [Vector] Generating sparse vectors for 23 destinations
+23:06:53 - [Vector] Hybrid vectorization complete: 23 destinations ✓
+23:06:53 - [Vector] GraphRAG completed with 23 entities ✓
+23:06:53 - [Workflow] Completed: 23 destinations processed
+```
+
+### SSE事件显示
+```
+1. minio - completed ✓
+2. parse - completed ✓
+3. chunk - completed ✓
+4. extract - completed ✓
+5. [缺失] vectorize_traditional ✗
+6. [缺失] vectorize_graph ✗
+7. complete - 处理完成 ✓
+```
+
+---
+
+## 🐛 根本原因
+
+### 代码分析 (workflow_service.py:125)
+```python
+if step_id and step_id not in completed_steps:
+    # 发送SSE事件
+    await self._send_step_event(...)
+    completed_steps.add(step_id)
+```
+
+**问题：**
+- 每个step_id只发送一次事件
+- 如果fallback节点先执行，主节点会被跳过
+- 或者节点执行太快，事件被合并
+
+---
+
+## ✅ 解决方案
+
+### 方案1: 调试日志（立即实施）
+添加日志确认SSE事件是否发送：
+
+```python
+# workflow_service.py:125
+if step_id and step_id not in completed_steps:
+    logger.info(f"[SSE] Sending events for step: {step_id}")
+    await self._send_step_event(...)
+else:
+    logger.warning(f"[SSE] Skipping step (already completed): {step_id}")
+```
+
+### 方案2: 移除去重逻辑（推荐）
+允许相同step_id多次发送事件：
+
+```python
+if step_id:
+    # 移除 "not in completed_steps" 检查
+    step_name = self.STEP_NAMES.get(step_id, step_id)
+
+    # 只有当状态真的变化时才发送
+    if step_id not in completed_steps:
+        await self._send_step_event(status="processing")
+        await asyncio.sleep(0.1)
+        await self._send_step_event(status="completed")
+        completed_steps.add(step_id)
+```
+
+### 方案3: 检查Redis事件列表
+查看Redis中是否保存了向量化事件：
+
+```bash
+redis-cli
+lrange document:events:<task_id> 0 -1
+```
+
+---
+
+## 🧪 测试步骤
+
+### 步骤1: 添加调试日志
+修改workflow_service.py添加日志
+
+### 步骤2: 重启后端
+```bash
+cd backend
+python main.py
+```
+
+### 步骤3: 上传PDF
+观察后端日志中的`[SSE]`消息
+
+### 步骤4: 检查Redis
+```python
+redis-cli
+keys document:events:*
+lrange document:events:<最新task_id> 0 -1
+```
+
+---
+
+## 📊 预期结果
+
+### 如果Redis中有事件
+说明SSE事件已保存，问题在前端接收
+
+### 如果Redis中没有事件
+说明SSE事件没有发送，问题在后端逻辑
+
+---
+
+## 🎯 临时解决方案
+
+如果短期内无法修复，可以在前端添加假节点：
+
+```javascript
+// WorkflowProgress.vue
+if (data.step === 'extract' && data.status === 'completed') {
+  // 自动标记向量化为processing
+  steps.value.vectorize_traditional = 'processing'
+  steps.value.vectorize_graph = 'processing'
+
+  setTimeout(() => {
+    steps.value.vectorize_traditional = 'completed'
+    steps.value.vectorize_graph = 'completed'
+  }, 3000)
+}
+```
+
+══════════════════════════════════════════════════════════════════════════════
+
+建议：先添加调试日志，确认SSE事件是否真的发送了
+
+══════════════════════════════════════════════════════════════════════════════

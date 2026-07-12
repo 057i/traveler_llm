@@ -1,6 +1,13 @@
 """
 Document Processing Workflow Graph Builder
-Build workflow for document processing pipeline
+
+6-step workflow for document processing pipeline:
+1. MinIO存储
+2. PDF解析 (MinerU)
+3. 文本分块
+4. 实体提取
+5. RAG向量化 (Milvus)
+6. GraphRAG (Neo4j)
 """
 from langgraph.graph import StateGraph, END
 from loguru import logger
@@ -23,43 +30,57 @@ from .nodes import (
 
 
 class DocumentProcessingGraphBuilder:
-    """Document processing workflow graph builder"""
+    """6-step document processing workflow graph builder"""
 
     def __init__(self):
         self.graph = StateGraph(DocumentProcessingState)
 
     def build(self):
         """
-        Build document processing workflow graph
+        Build 6-step document processing workflow
 
         Flow:
-        MinIO save -> PDF parse -> text chunking -> entity extraction -> vectorization -> graph vectorization -> finalize
-        Each step has fallback mechanism for error handling
+        1. save_to_minio → MinIO存储
+        2. parse_pdf_mineru → PDF解析 (MinerU API)
+        3. chunk_text → 文本分块 (LangChain)
+        4. extract_entities → 实体提取 (Qwen LLM)
+        5. vectorize_traditional → RAG向量化 (Milvus)
+        6. vectorize_graph → GraphRAG (Neo4j)
+        7. finalize → 完成并统计
         """
-        self._add_nodes()
-        self._add_edges()
-        return self.graph.compile()
+        logger.info("[GraphBuilder] Building 6-step workflow")
 
-    def _add_nodes(self):
-        """Add all nodes to the graph"""
+        # Step 1: MinIO存储
         self.graph.add_node("save_to_minio", save_to_minio)
         self.graph.add_node("minio_fallback", minio_fallback)
+
+        # Step 2: PDF解析
         self.graph.add_node("parse_pdf_mineru", parse_pdf_mineru)
         self.graph.add_node("parse_fallback", parse_pdf_pypdf)
+
+        # Step 3: 文本分块
         self.graph.add_node("chunk_text", chunk_text)
+
+        # Step 4: 实体提取
         self.graph.add_node("extract_entities", extract_entities)
         self.graph.add_node("extract_fallback", extract_fallback)
-        self.graph.add_node("vectorize", vectorize_traditional)
+
+        # Step 5: RAG向量化
+        self.graph.add_node("vectorize_traditional", vectorize_traditional)
         self.graph.add_node("vector_fallback", vector_fallback)
+
+        # Step 6: GraphRAG
         self.graph.add_node("vectorize_graph", vectorize_graph)
         self.graph.add_node("graph_vector_fallback", graph_vector_fallback)
+
+        # Step 7: 完成
         self.graph.add_node("finalize", finalize)
 
-    def _add_edges(self):
-        """Add all edges to the graph"""
+        # 设置入口点
         self.graph.set_entry_point("save_to_minio")
 
-        # MinIO -> PDF Parse
+        # 连接节点 - 6步骤流程
+        # Step 1: MinIO存储
         self.graph.add_conditional_edges(
             "save_to_minio",
             self._check_minio_result,
@@ -68,11 +89,9 @@ class DocumentProcessingGraphBuilder:
                 "fallback": "minio_fallback"
             }
         )
-
-        # MinIO fallback -> PDF Parse
         self.graph.add_edge("minio_fallback", "parse_pdf_mineru")
 
-        # PDF Parse -> Chunk
+        # Step 2: PDF解析
         self.graph.add_conditional_edges(
             "parse_pdf_mineru",
             self._check_parse_result,
@@ -81,40 +100,34 @@ class DocumentProcessingGraphBuilder:
                 "fallback": "parse_fallback"
             }
         )
-
-        # PDF fallback -> Chunk
         self.graph.add_edge("parse_fallback", "chunk_text")
 
-        # Chunk -> Extract
+        # Step 3: 文本分块 → Step 4: 实体提取
         self.graph.add_edge("chunk_text", "extract_entities")
 
-        # Extract -> Vectorize
+        # Step 4: 实体提取
         self.graph.add_conditional_edges(
             "extract_entities",
             self._check_extract_result,
             {
-                "success": "vectorize",
+                "success": "vectorize_traditional",
                 "fallback": "extract_fallback"
             }
         )
+        self.graph.add_edge("extract_fallback", "vectorize_traditional")
 
-        # Extract fallback -> Vectorize
-        self.graph.add_edge("extract_fallback", "vectorize")
-
-        # Vectorize -> check
+        # Step 5: RAG向量化
         self.graph.add_conditional_edges(
-            "vectorize",
+            "vectorize_traditional",
             self._check_vector_result,
             {
                 "success": "vectorize_graph",
                 "fallback": "vector_fallback"
             }
         )
-
-        # Vector fallback -> Vectorize graph
         self.graph.add_edge("vector_fallback", "vectorize_graph")
 
-        # Vectorize graph -> check
+        # Step 6: GraphRAG
         self.graph.add_conditional_edges(
             "vectorize_graph",
             self._check_graph_vector_result,
@@ -123,12 +136,16 @@ class DocumentProcessingGraphBuilder:
                 "fallback": "graph_vector_fallback"
             }
         )
-
-        # Graph vector fallback -> finalize
         self.graph.add_edge("graph_vector_fallback", "finalize")
 
-        # Finalize -> END
+        # Step 7: 完成
         self.graph.add_edge("finalize", END)
+
+        # 编译图
+        compiled_graph = self.graph.compile()
+        logger.success("[GraphBuilder] 6-step workflow compiled successfully")
+
+        return compiled_graph
 
     def _check_minio_result(self, state: DocumentProcessingState) -> str:
         """Check MinIO save result"""
@@ -153,10 +170,10 @@ class DocumentProcessingGraphBuilder:
 
 def build_document_processing_workflow():
     """
-    Build and return document processing workflow
+    Build and return 6-step document processing workflow
 
     Returns:
-        Compiled document processing workflow graph
+        Compiled 6-step workflow graph
     """
     builder = DocumentProcessingGraphBuilder()
     return builder.build()

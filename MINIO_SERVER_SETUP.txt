@@ -1,0 +1,261 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              MinIO服务器配置完成 - 使用指南                                 ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## ✅ 已完成的修改
+
+### 1. .env配置
+**文件：** `backend/.env`
+
+**新增内容：**
+```env
+# MinIO Configuration (对象存储)
+MINIO_ENDPOINT=localhost:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+MINIO_BUCKET=travel-documents
+MINIO_SECURE=false
+```
+
+### 2. Settings配置
+**文件：** `backend/config/settings.py`
+
+**新增字段：**
+```python
+MINIO_ENDPOINT: str = "localhost:9000"
+MINIO_ACCESS_KEY: str = "minioadmin"
+MINIO_SECRET_KEY: str = "minioadmin"
+MINIO_BUCKET: str = "travel-documents"
+MINIO_SECURE: bool = False
+```
+
+### 3. MinIO客户端重写
+**文件：** `backend/app/core/minio_client.py`
+
+**修改：**
+- 从本地文件存储改为真实MinIO服务器
+- 使用`minio` Python SDK
+- 支持bucket自动创建
+- 支持预签名URL
+- 完整的错误处理
+
+---
+
+## 📋 前后对比
+
+### 修改前 ❌
+```python
+# 使用本地文件系统
+storage_path = "./data/uploads"
+文件保存到本地目录
+```
+
+### 修改后 ✅
+```python
+# 使用MinIO服务器
+endpoint = "localhost:9000"
+文件上传到MinIO对象存储
+```
+
+---
+
+## 🚀 使用步骤
+
+### 步骤1: 安装minio包
+```bash
+cd backend
+pip install minio
+```
+
+### 步骤2: 启动MinIO服务
+```bash
+cd E:\大模型开发\代码\网站\travel_proj
+docker-compose -f docker-compose-milvus.yml up -d
+```
+
+**包含的服务：**
+- etcd (Milvus依赖)
+- minio (对象存储)
+- milvus (向量数据库)
+
+### 步骤3: 验证MinIO启动
+```bash
+docker ps | grep minio
+```
+
+**应该看到：**
+```
+milvus-minio ... Up ... 0.0.0.0:9000->9000/tcp, 0.0.0.0:9001->9001/tcp
+```
+
+### 步骤4: 访问MinIO控制台
+打开浏览器访问：`http://localhost:9001`
+
+**登录信息：**
+- 用户名: `minioadmin`
+- 密码: `minioadmin`
+
+### 步骤5: 重启后端
+```bash
+cd backend
+python main.py
+```
+
+**观察启动日志：**
+```
+[MinIO] Connected to localhost:9000, bucket: travel-documents
+[MinIO] Bucket exists: travel-documents
+```
+
+### 步骤6: 测试上传
+1. 刷新前端
+2. 上传PDF文件
+3. 文件会自动上传到MinIO服务器
+
+---
+
+## 🔍 验证方法
+
+### 方法1: 查看MinIO控制台
+1. 访问 `http://localhost:9001`
+2. 登录后查看`travel-documents` bucket
+3. 应该能看到上传的PDF文件
+
+### 方法2: 检查本地目录
+```bash
+ls backend/data/uploads
+```
+**应该为空或很少文件**（不再使用本地存储）
+
+### 方法3: 查看后端日志
+上传文件后，日志应该显示：
+```
+[MinIO] File uploaded: xxx.pdf
+[MinIO] File exists: xxx.pdf
+```
+
+---
+
+## 📊 API方法对比
+
+### save_file()
+```python
+# 修改前
+save_file(file_path, destination_name)
+→ 复制到本地目录
+
+# 修改后
+save_file(file_path, destination_name)
+→ 上传到MinIO服务器
+```
+
+### get_file()
+```python
+# 修改前
+get_file(filename)
+→ 从本地目录读取
+
+# 修改后
+get_file(object_name, local_path)
+→ 从MinIO下载到本地临时文件
+```
+
+### 新增方法
+```python
+get_file_url(object_name, expires=3600)
+→ 获取预签名URL，可直接访问文件
+```
+
+---
+
+## ⚙️ 配置说明
+
+### MINIO_ENDPOINT
+MinIO服务器地址，格式：`host:port`
+- 本地开发：`localhost:9000`
+- 生产环境：`minio.yourdomain.com:9000`
+
+### MINIO_ACCESS_KEY / MINIO_SECRET_KEY
+MinIO访问凭证
+- 默认：`minioadmin` / `minioadmin`
+- 生产环境：使用强密码
+
+### MINIO_BUCKET
+存储桶名称
+- 必须符合S3命名规范（小写、连字符）
+- 会自动创建
+
+### MINIO_SECURE
+是否使用HTTPS
+- `false`: http://
+- `true`: https://
+
+---
+
+## 🐛 常见问题
+
+### 问题1: 连接失败
+**错误：** `[MinIO] Connection failed`
+
+**解决：**
+1. 检查MinIO是否运行：`docker ps | grep minio`
+2. 检查端口是否开放：`netstat -ano | findstr 9000`
+3. 检查配置是否正确
+
+### 问题2: Bucket不存在
+**错误：** `Bucket does not exist`
+
+**解决：**
+客户端会自动创建bucket，如果失败：
+1. 检查权限
+2. 手动在控制台创建
+
+### 问题3: 上传失败
+**错误：** `Upload failed`
+
+**解决：**
+1. 检查磁盘空间
+2. 检查文件权限
+3. 查看MinIO日志：`docker logs milvus-minio`
+
+---
+
+## 📝 迁移旧文件（可选）
+
+如果需要迁移本地存储的旧文件到MinIO：
+
+```python
+# 创建迁移脚本
+import os
+from app.core.minio_client import get_minio_client
+
+minio = get_minio_client()
+local_dir = "./data/uploads"
+
+for filename in os.listdir(local_dir):
+    file_path = os.path.join(local_dir, filename)
+    minio.save_file(file_path, filename)
+    print(f"Migrated: {filename}")
+```
+
+---
+
+## 🎯 下一步优化（可选）
+
+### 1. CDN加速
+配置MinIO前面的CDN，加速文件访问
+
+### 2. 生命周期策略
+设置文件自动过期删除策略
+
+### 3. 多副本
+配置MinIO集群实现高可用
+
+### 4. 压缩优化
+上传前对PDF进行压缩
+
+══════════════════════════════════════════════════════════════════════════════
+
+立即执行：pip install minio → 启动MinIO → 重启后端 → 测试上传！
+
+══════════════════════════════════════════════════════════════════════════════

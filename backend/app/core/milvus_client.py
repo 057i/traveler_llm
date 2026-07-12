@@ -19,7 +19,7 @@ class MilvusClient:
     def __init__(self):
         self.host = settings.MILVUS_HOST
         self.port = settings.MILVUS_PORT
-        self.collection_name = settings.MILVUS_COLLECTION
+        self.collection_name = settings.MILVUS_COLLECTION_NAME
         self.dimension = settings.EMBEDDING_DIM
         self.collection = None
 
@@ -97,7 +97,7 @@ class MilvusClient:
         if not self.collection:
             raise Exception("Collection not initialized")
 
-        search_params = {"metric_type": "COSINE", "params": {"nprobe": 10}}
+        search_params = {"metric_type": "COSINE", "params": {"nprobe": 32}}
 
         results = self.collection.search(
             data=[query_vector],

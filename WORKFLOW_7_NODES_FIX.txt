@@ -1,0 +1,128 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              Workflow节点修复方案 - 7个节点                                 ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 🎯 正确的Workflow流程（7个节点）
+
+```
+1. MinIO存储 (15%)
+   ↓
+2. PDF解析 (30%)
+   ↓
+3. 文本分块 (45%)
+   ↓
+4. 实体提取 (60%)
+   ↓           ↓
+5. 传统向量化 (75%)  6. 图向量化 (90%)
+   ↓           ↓
+      7. 完成 (100%)
+```
+
+---
+
+## 📊 节点配置
+
+### 后端SSE事件
+```javascript
+STEP_MAPPING = {
+    'save_to_minio': 'minio',
+    'parse_pdf_mineru': 'parse',
+    'chunk_text': 'chunk',
+    'extract_entities': 'extract',
+    'vectorize_traditional': 'vectorize_traditional',
+    'vectorize_graph': 'vectorize_graph',
+    'finalize': 'finalize'
+}
+
+STEP_NAMES = {
+    'minio': 'MinIO存储',
+    'parse': 'PDF解析',
+    'chunk': '文本分块',
+    'extract': '实体提取',
+    'vectorize_traditional': '传统向量化',
+    'vectorize_graph': '图向量化',
+    'finalize': '完成'
+}
+
+STEP_PROGRESS = {
+    'minio': 15,
+    'parse': 30,
+    'chunk': 45,
+    'extract': 60,
+    'vectorize_traditional': 75,
+    'vectorize_graph': 90,
+    'finalize': 100
+}
+```
+
+---
+
+## 🎨 前端节点配置
+
+### Vue组件配置
+```javascript
+const steps = ref({
+  minio: 'pending',
+  parse: 'pending',
+  chunk: 'pending',
+  extract: 'pending',
+  vectorize_traditional: 'pending',
+  vectorize_graph: 'pending',
+  finalize: 'pending'
+})
+
+// 节点位置（移除upload节点）
+const nodePositions = {
+  minio: { x: 150, y: 80 },
+  parse: { x: 350, y: 80 },
+  chunk: { x: 250, y: 180 },
+  extract: { x: 490, y: 180 },
+  vectorize_traditional: { x: 250, y: 280 },
+  vectorize_graph: { x: 490, y: 280 },
+  finalize: { x: 370, y: 380 }
+}
+
+// 连线配置
+const connections = [
+  { from: 'minio', to: 'parse' },
+  { from: 'parse', to: 'chunk' },
+  { from: 'parse', to: 'extract' },
+  { from: 'chunk', to: 'vectorize_traditional' },
+  { from: 'extract', to: 'vectorize_graph' },
+  { from: 'vectorize_traditional', to: 'finalize' },
+  { from: 'vectorize_graph', to: 'finalize' }
+]
+```
+
+---
+
+## 🔧 需要修改的内容
+
+### 1. 移除"上传文件"节点
+- 不在SVG中绘制
+- 不在steps对象中定义
+- 不接收SSE事件
+
+### 2. 调整节点位置
+- MinIO存储作为起点
+- 居中布局
+
+### 3. 调整连线
+- 从MinIO开始
+- 正确的分叉和汇聚
+
+---
+
+## ✅ 修复步骤
+
+1. 修改 WorkflowProgress.vue 的 steps 定义
+2. 移除 upload 节点的SVG绘制
+3. 调整节点坐标
+4. 修复连线路径
+5. 测试SSE事件接收
+
+══════════════════════════════════════════════════════════════════════════════
+
+开始修复前端组件...
+
+══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,140 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              Workflow节点执行诊断报告                                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 🔍 问题分析
+
+### 观察到的问题
+SSE事件中只显示了3个步骤：
+- chunk (文本分块)
+- extract (实体提取)
+- finalize (完成)
+
+缺少4个步骤：
+- minio (MinIO存储)
+- parse (PDF解析)
+- vectorize_traditional (传统向量化)
+- vectorize_graph (图向量化)
+
+---
+
+## 🎯 可能的原因
+
+### 原因1: Conditional edges跳过了某些节点
+LangGraph的conditional_edges可能直接跳过了minio和parse节点。
+
+### 原因2: 节点执行太快，completed_steps去重
+如果同一个step_id的多个节点（如fallback）执行，`step_id not in completed_steps`会跳过后续的。
+
+### 原因3: astream没有yield所有节点
+某些节点可能被合并或跳过了。
+
+---
+
+## 🔧 解决方案
+
+### 方案1: 添加详细的节点执行日志
+修改workflow_service.py，记录每个节点是否触发事件：
+
+```python
+async for event in self.workflow.astream(initial_state):
+    for node_name, node_state in event.items():
+        logger.info(f"[Workflow] Node executed: {node_name}")
+
+        step_id = self.STEP_MAPPING.get(node_name)
+
+        if not step_id:
+            logger.warning(f"[Workflow] No mapping for node: {node_name}")
+            continue
+
+        if step_id in completed_steps:
+            logger.info(f"[Workflow] Step {step_id} already completed, skipping")
+            continue
+
+        # 发送事件...
+```
+
+### 方案2: 检查后端日志
+查看后端启动日志中的`[Workflow] Node executed:`，确认实际执行了哪些节点。
+
+### 方案3: 强制发送所有步骤的processing事件
+在workflow开始时，立即发送所有步骤的start事件：
+
+```python
+# 开始时发送所有步骤
+for step_id in ["minio", "parse", "chunk", "extract", "vectorize_traditional", "vectorize_graph"]:
+    await self._send_step_event(
+        task_id=task_id,
+        step_id=step_id,
+        step_name=self.STEP_NAMES[step_id],
+        status="pending",
+        message="等待执行",
+        progress=self.STEP_PROGRESS[step_id]
+    )
+```
+
+---
+
+## 🧪 诊断步骤
+
+### 步骤1: 查看后端日志
+上传PDF后，在后端日志中搜索：
+```
+[Workflow] Node executed:
+```
+
+应该看到7个节点：
+1. save_to_minio
+2. parse_pdf_mineru
+3. chunk_text
+4. extract_entities
+5. vectorize_traditional
+6. vectorize_graph
+7. finalize
+
+### 步骤2: 检查Redis中的进度事件
+```python
+redis-cli
+keys document:progress:*
+get document:progress:<task_id>
+```
+
+### 步骤3: 检查SSE endpoint日志
+后端日志中搜索：
+```
+[SSE] Sent progress event
+```
+
+---
+
+## 📝 临时解决方案
+
+如果无法修复workflow事件，可以在前端添加虚拟节点显示：
+
+**frontend/src/components/WorkflowProgress.vue**
+```javascript
+// 如果某些步骤没有收到事件，假设它们已完成
+if (this.steps.chunk === 'processing' && !this.steps.parse) {
+  this.steps.minio = 'completed'
+  this.steps.parse = 'completed'
+}
+```
+
+---
+
+## 🎯 推荐操作
+
+1. **立即查看后端日志**
+   搜索`[Workflow] Node executed:`确认哪些节点执行了
+
+2. **添加调试日志**
+   在workflow_service.py的astream循环中添加更多日志
+
+3. **测试上传PDF**
+   观察完整的workflow执行流程
+
+══════════════════════════════════════════════════════════════════════════════
+
+请提供后端日志中的`[Workflow] Node executed:`输出！
+
+══════════════════════════════════════════════════════════════════════════════
