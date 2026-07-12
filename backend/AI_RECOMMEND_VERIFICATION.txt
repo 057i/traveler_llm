@@ -1,0 +1,38 @@
+﻿# AI推荐工作流节点验证
+
+按照 RAG_SEARCH_AND_OPTIMIZATION_SUMMARY.md 验证：
+
+## 必需的8个节点（LangGraph工作流）
+
+1. query_rewriter - 查询理解
+   - 问题重写
+   - 实体提取
+   - 意图识别
+   
+2. parallel_retrieval - 并行检索
+   - Milvus混合检索（稠密+稀疏）
+   - Neo4j图检索
+   
+3. rrf_fusion - RRF融合
+   - 融合Milvus和Neo4j结果
+   - RRF算法
+   - 缩放到原始分数范围
+   
+4. confidence_check - 置信度检查
+   - 评估检索质量
+   - 决定是否需要Tavily
+   
+5. tavily_search - 网络搜索（可选）
+   - 低置信度时触发
+   
+6. rrf_fusion_with_tavily - 第二次RRF融合
+   - 融合Tavily结果
+   
+7. rerank - Rerank精排
+   - bge-reranker-v2-m3
+   - CrossEncoder深度交互
+   
+8. synthesizer - LLM润色
+   - 生成自然语言回答
+
+## 验证清单

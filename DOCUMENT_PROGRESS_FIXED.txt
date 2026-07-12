@@ -1,0 +1,86 @@
+﻿╔════════════════════════════════════════════════════════════════════════════╗
+║              文档处理进度显示修复完成                                        ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+## 完成的修复
+
+### 1. 工作流服务增强
+   ✅ workflow_service.py - 完全重写
+   - 映射节点到前端步骤ID
+   - 发送SSE事件（start, progress, step_complete, complete, error）
+   - 实时进度百分比（15%, 35%, 50%, 65%, 80%, 95%, 100%）
+   - 人性化的中文消息
+
+### 2. SSE端点修复
+   ✅ documents.py - /progress/{task_id}
+   - 支持命名事件（event: progress, event: step_complete等）
+   - Redis数据获取和事件分发
+   - 超时处理（5分钟）
+   - 自动清理已处理事件
+
+### 3. 前端匹配
+   ✅ 步骤ID映射：
+   - minio → MinIO存储
+   - parse → PDF解析
+   - chunk → 文本分块
+   - extract → 实体提取
+   - vectorize_traditional → 向量化
+   - vectorize_graph → 知识图谱
+
+### 4. SSE事件格式
+   `
+   event: start
+   data: {"message": "开始处理文档", "filename": "xxx.pdf"}
+
+   event: progress
+   data: {"step": "minio", "status": "processing", "message": "...", "progress": 15}
+
+   event: step_complete
+   data: {"step": "minio", "status": "completed", "message": "...", "progress": 15}
+
+   event: complete
+   data: {"message": "处理完成", "destinations_count": 5, "progress": 100}
+
+   event: error
+   data: {"message": "错误信息", "error": "..."}
+   `
+
+══════════════════════════════════════════════════════════════════════════════
+
+## 工作流程
+
+1. 用户上传PDF → /api/documents/upload
+2. 后台启动workflow → process_document_background()
+3. Workflow执行节点 → workflow_service.process_document()
+4. 每个节点完成 → 更新Redis进度
+5. 前端SSE监听 → /api/documents/progress/{task_id}
+6. 实时显示进度 → WorkflowProgress组件更新
+
+══════════════════════════════════════════════════════════════════════════════
+
+## 测试步骤
+
+1. 启动后端：
+   `
+   cd backend
+   python main.py
+   `
+
+2. 访问前端文档管理：
+   `
+   http://localhost:5173/documents
+   `
+
+3. 上传PDF文件
+
+4. 观察实时进度：
+   - 看到6个步骤依次执行
+   - 每个步骤图标从pending→processing→completed
+   - 进度条实时更新
+   - 底部日志实时显示
+
+══════════════════════════════════════════════════════════════════════════════
+
+状态：✅ 文档处理进度显示完全恢复！
+
+══════════════════════════════════════════════════════════════════════════════

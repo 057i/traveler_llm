@@ -1,0 +1,58 @@
+﻿==============================================================================
+紧急修复方案 - 节点文件损坏
+==============================================================================
+
+问题: 编码清理过度，导致12个节点文件出现语法错误
+
+损坏文件清单:
+
+AI Recommend Nodes (7/8):
+  [x] node_query_rewriter.py - 已修复
+  [ ] node_parallel_retrieval.py - 语法错误
+  [ ] node_rrf_fusion.py - 语法错误
+  [ ] node_confidence_check.py - 语法错误
+  [ ] node_tavily_search.py - 语法错误
+  [ ] node_rrf_fusion_with_tavily.py - 语法错误
+  [ ] node_rerank.py - 语法错误
+  [ ] node_synthesizer.py - 语法错误
+
+Document Processing Nodes (5/6):
+  [x] node_minio.py - 已修复
+  [ ] node_pdf_parse.py - 语法错误
+  [ ] node_chunking.py - 语法错误
+  [ ] node_entity_extraction.py - 语法错误
+  [ ] node_vectorization.py - 语法错误
+  [ ] node_finalize.py - 语法错误
+
+==============================================================================
+建议方案
+==============================================================================
+
+方案1: Git恢复 (推荐)
+  如果是Git仓库，可以恢复这些文件：
+  git checkout HEAD -- backend/app/workflows/ai_recommend/nodes/
+  git checkout HEAD -- backend/app/workflows/document_processing/nodes/
+
+方案2: 手动重建
+  逐个重建12个损坏的文件
+  预计时间: 30-60分钟
+
+方案3: 从备份恢复
+  如果有备份，直接恢复nodes目录
+
+==============================================================================
+下一步
+==============================================================================
+
+请选择:
+1. 如果有Git历史 -> 使用 git checkout 恢复
+2. 如果有备份 -> 恢复备份文件
+3. 否则 -> 需要手动重建这12个文件
+
+当前建议: 
+- 检查是否有Git历史: git log --oneline
+- 如果没有，我可以帮你逐个重建这些文件
+  (但需要参考 RAG_SEARCH_AND_OPTIMIZATION_SUMMARY.md 
+   确保实现符合规范)
+
+==============================================================================

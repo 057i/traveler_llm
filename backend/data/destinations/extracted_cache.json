@@ -1,0 +1,6785 @@
+[
+  {
+    "name": "三清山",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "世界自然遗产，以奇峰怪石、云海日出著称",
+    "tags": [
+      "自然风光",
+      "世界遗产"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      150,
+      150
+    ],
+    "suitable_for": [
+      "家庭",
+      "情侣",
+      "朋友"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山_江西省上饶市",
+    "category": "山脉",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "150",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "玉皇顶",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "观赏日出和云海的最佳地点",
+    "tags": [
+      "观景台",
+      "日出"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉皇顶_江西省上饶市",
+    "category": "山峰",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "2-3小时"
+  },
+  {
+    "name": "三清宫",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "道教名山上的著名道观",
+    "tags": [
+      "宗教文化"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清宫_江西省上饶市",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "司春女神",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山标志性奇石景观",
+    "tags": [
+      "奇石"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "司春女神_江西省上饶市",
+    "category": "奇石",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "巨蟒出山",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山著名奇石景观",
+    "tags": [
+      "奇石"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "巨蟒出山_江西省上饶市",
+    "category": "奇石",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "南清园景区",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山自然景观最奇绝的景区，包含多个标志性景点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "南清园景区_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "2-3小时"
+  },
+  {
+    "name": "玉京峰",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山最高峰，是观赏日出日落的最佳地点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉京峰_江西省上饶市",
+    "category": "山峰",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "阳光海岸",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山东部观景地，适合观看日出",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "阳光海岸_江西省上饶市",
+    "category": "景点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "西海岸",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山西部观景地，适合观看日落",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "西海岸_江西省上饶市",
+    "category": "景点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "玉台",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "观赏日出的理想地点，距离女神宾馆近",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉台_江西省上饶市",
+    "category": "景点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "女神宾馆",
+    "location": "江西省上饶市",
+    "type": "Hotel",
+    "description": "靠近玉台，适合观看日出",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      500,
+      1000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "女神宾馆_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "紫烟石",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清宫旁可观赏夕阳",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "紫烟石_江西省上饶市",
+    "category": "景点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "龙虎殿",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清宫内可观赏朝阳",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "龙虎殿_江西省上饶市",
+    "category": "景点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "杜鹃谷",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "拥有千年杜鹃树，每年5-6月花开时节尤为壮观",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "杜鹃谷_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "一线天",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "南清园景区内的险要路段，有299级台阶",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "一线天_江西省上饶市",
+    "category": "景点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "东方女神",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "南清园景区标志性景观之一",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "东方女神_江西省上饶市",
+    "category": "景点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "玉女开怀",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山至纯至美的象征，形态柔美",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉女开怀_江西省上饶市",
+    "category": "景观",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "葛洪献丹",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "纪念道教丹鼎派创始人葛洪的景点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "葛洪献丹_江西省上饶市",
+    "category": "景观",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "神龙戏松",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "山峰石壁上有一条长蛇与松树相戏",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "神龙戏松_江西省上饶市",
+    "category": "景观",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三龙出海",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三座山峰形似三条巨龙腾空而出",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三龙出海_江西省上饶市",
+    "category": "景观",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "西海岸景区",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山观景最开阔的区域，有高山栈道",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "西海岸景区_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "猴王献宝",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "形似猴王手捧宝物，憨态可掬",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "猴王献宝_江西省上饶市",
+    "category": "景观",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "万寿园景区",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "以祥寿文化为主题的景区，风景精致",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "万寿园景区_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "老道拜月",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "形似老道对月虔诚遥拜",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "老道拜月_江西省上饶市",
+    "category": "景观",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "海狮吞月",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "形似海狮吞月，寓意吉祥",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "海狮吞月_江西省上饶市",
+    "category": "景观",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清宫景区",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山人文景观集萃地，道教古建筑群",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清宫景区_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "西海栈道",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "全国最高、最长的高山栈道",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "西海栈道_江西省上饶市",
+    "category": "设施",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "南清园",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山核心景区，包含多个著名景点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "南清园_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "阳光海岸景区",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "高空栈道景区，风景壮丽，适合漫步",
+    "tags": [
+      "自然风光",
+      "高空景观"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "摄影爱好者",
+      "游客"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "阳光海岸景区_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "1.5小时"
+  },
+  {
+    "name": "玉京峰景区",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山最高峰，可观赏日出和云海",
+    "tags": [
+      "自然风光",
+      "观景"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "登山爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉京峰景区_江西省上饶市",
+    "category": "山峰",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "2-3小时"
+  },
+  {
+    "name": "玉灵观景区",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山外围景区，游客较少，适合探险",
+    "tags": [
+      "原始景观",
+      "户外活动"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "户外爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉灵观景区_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "未明确"
+  },
+  {
+    "name": "西华台景区",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "田园风光与自然景观结合的原始景区",
+    "tags": [
+      "自然景观",
+      "田园风光"
+    ],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "户外爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "西华台景区_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "未明确"
+  },
+  {
+    "name": "三洞口景区",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山最奇险的景区，开发原始，需谨慎游览",
+    "tags": [
+      "自然风光"
+    ],
+    "best_season": [
+      "春季",
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三洞口景区_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "石鼓岭景区",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "正在开发的新景区，瀑布景观壮观",
+    "tags": [
+      "自然风光"
+    ],
+    "best_season": [
+      "春季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "石鼓岭景区_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "玉帘瀑布",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山最大瀑布之一，高34米，宽30米",
+    "tags": [],
+    "best_season": [
+      "春季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉帘瀑布_江西省上饶市",
+    "category": "瀑布",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "石门四叠瀑",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "瀑布高百余米，雄伟壮观",
+    "tags": [],
+    "best_season": [
+      "春季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "石门四叠瀑_江西省上饶市",
+    "category": "瀑布",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "天门山庄",
+    "location": "江西省上饶市",
+    "type": "Hotel",
+    "description": "三星级宾馆，集餐饮、住宿、娱乐于一体",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      500,
+      500
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "天门山庄_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "日上山庄",
+    "location": "江西省上饶市",
+    "type": "Hotel",
+    "description": "看日出、观晚霞的理想下榻地",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      400,
+      400
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 3.0,
+    "image_url": "",
+    "graph_id": "日上山庄_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山庄",
+    "location": "江西省上饶市",
+    "type": "Hotel",
+    "description": "欧式庭院建筑，设施齐全，适合休闲度假",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      300,
+      300
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山庄_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "南星宾馆",
+    "location": "江西省上饶市",
+    "type": "Hotel",
+    "description": "园林式设计，兼具古典与现代气息",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      400,
+      400
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "南星宾馆_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "水云山庄",
+    "location": "江西省上饶市",
+    "type": "Hotel",
+    "description": "四星级酒店，配套齐全，交通便利",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      400,
+      400
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "水云山庄_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清宫道观",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "道教圣地，可留宿客人",
+    "tags": [
+      "宗教文化"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清宫道观_江西省上饶市",
+    "category": "宗教场所",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山国际青年旅舍",
+    "location": "江西省上饶市三清山风景名胜汾水服务区引浆畲族新村",
+    "type": "Hotel",
+    "description": "世界遗产地区唯一一家国际青年旅舍",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      50,
+      50
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.5,
+    "image_url": "",
+    "graph_id": "三清山国际青年旅舍_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "女神宾馆",
+    "location": "江西省上饶市三清山",
+    "type": "Hotel",
+    "description": "观日出位置最佳的宾馆",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      170,
+      170
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "女神宾馆_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "瞬间烟火",
+    "location": "江西省上饶市三清山",
+    "type": "Restaurant",
+    "description": "提供当地特色美食",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "瞬间烟火_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "Sunmars",
+    "location": "江西省上饶市三清山",
+    "type": "Restaurant",
+    "description": "售卖清明果等地方小吃",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "Sunmars_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "板栗烧肉",
+    "location": "江西省上饶市三清山",
+    "type": "Restaurant",
+    "description": "街头小吃，风味独特",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "板栗烧肉_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "清汤",
+    "location": "江西省上饶市",
+    "type": "Restaurant",
+    "description": "江西传统小吃，包面或馄饨",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "清汤_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "熏香鸡腿",
+    "location": "江西省上饶市三清山",
+    "type": "Restaurant",
+    "description": "山下农家摊贩售卖的香鸡腿",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "熏香鸡腿_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "麻籽馃",
+    "location": "江西省上饶市三清山",
+    "type": "Restaurant",
+    "description": "畲族特色食品，冬至食用",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "麻籽馃_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山景区商店",
+    "location": "江西省上饶市三清山",
+    "type": "Restaurant",
+    "description": "售卖当地特产如云雾茶、白玉豆等",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山景区商店_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "玉山县城商店",
+    "location": "江西省上饶市玉山县",
+    "type": "Restaurant",
+    "description": "购买三清山特产的地点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉山县城商店_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "上饶市区商店",
+    "location": "江西省上饶市",
+    "type": "Restaurant",
+    "description": "购买三清山特产的地点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "上饶市区商店_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山露营区",
+    "location": "江西省上饶市三清山",
+    "type": "Attraction",
+    "description": "适合露营的区域，有帐篷出租服务",
+    "tags": [
+      "露营",
+      "户外运动"
+    ],
+    "best_season": [
+      "春季",
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山露营区_江西省上饶市",
+    "category": "户外活动",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "南清园露营区",
+    "location": "江西省上饶市三清山",
+    "type": "Attraction",
+    "description": "推荐露营地点，靠近玉清台",
+    "tags": [
+      "露营",
+      "户外运动"
+    ],
+    "best_season": [
+      "春季",
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "南清园露营区_江西省上饶市",
+    "category": "户外活动",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "三清宫露营区",
+    "location": "江西省上饶市三清山",
+    "type": "Attraction",
+    "description": "适合大面积露营，但不适合看日出",
+    "tags": [
+      "露营",
+      "户外运动"
+    ],
+    "best_season": [
+      "春季",
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清宫露营区_江西省上饶市",
+    "category": "户外活动",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "瞬间烟火",
+    "location": "江西省上饶市",
+    "type": "Restaurant",
+    "description": "提供当地特色菜，价格较高",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "瞬间烟火_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "白玉豆",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山特产，口感清香",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "白玉豆_江西省上饶市",
+    "category": "特产",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "罗纹砚",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山特有砚台，纹理独特",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "罗纹砚_江西省上饶市",
+    "category": "工艺品",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "云雾茶",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "以清香、味醇著称",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "云雾茶_江西省上饶市",
+    "category": "茶叶",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "金沙索道",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "连接山下与景区的索道",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "金沙索道_江西省上饶市",
+    "category": "交通",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "南山索道",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "亚洲最长索道，连接山下与山上",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "南山索道_江西省上饶市",
+    "category": "交通",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清福地",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "道教圣地，有古建筑群",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清福地_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "猴王观宝",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "标志性观景台，可赏日落",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "猴王观宝_江西省上饶市",
+    "category": "景点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "1小时"
+  },
+  {
+    "name": "郁松林",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "适合住宿，可观赏日落",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "郁松林_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "1小时"
+  },
+  {
+    "name": "万寿园",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山景区之一，有纪念性建筑",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "万寿园_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "1小时"
+  },
+  {
+    "name": "梯云岭",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "登山起点，可俯瞰山景",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "梯云岭_江西省上饶市",
+    "category": "景点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "1小时"
+  },
+  {
+    "name": "金不换花园小窝",
+    "location": "江西省上饶市",
+    "type": "Hotel",
+    "description": "提供住宿和简餐，适合登山者",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      100,
+      200
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "金不换花园小窝_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山索道",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "连接山上山下的缆车系统",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山索道_江西省上饶市",
+    "category": "交通设施",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "东海岸",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山景观带，适合徒步游览",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "东海岸_江西省上饶市",
+    "category": "景区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "玉灵观",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "道教圣地，位于三清山北线",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉灵观_江西省上饶市",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "金不换花园",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "观赏佛光的绝佳地点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "金不换花园_江西省上饶市",
+    "category": "景点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "玉山火车站",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山附近主要火车站",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉山火车站_江西省上饶市",
+    "category": "交通枢纽",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "上饶火车站",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "前往三清山的重要中转站",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "上饶火车站_江西省上饶市",
+    "category": "交通枢纽",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "衢州机场",
+    "location": "浙江省衢州市",
+    "type": "Attraction",
+    "description": "距离三清山最近的机场",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "衢州机场_浙江省衢州市",
+    "category": "机场",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "玉山县城",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山周边交通枢纽",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉山县城_江西省上饶市",
+    "category": "城市",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "婺源县",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山周边旅游区域",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "婺源县_江西省上饶市",
+    "category": "县",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "紫湖镇",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "连接婺源与三清山的中转点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "紫湖镇_江西省上饶市",
+    "category": "镇",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山东部索道",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山索道系统之一，连接景区入口与中心景区",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山东部索道_江西省上饶市",
+    "category": "索道",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山南部索道",
+    "location": "江西省上饶市",
+    "type": "Attraction",
+    "description": "三清山索道系统之一，连接景区入口与中心景区",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山南部索道_江西省上饶市",
+    "category": "索道",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "女神宾馆",
+    "location": "三清山中心景区东方女神旁",
+    "type": "Hotel",
+    "description": "位于三清山景区内，靠近东方女神景点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      200,
+      400
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.5,
+    "image_url": "",
+    "graph_id": "女神宾馆_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "天门山庄",
+    "location": "万寿园景区附近",
+    "type": "Hotel",
+    "description": "靠近万寿园景区，提供住宿服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      300,
+      500
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.2,
+    "image_url": "",
+    "graph_id": "天门山庄_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "日上山庄",
+    "location": "三清山中心景区南清园南天门下",
+    "type": "Hotel",
+    "description": "位于南清园景区附近，方便游览",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      250,
+      450
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.3,
+    "image_url": "",
+    "graph_id": "日上山庄_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山庄",
+    "location": "上饶市玉山县三清山景区停车场对面",
+    "type": "Hotel",
+    "description": "靠近景区停车场，方便游客入住",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      200,
+      400
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.1,
+    "image_url": "",
+    "graph_id": "三清山庄_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "南星宾馆",
+    "location": "玉山县三清山南山外双溪",
+    "type": "Hotel",
+    "description": "位于南山外双溪区域，适合休闲度假",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      150,
+      300
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "南星宾馆_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "水云山庄",
+    "location": "金沙旅游服务区，距金沙索道300m",
+    "type": "Hotel",
+    "description": "靠近金沙索道，交通便利",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      200,
+      350
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.2,
+    "image_url": "",
+    "graph_id": "水云山庄_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山旅游咨询",
+    "location": "江西省上饶地区的玉山和德兴两县交界处",
+    "type": "Attraction",
+    "description": "提供三清山旅游咨询服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山旅游咨询_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山公安报警",
+    "location": "江西省上饶地区的玉山和德兴两县交界处",
+    "type": "Attraction",
+    "description": "三清山景区内的公安报警服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山公安报警_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山医疗服务",
+    "location": "江西省上饶地区的玉山和德兴两县交界处",
+    "type": "Attraction",
+    "description": "三清山景区内的医疗服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山医疗服务_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山旅游投诉",
+    "location": "江西省上饶地区的玉山和德兴两县交界处",
+    "type": "Attraction",
+    "description": "提供三清山旅游投诉服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山旅游投诉_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山物价投诉",
+    "location": "江西省上饶地区的玉山和德兴两县交界处",
+    "type": "Attraction",
+    "description": "提供三清山物价投诉服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山物价投诉_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山景区火警",
+    "location": "江西省上饶地区的玉山和德兴两县交界处",
+    "type": "Attraction",
+    "description": "三清山景区的火警报警服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三清山景区火警_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "冈仁波齐",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "世界公认的神山，被多个宗教认定为世界中心",
+    "tags": [
+      "宗教圣地",
+      "自然风光"
+    ],
+    "best_season": [
+      "7月到10月"
+    ],
+    "budget_range": [
+      200,
+      200
+    ],
+    "suitable_for": [
+      "朝圣者",
+      "探险者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "冈仁波齐_西藏自治区阿里地区",
+    "category": "山脉",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "200",
+    "visit_duration": ""
+  },
+  {
+    "name": "玛旁雍错",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "被多个宗教认定的圣湖，亚洲最负盛名的湖泊之一",
+    "tags": [
+      "圣湖",
+      "自然风光"
+    ],
+    "best_season": [
+      "7月到10月"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "朝圣者",
+      "旅行者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玛旁雍错_西藏自治区阿里地区",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "古格王国遗址",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "神秘消失的古文明遗址，吸引众多旅行者",
+    "tags": [
+      "古文明",
+      "历史遗迹"
+    ],
+    "best_season": [
+      "7月到10月"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "历史爱好者",
+      "探险者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "古格王国遗址_西藏自治区阿里地区",
+    "category": "遗址",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "扎达土林",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "奇特的土林地貌，日落时分尤为壮观",
+    "tags": [
+      "自然风光",
+      "地质奇观"
+    ],
+    "best_season": [
+      "7月到10月"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "摄影爱好者",
+      "旅行者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "扎达土林_西藏自治区阿里地区",
+    "category": "地貌",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "班公错",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "著名的天鹅湖，夏季有大量候鸟繁殖",
+    "tags": [
+      "自然风光",
+      "生态景观"
+    ],
+    "best_season": [
+      "7月到10月"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "生态旅游者",
+      "摄影爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "班公错_西藏自治区阿里地区",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "冈底斯宾馆",
+    "location": "西藏自治区阿里地区塔钦",
+    "type": "Hotel",
+    "description": "当地最著名的旅店，提供基本住宿和藏餐",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      120,
+      120
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.5,
+    "image_url": "",
+    "graph_id": "冈底斯宾馆_西藏自治区阿里地区塔钦",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "拉萨饭店",
+    "location": "西藏自治区阿里地区塔钦",
+    "type": "Restaurant",
+    "description": "神山下最好的饭馆，提供藏餐",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "拉萨饭店_西藏自治区阿里地区塔钦",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "神山宾馆",
+    "location": "西藏自治区阿里地区塔钦",
+    "type": "Hotel",
+    "description": "靠近神山的住宿选择，价格区间较大",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      20,
+      100
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "神山宾馆_西藏自治区阿里地区塔钦",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "塔钦",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "转山起点，神山脚下聚集点",
+    "tags": [
+      "旅游集散地",
+      "边检站"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "塔钦_西藏自治区阿里地区",
+    "category": "集镇",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "大金寺",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "转山起点之一，提供住宿和补给",
+    "tags": [
+      "转山起点",
+      "宗教场所"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "大金寺_西藏自治区阿里地区",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "止热寺",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "转山途中住宿点",
+    "tags": [
+      "宗教场所",
+      "转山住宿"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "止热寺_西藏自治区阿里地区",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "尊最普寺",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "转山途中住宿点",
+    "tags": [
+      "宗教场所",
+      "转山住宿"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "尊最普寺_西藏自治区阿里地区",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "江扎寺",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "内圈转山途中的第一座寺庙",
+    "tags": [
+      "宗教场所",
+      "转山路线"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "江扎寺_西藏自治区阿里地区",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "赛龙寺",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "内圈转山途中的重要寺庙",
+    "tags": [
+      "宗教场所",
+      "转山路线"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "赛龙寺_西藏自治区阿里地区",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "直贡噶举十三塔",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "供奉直贡法嗣的塔群",
+    "tags": [
+      "宗教场所",
+      "历史遗迹"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "直贡噶举十三塔_西藏自治区阿里地区",
+    "category": "建筑",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "小噶巴拉湖",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "内圈转山途中的白色湖泊",
+    "tags": [
+      "自然风光",
+      "转山路线"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "小噶巴拉湖_西藏自治区阿里地区",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "噶瓦拉湖",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "内圈转山途中的黑色湖泊",
+    "tags": [
+      "自然风光",
+      "转山路线"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "噶瓦拉湖_西藏自治区阿里地区",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "卓玛拉山口",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "外圈转山中最艰苦的路段",
+    "tags": [
+      "地理标志",
+      "转山挑战"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "卓玛拉山口_西藏自治区阿里地区",
+    "category": "山口",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "天葬场",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "藏传佛教天葬仪式地点",
+    "tags": [
+      "神秘体验",
+      "宗教文化"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "天葬场_西藏自治区阿里地区",
+    "category": "宗教场所",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "狮泉河",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "转山途中重要补给点",
+    "tags": [
+      "补给点",
+      "地理标志"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "狮泉河_西藏自治区阿里地区",
+    "category": "河流",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "拉孜",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "转山途中重要补给点",
+    "tags": [
+      "补给点",
+      "交通节点"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "拉孜_西藏自治区阿里地区",
+    "category": "城镇",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "免费",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "冈仁波齐",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "藏传佛教和印度教的神山，转山路线著名",
+    "tags": [
+      "宗教圣地",
+      "自然风光"
+    ],
+    "best_season": [
+      "4月-10月"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "冈仁波齐_西藏自治区日喀则市",
+    "category": "山脉",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "江扎寺",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "直贡噶举派的根据地，转山途中的重要寺庙",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "江扎寺_西藏自治区日喀则市",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "赛龙寺",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "转山途中的重要寺庙",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "赛龙寺_西藏自治区日喀则市",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "直贡噶举十三塔",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "供奉直贡法嗣法体的十三座塔",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "直贡噶举十三塔_西藏自治区日喀则市",
+    "category": "建筑",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "小噶巴拉湖",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "白色水面的湖泊，转山途中经过",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "小噶巴拉湖_西藏自治区日喀则市",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "噶瓦拉湖",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "黑色水面的湖泊，转山途中经过",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "噶瓦拉湖_西藏自治区日喀则市",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "止热寺",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "转山途中的住宿点，20元/床",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "止热寺_西藏自治区日喀则市",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "尊最普寺",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "转山途中的住宿点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "尊最普寺_西藏自治区日喀则市",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "Zutrulpuk寺",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "转山途中的住宿点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "Zutrulpuk寺_西藏自治区日喀则市",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "曲故寺",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "建于13世纪的悬空寺",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "曲故寺_西藏自治区日喀则市",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "卓玛拉山口",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "转山途中的最高点，海拔5630米",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "卓玛拉山口_西藏自治区日喀则市",
+    "category": "山口",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "托吉错",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "慈悲湖，传说可洗净污垢",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "托吉错_西藏自治区日喀则市",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "Trangser Trangmar",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "金色和红色的石壁，转山途中景观",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "Trangser Trangmar_西藏自治区日喀则市",
+    "category": "地貌",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "塔钦",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "转山起点和终点，补给点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "塔钦_西藏自治区日喀则市",
+    "category": "城镇",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "直贡噶举派",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "转山相关的重要佛教派别",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "直贡噶举派_西藏自治区日喀则市",
+    "category": "宗教派别",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "即乌寺",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "靠近玛旁雍错的寺庙，是转山途中的重要地点",
+    "tags": [
+      "转山点",
+      "宗教场所"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      0,
+      0
+    ],
+    "suitable_for": [
+      "朝圣者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "即乌寺_西藏自治区阿里地区",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "0",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "巴噶",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "平坦开阔的草原，是转山途中的必经之地",
+    "tags": [
+      "徒步路线",
+      "草原"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      0,
+      0
+    ],
+    "suitable_for": [
+      "徒步者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "巴噶_西藏自治区阿里地区",
+    "category": "草原",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "0",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "色热龙寺",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "转湖途中的一座寺庙，附近有住宿条件",
+    "tags": [
+      "宗教圣地"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "朝圣者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "色热龙寺_西藏自治区阿里地区",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "楚古寺",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "举行沐浴仪式的重要场所，是转湖的重要节点",
+    "tags": [
+      "宗教圣地"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "朝圣者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "楚古寺_西藏自治区阿里地区",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "Gotsuk Gon 寺",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "建在小山崖上的寺庙，是观赏圣湖的绝佳位置",
+    "tags": [
+      "宗教圣地",
+      "观景台"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "朝圣者",
+      "摄影爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "Gotsuk Gon 寺_西藏自治区阿里地区",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "神山冈仁波齐",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "藏传佛教、印度教等多宗教的神圣山峰",
+    "tags": [
+      "宗教圣地",
+      "自然风光"
+    ],
+    "best_season": [],
+    "budget_range": [
+      200,
+      200
+    ],
+    "suitable_for": [
+      "朝圣者",
+      "旅行者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "神山冈仁波齐_西藏自治区阿里地区",
+    "category": "山脉",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "200",
+    "visit_duration": ""
+  },
+  {
+    "name": "即乌寺小村",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "提供简陋住宿，适合转湖旅人",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      15,
+      20
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 3.0,
+    "image_url": "",
+    "graph_id": "即乌寺小村_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "神湖旅店",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "提供基本住宿条件，靠近玛旁雍错",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      15,
+      20
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 3.0,
+    "image_url": "",
+    "graph_id": "神湖旅店_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "边防武警部队营房",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "提供简陋住宿和用餐服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      10,
+      15
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 3.0,
+    "image_url": "",
+    "graph_id": "边防武警部队营房_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "即乌寺温泉",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "露天温泉，提供洗浴服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "即乌寺温泉_西藏自治区阿里地区",
+    "category": "温泉",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "纳木那尼峰",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "喜马拉雅山主要高峰之一，藏语称‘圣母之山’",
+    "tags": [
+      "自然风光",
+      "雪山"
+    ],
+    "best_season": [
+      "夏季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "登山爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "纳木那尼峰_西藏自治区阿里地区",
+    "category": "山峰",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "无门票",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "拉昂错",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "咸水湖，被称为‘鬼湖’",
+    "tags": [
+      "自然风光",
+      "奇特景观"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "游客"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "拉昂错_西藏自治区阿里地区",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "无门票",
+    "visit_duration": "半天"
+  },
+  {
+    "name": "札达土林",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "独特的土质地貌，壮观迷人",
+    "tags": [
+      "自然风光",
+      "地质奇观"
+    ],
+    "best_season": [
+      "秋季"
+    ],
+    "budget_range": [
+      200,
+      200
+    ],
+    "suitable_for": [
+      "摄影爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "札达土林_西藏自治区阿里地区",
+    "category": "地貌",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "200",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "托林寺",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "古格王朝创建的佛教寺庙，历史悠久",
+    "tags": [
+      "宗教文化",
+      "历史遗迹"
+    ],
+    "best_season": [
+      "秋季"
+    ],
+    "budget_range": [
+      200,
+      200
+    ],
+    "suitable_for": [
+      "文化爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "托林寺_西藏自治区阿里地区",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "09:00-18:00",
+    "ticket_price": "200",
+    "visit_duration": "2小时"
+  },
+  {
+    "name": "古格遗址",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "古格王朝遗址，具有重要历史价值",
+    "tags": [
+      "考古",
+      "历史遗迹"
+    ],
+    "best_season": [
+      "秋季"
+    ],
+    "budget_range": [
+      200,
+      200
+    ],
+    "suitable_for": [
+      "历史爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "古格遗址_西藏自治区阿里地区",
+    "category": "遗址",
+    "address": "",
+    "opening_hours": "09:00-18:00",
+    "ticket_price": "200",
+    "visit_duration": "2小时"
+  },
+  {
+    "name": "东嘎皮央",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "古格王朝时期的石窟和遗址",
+    "tags": [
+      "考古",
+      "历史遗迹"
+    ],
+    "best_season": [
+      "秋季"
+    ],
+    "budget_range": [
+      200,
+      200
+    ],
+    "suitable_for": [
+      "历史爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "东嘎皮央_西藏自治区阿里地区",
+    "category": "遗址",
+    "address": "",
+    "opening_hours": "09:00-18:00",
+    "ticket_price": "200",
+    "visit_duration": "2小时"
+  },
+  {
+    "name": "象泉河谷",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "拥有众多佛塔遗像的河谷",
+    "tags": [
+      "宗教文化",
+      "自然风光"
+    ],
+    "best_season": [
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "摄影爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "象泉河谷_西藏自治区阿里地区",
+    "category": "峡谷",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "无门票",
+    "visit_duration": "半天"
+  },
+  {
+    "name": "普兰县",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "位于冈仁波齐和玛旁雍错附近，是朝圣路线的重要节点",
+    "tags": [
+      "朝圣地",
+      "旅游中心"
+    ],
+    "best_season": [
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "游客",
+      "朝圣者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "普兰县_西藏自治区阿里地区",
+    "category": "县城",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "无门票",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "新藏公路",
+    "location": "新疆维吾尔自治区",
+    "type": "Attraction",
+    "description": "连接新疆与西藏的重要交通线",
+    "tags": [
+      "高原之路",
+      "自驾路线"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "自驾游爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "新藏公路_新疆维吾尔自治区",
+    "category": "公路",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "无门票",
+    "visit_duration": "数天"
+  },
+  {
+    "name": "日喀则",
+    "location": "西藏自治区",
+    "type": "Attraction",
+    "description": "西藏第二大城市，历史文化名城",
+    "tags": [
+      "文化城市",
+      "旅游城市"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "游客"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "日喀则_西藏自治区",
+    "category": "城市",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "无门票",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "拉萨",
+    "location": "西藏自治区",
+    "type": "Attraction",
+    "description": "西藏首府，有丰富的文化和宗教遗产",
+    "tags": [
+      "文化城市",
+      "旅游城市"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "游客"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "拉萨_西藏自治区",
+    "category": "城市",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "无门票",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "叶城",
+    "location": "新疆维吾尔自治区",
+    "type": "Attraction",
+    "description": "位于新疆西南部，是新藏公路途经地",
+    "tags": [
+      "交通枢纽",
+      "边陲城市"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "游客"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "叶城_新疆维吾尔自治区",
+    "category": "城市",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "无门票",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "狮泉河镇",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "位于狮泉河畔，是前往冈仁波齐和玛旁雍错的重要中转站",
+    "tags": [
+      "旅游中转站",
+      "高原小镇"
+    ],
+    "best_season": [
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "游客"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "狮泉河镇_西藏自治区阿里地区",
+    "category": "镇",
+    "address": "",
+    "opening_hours": "全天",
+    "ticket_price": "无门票",
+    "visit_duration": "1天"
+  },
+  {
+    "name": "曲龙银城",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "象雄国的古都，拥有银色钙化石地貌",
+    "tags": [
+      "地质景观",
+      "历史遗迹"
+    ],
+    "best_season": [
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "探险者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "曲龙银城_西藏自治区阿里地区",
+    "category": "遗址",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "1-2小时"
+  },
+  {
+    "name": "古格王朝遗址",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "神秘消失的古格王国遗址，具有重要考古价值",
+    "tags": [
+      "文化探索",
+      "历史遗迹"
+    ],
+    "best_season": [
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "历史爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "古格王朝遗址_西藏自治区阿里地区",
+    "category": "遗址",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "2-3小时"
+  },
+  {
+    "name": "日土岩画",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "西藏保留最完好的石刻文化，内容涵盖狩猎、宗教等",
+    "tags": [
+      "历史文化",
+      "艺术价值"
+    ],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "文化爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "日土岩画_西藏自治区阿里地区",
+    "category": "岩画",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "科加寺",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "历史悠久的佛教寺庙，具有原始古朴风格",
+    "tags": [
+      "宗教文化",
+      "历史遗迹"
+    ],
+    "best_season": [
+      "全年"
+    ],
+    "budget_range": [
+      80,
+      80
+    ],
+    "suitable_for": [
+      "宗教朝圣者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "科加寺_西藏自治区阿里地区",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "80",
+    "visit_duration": ""
+  },
+  {
+    "name": "尼泊尔大厦",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "尼泊尔人居住的洞穴群，具有异域风情",
+    "tags": [
+      "边境特色",
+      "异域文化"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "文化探索者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "尼泊尔大厦_西藏自治区阿里地区",
+    "category": "建筑",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "普兰国际市场",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "边贸市场，主要由尼泊尔人经营",
+    "tags": [
+      "边境贸易",
+      "异国风情"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [
+      "购物爱好者"
+    ],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "普兰国际市场_西藏自治区阿里地区",
+    "category": "市场",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "普兰国际贸易市场",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "以尼泊尔和印度商品为主的边境贸易市场",
+    "tags": [
+      "边境贸易",
+      "异国风情"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "普兰国际贸易市场_西藏自治区阿里地区",
+    "category": "市场",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "狮泉河宾馆",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "位于狮泉河镇，提供基础住宿服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      80,
+      80
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 3.0,
+    "image_url": "",
+    "graph_id": "狮泉河宾馆_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "普兰县招待所",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "基本住宿设施，价格实惠",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      25,
+      25
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 2.0,
+    "image_url": "",
+    "graph_id": "普兰县招待所_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "冈底期宾馆",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "靠近神山冈仁波齐，提供标间和床位",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      30,
+      100
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 3.0,
+    "image_url": "",
+    "graph_id": "冈底期宾馆_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "重庆宾馆",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "扎达县较具规模的宾馆",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      100,
+      100
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 3.0,
+    "image_url": "",
+    "graph_id": "重庆宾馆_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "白马山庄",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "家庭旅馆，提供简单住宿",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      30,
+      30
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 2.0,
+    "image_url": "",
+    "graph_id": "白马山庄_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三元宾馆",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "提供双人标间，可洗热水澡",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      130,
+      130
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "三元宾馆_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "普兰木碗作坊",
+    "location": "西藏自治区阿里地区",
+    "type": "Restaurant",
+    "description": "售卖手工木碗等特色手工艺品",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "普兰木碗作坊_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "狮泉河餐馆",
+    "location": "西藏自治区阿里地区",
+    "type": "Restaurant",
+    "description": "提供川菜和藏餐，但口味不一",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "狮泉河餐馆_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "玛旁雍措客栈",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "边防武警部队营房改建的住宿点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      15,
+      15
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 2.0,
+    "image_url": "",
+    "graph_id": "玛旁雍措客栈_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "塔钦宾馆",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "靠近冈仁波齐，提供标间",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      100,
+      100
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 3.0,
+    "image_url": "",
+    "graph_id": "塔钦宾馆_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "志愿者之家",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "便宜的住宿选择，适合背包客",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      30,
+      50
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 2.0,
+    "image_url": "",
+    "graph_id": "志愿者之家_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "普兰国际商贸市场",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "中尼边境贸易中心，售卖多种商品",
+    "tags": [
+      "边境贸易",
+      "异国风情"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "普兰国际商贸市场_西藏自治区阿里地区",
+    "category": "市场",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "冈仁波齐山",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "神山，具有重要宗教地位",
+    "tags": [
+      "宗教圣地",
+      "自然风光"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "冈仁波齐山_西藏自治区阿里地区",
+    "category": "山脉",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "班公措",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "高原湖泊，有民俗节活动",
+    "tags": [
+      "自然风光",
+      "民俗活动"
+    ],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "班公措_西藏自治区阿里地区",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "羊卓雍湖",
+    "location": "西藏自治区拉萨市",
+    "type": "Attraction",
+    "description": "世界上海拔最高的淡水湖",
+    "tags": [
+      "高原景观",
+      "自然风光"
+    ],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "羊卓雍湖_西藏自治区拉萨市",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "布达拉宫",
+    "location": "西藏自治区拉萨市",
+    "type": "Attraction",
+    "description": "世界文化遗产，西藏地标建筑",
+    "tags": [
+      "世界遗产",
+      "历史文化"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      200,
+      200
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "布达拉宫_西藏自治区拉萨市",
+    "category": "宫殿",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "200",
+    "visit_duration": ""
+  },
+  {
+    "name": "大昭寺",
+    "location": "西藏自治区拉萨市",
+    "type": "Attraction",
+    "description": "藏传佛教圣地，历史悠久",
+    "tags": [
+      "宗教圣地",
+      "历史文化"
+    ],
+    "best_season": [
+      "全年"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "大昭寺_西藏自治区拉萨市",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "八角街",
+    "location": "西藏自治区拉萨市",
+    "type": "Attraction",
+    "description": "拉萨最具人文特色的商业街",
+    "tags": [
+      "文化体验",
+      "旅游街区"
+    ],
+    "best_season": [
+      "全年"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "八角街_西藏自治区拉萨市",
+    "category": "街区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "卡若拉冰川",
+    "location": "西藏自治区拉萨市",
+    "type": "Attraction",
+    "description": "位于冈巴拉雪山的冰川景观",
+    "tags": [
+      "冰雪景观",
+      "自然风光"
+    ],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "卡若拉冰川_西藏自治区拉萨市",
+    "category": "冰川",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "白居寺",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "以壁画和雕刻闻名的藏传佛教寺庙",
+    "tags": [
+      "宗教圣地",
+      "艺术瑰宝"
+    ],
+    "best_season": [
+      "全年"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "白居寺_西藏自治区日喀则市",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "帕拉庄园",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "旧时贵族的宅邸，历史遗迹",
+    "tags": [
+      "文化景观",
+      "历史遗迹"
+    ],
+    "best_season": [
+      "全年"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "帕拉庄园_西藏自治区日喀则市",
+    "category": "庄园",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "英吉沙小刀",
+    "location": "新疆喀什地区",
+    "type": "Restaurant",
+    "description": "新疆著名的手工艺品，可作为纪念品购买",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "英吉沙小刀_新疆喀什地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "烤全羊",
+    "location": "新疆喀什地区",
+    "type": "Restaurant",
+    "description": "新疆传统美食，常见于节日和宴席",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "烤全羊_新疆喀什地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "甜茶",
+    "location": "西藏拉萨市",
+    "type": "Restaurant",
+    "description": "藏式甜茶，是当地常见的饮品",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "甜茶_西藏拉萨市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "古格王朝",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "阿里地区最引人入胜的古迹之一",
+    "tags": [
+      "宗教文化",
+      "历史遗迹"
+    ],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "古格王朝_西藏自治区阿里地区",
+    "category": "古迹",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "班公错",
+    "location": "西藏自治区日土县",
+    "type": "Attraction",
+    "description": "措勤民俗节的主要活动地",
+    "tags": [
+      "自然风光"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "班公错_西藏自治区日土县",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "措勤县",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "割草节举办地，以牧草闻名",
+    "tags": [
+      "民俗活动"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "措勤县_西藏自治区阿里地区",
+    "category": "县",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "阿里大北线",
+    "location": "西藏自治区",
+    "type": "Attraction",
+    "description": "穿越阿里地区的著名旅游路线",
+    "tags": [
+      "自驾路线"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "阿里大北线_西藏自治区",
+    "category": "路线",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "拉曲河",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "转山途中的重要地理标志",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "拉曲河_西藏自治区日喀则市",
+    "category": "河流",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "天葬场",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "转山途中的宗教地点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "天葬场_西藏自治区日喀则市",
+    "category": "宗教场所",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "霍尔",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "转湖途中的一站，有住宿条件",
+    "tags": [
+      "旅游集散地"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "霍尔_西藏自治区阿里地区",
+    "category": "乡镇",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "神山圣湖联合门票",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "进入神山和圣湖景点区域的门票",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      200,
+      200
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "神山圣湖联合门票_西藏自治区阿里地区",
+    "category": "门票",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "200",
+    "visit_duration": ""
+  },
+  {
+    "name": "即乌寺旅店",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "提供简陋住宿，人均20元",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      20,
+      20
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 3.0,
+    "image_url": "",
+    "graph_id": "即乌寺旅店_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "即乌寺小村温泉",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "露天温泉，10元可洗浴",
+    "tags": [
+      "休闲体验"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "即乌寺小村温泉_西藏自治区阿里地区",
+    "category": "温泉",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "巴噶草原",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "平坦开阔的草原，转湖途中经过",
+    "tags": [
+      "自然风光"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "巴噶草原_西藏自治区阿里地区",
+    "category": "草原",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "冈仁波齐峰",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "藏传佛教神山，与纳木那尼峰遥遥相对",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "冈仁波齐峰_西藏自治区阿里地区",
+    "category": "山峰",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "玛旁雍措",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "圣湖之一，湖边有住宿点",
+    "tags": [
+      "宗教圣地",
+      "自然风光"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玛旁雍措_西藏自治区阿里地区",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "古格家庭旅馆",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "扎不让村的家庭旅馆",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      30,
+      30
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "古格家庭旅馆_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "普兰县餐厅",
+    "location": "西藏自治区阿里地区",
+    "type": "Restaurant",
+    "description": "提供当地特色饮食",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "普兰县餐厅_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "卡若拉冰川",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "著名的冰川景观",
+    "tags": [
+      "自然风光",
+      "地质景观"
+    ],
+    "best_season": [
+      "冬季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "卡若拉冰川_西藏自治区日喀则市",
+    "category": "冰川",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "塔钦小村",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "靠近冈仁波齐山的住宿地",
+    "tags": [
+      "旅游住宿",
+      "宗教朝圣"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "塔钦小村_西藏自治区阿里地区",
+    "category": "村庄",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "札达县",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "拥有扎达土林等自然景观",
+    "tags": [
+      "自然风光",
+      "旅游目的地"
+    ],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "札达县_西藏自治区阿里地区",
+    "category": "县",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "古格王朝",
+    "location": "阿里地区",
+    "type": "Attraction",
+    "description": "阿里最引人入胜的古迹之一",
+    "tags": [
+      "宗教",
+      "历史文化"
+    ],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "古格王朝_阿里地区",
+    "category": "古迹",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "狮泉河",
+    "location": "阿里地区",
+    "type": "Attraction",
+    "description": "阿里地区的重要河流，周边有多个景点",
+    "tags": [],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "狮泉河_阿里地区",
+    "category": "河流",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "冈仁波齐",
+    "location": "阿里地区",
+    "type": "Attraction",
+    "description": "神山，是冈底斯转山节的核心区域",
+    "tags": [],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "冈仁波齐_阿里地区",
+    "category": "山峰",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "班公错",
+    "location": "日土县",
+    "type": "Attraction",
+    "description": "班公措民俗节举办地，湖光山色优美",
+    "tags": [],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "班公错_日土县",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "狮泉河镇",
+    "location": "阿里地区",
+    "type": "Attraction",
+    "description": "阿里象雄文化节举办地",
+    "tags": [],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "狮泉河镇_阿里地区",
+    "category": "城镇",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "措勤县",
+    "location": "阿里地区",
+    "type": "Attraction",
+    "description": "措勤割草节举办地，以牧草闻名",
+    "tags": [],
+    "best_season": [
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "措勤县_阿里地区",
+    "category": "县",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "阿里大北线",
+    "location": "阿里地区",
+    "type": "Attraction",
+    "description": "穿越阿里地区的著名自驾路线",
+    "tags": [],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "阿里大北线_阿里地区",
+    "category": "路线",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "狮泉河邮政机构",
+    "location": "阿里地区",
+    "type": "Attraction",
+    "description": "中国最遥远的邮政分支机构",
+    "tags": [],
+    "best_season": [
+      "全年"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "狮泉河邮政机构_阿里地区",
+    "category": "设施",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "阿里昆莎机场",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "位于狮泉河镇西南，2010年通航，提供民航大巴直达市区",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "阿里昆莎机场_西藏自治区阿里地区",
+    "category": "机场",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "拉萨贡嘎机场",
+    "location": "西藏自治区拉萨市",
+    "type": "Attraction",
+    "description": "西藏主要航空枢纽，有飞往阿里航线",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "拉萨贡嘎机场_西藏自治区拉萨市",
+    "category": "机场",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "叶城客运站",
+    "location": "新疆维吾尔自治区和田地区",
+    "type": "Attraction",
+    "description": "提供前往阿里地区的长途班车服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "叶城客运站_新疆维吾尔自治区和田地区",
+    "category": "车站",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "新藏线",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "从新疆叶城到阿里地区的交通线路",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "新藏线_西藏自治区阿里地区",
+    "category": "公路",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "219国道",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "贯穿阿里地区的重要交通干道",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "219国道_西藏自治区阿里地区",
+    "category": "公路",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "叶城",
+    "location": "新疆维吾尔自治区喀什地区",
+    "type": "Attraction",
+    "description": "新藏公路起点，是前往阿里地区的交通要道",
+    "tags": [],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "叶城_新疆维吾尔自治区喀什地区",
+    "category": "城市",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "阿里地区客运站",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "提供前往拉萨、叶城等地的长途班车服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "阿里地区客运站_西藏自治区阿里地区",
+    "category": "交通枢纽",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "拉萨汽车站",
+    "location": "西藏自治区拉萨市",
+    "type": "Attraction",
+    "description": "提供前往阿里地区的长途班车服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "拉萨汽车站_西藏自治区拉萨市",
+    "category": "交通枢纽",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "萨嘎县",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "新藏公路途经的重要节点，提供补给和住宿",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "萨嘎县_西藏自治区阿里地区",
+    "category": "县城",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "拉孜",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "新藏公路南线的重要节点，是前往阿里的必经之地",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "拉孜_西藏自治区日喀则市",
+    "category": "县城",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "日喀则汽车站",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "提供前往阿里的长途班车服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "日喀则汽车站_西藏自治区日喀则市",
+    "category": "交通枢纽",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "阿里驻拉萨办事处",
+    "location": "西藏自治区拉萨市",
+    "type": "Attraction",
+    "description": "提供前往阿里的交通信息和搭车服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "阿里驻拉萨办事处_西藏自治区拉萨市",
+    "category": "机构",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "西藏阿里藏羚羊旅运有限公司",
+    "location": "西藏自治区拉萨市",
+    "type": "Hotel",
+    "description": "提供从拉萨到阿里地区的长途班车服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      700,
+      750
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "西藏阿里藏羚羊旅运有限公司_西藏自治区拉萨市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "县政府招待所",
+    "location": "西藏自治区萨嘎县",
+    "type": "Hotel",
+    "description": "提供基本住宿服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      20,
+      20
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "县政府招待所_西藏自治区萨嘎县",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "加加段招待所",
+    "location": "西藏自治区萨嘎县",
+    "type": "Hotel",
+    "description": "提供较为舒适的住宿条件",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      30,
+      50
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "加加段招待所_西藏自治区萨嘎县",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "阿里办事处",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "提供前往阿里的交通信息和搭车服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "阿里办事处_西藏自治区阿里地区",
+    "category": "机构",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "萨嘎旅社",
+    "location": "西藏自治区日喀条市",
+    "type": "Hotel",
+    "description": "价格实惠，位于政府招待所对面",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      20,
+      20
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "萨嘎旅社_西藏自治区日喀则市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "政府招待所",
+    "location": "西藏自治区日喀则市",
+    "type": "Hotel",
+    "description": "提供双人间、三人间住宿",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "政府招待所_西藏自治区日喀则市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "武警营",
+    "location": "西藏自治区日喀则市",
+    "type": "Hotel",
+    "description": "价格30元/人，包膳食",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "武警营_西藏自治区日喀则市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "高原牦牛旅社",
+    "location": "西藏自治区日喀则市",
+    "type": "Hotel",
+    "description": "货车司机主要留宿处",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      20,
+      30
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "高原牦牛旅社_西藏自治区日喀则市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "扎西旅社",
+    "location": "西藏自治区日喀则市",
+    "type": "Hotel",
+    "description": "老旅馆，很多司机留宿",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      12,
+      30
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "扎西旅社_西藏自治区日喀则市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "永生旅社",
+    "location": "西藏自治区日喀则市",
+    "type": "Hotel",
+    "description": "住宿人数较少",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "永生旅社_西藏自治区日喀则市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "神山冈仁波齐峰",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "藏传佛教圣山，朝圣者众多",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "神山冈仁波齐峰_西藏自治区日喀则市",
+    "category": "山脉",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "圣湖玛旁雍错",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "藏传佛教圣湖",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "圣湖玛旁雍错_西藏自治区日喀则市",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "大金寺",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "位于神山脚下，是朝圣者聚集地",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "大金寺_西藏自治区日喀则市",
+    "category": "寺庙",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "霍尔区",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "靠近神山及圣湖，是重要住宿点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "霍尔区_西藏自治区日喀则市",
+    "category": "区域",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "星月小饭馆",
+    "location": "西藏自治区日喀则市",
+    "type": "Restaurant",
+    "description": "有独立沐浴房，10元/人",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "星月小饭馆_西藏自治区日喀则市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "西海餐厅",
+    "location": "西藏自治区日喀则市",
+    "type": "Restaurant",
+    "description": "提供餐饮服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "西海餐厅_西藏自治区日喀则市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "高原牦牛旅馆",
+    "location": "西藏自治区日喀则市",
+    "type": "Hotel",
+    "description": "提供食宿",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "高原牦牛旅馆_西藏自治区日喀则市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "神山圣湖",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "神山与圣湖组合景观",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "神山圣湖_西藏自治区日喀则市",
+    "category": "综合景观",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "巴噶",
+    "location": "西藏自治区日喀则市",
+    "type": "Attraction",
+    "description": "靠近神山，有大金寺",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "巴噶_西藏自治区日喀则市",
+    "category": "区域",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "霍尔区",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "靠近冈仁波齐峰和玛旁雍错湖的住宿点",
+    "tags": [
+      "朝圣路线",
+      "边疆地区"
+    ],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "霍尔区_西藏自治区阿里地区",
+    "category": "旅游区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "拉孜宾馆",
+    "location": "西藏自治区日喀则市",
+    "type": "Hotel",
+    "description": "提供住宿和找便车服务",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      25,
+      25
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "拉孜宾馆_西藏自治区日喀则市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "四川旅社",
+    "location": "西藏自治区日喀则市",
+    "type": "Hotel",
+    "description": "靠近公路及停车场，适合找便车",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      15,
+      15
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "四川旅社_西藏自治区日喀则市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "贡吉招待所",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "桑桑镇的住宿点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      20,
+      20
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "贡吉招待所_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "高原旅馆",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "措勤县的住宿点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      15,
+      15
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "高原旅馆_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "扎日南木错旅馆",
+    "location": "西藏自治区阿里地区",
+    "type": "Hotel",
+    "description": "措勤县的住宿点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      5,
+      30
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "扎日南木错旅馆_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "重庆小吃",
+    "location": "西藏自治区阿里地区",
+    "type": "Restaurant",
+    "description": "措勤县较好的饭馆",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "重庆小吃_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "遂州饭馆",
+    "location": "西藏自治区阿里地区",
+    "type": "Restaurant",
+    "description": "桑桑镇的饭馆",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "遂州饭馆_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "天府饭馆",
+    "location": "西藏自治区阿里地区",
+    "type": "Restaurant",
+    "description": "22道班附近的饭馆",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "天府饭馆_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "江龙饭馆",
+    "location": "西藏自治区阿里地区",
+    "type": "Restaurant",
+    "description": "22道班附近的饭馆",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "江龙饭馆_西藏自治区阿里地区",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "改则",
+    "location": "西藏自治区那曲市",
+    "type": "Attraction",
+    "description": "阿里北线较大的县城，有食宿和加油站",
+    "tags": [],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "改则_西藏自治区那曲市",
+    "category": "县城",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "盐湖",
+    "location": "西藏自治区那曲市",
+    "type": "Attraction",
+    "description": "位于改则附近，夜晚月色美丽",
+    "tags": [],
+    "best_season": [
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "盐湖_西藏自治区那曲市",
+    "category": "湖泊",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "革吉",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "阿里地区的重要县城，有饭馆和丁字路口",
+    "tags": [],
+    "best_season": [
+      "夏季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "革吉_西藏自治区阿里地区",
+    "category": "县城",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "普兰",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "靠近中尼边境，是重要的出入境口岸",
+    "tags": [],
+    "best_season": [
+      "春季",
+      "秋季"
+    ],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "普兰_西藏自治区阿里地区",
+    "category": "县城",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "政府招待所",
+    "location": "西藏自治区那曲市改则县",
+    "type": "Hotel",
+    "description": "提供标间和四人间，价格实惠",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      35,
+      60
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "政府招待所_改则",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "大众便餐",
+    "location": "西藏自治区那曲市改则县",
+    "type": "Restaurant",
+    "description": "味道不错，适合当地用餐",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "大众便餐_改则",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "富豪酒店",
+    "location": "西藏自治区阿里地区革吉县",
+    "type": "Hotel",
+    "description": "革吉最好的饭馆，适合住宿",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "富豪酒店_革吉",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "札达",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "以土林地貌和古格王朝遗址闻名",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "札达_西藏自治区阿里地区",
+    "category": "县",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "那木加",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "前往札达的途中一个重要节点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "那木加_西藏自治区阿里地区",
+    "category": "地点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "巴尔兵站",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "通往札达的新路线上的一个重要站点",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "巴尔兵站_西藏自治区阿里地区",
+    "category": "军事设施",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "阿里地区",
+    "location": "西藏自治区",
+    "type": "Attraction",
+    "description": "西藏最偏远的地区之一，拥有丰富自然与人文景观",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "阿里地区_西藏自治区",
+    "category": "地区",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "藏野驴",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "青藏高原特有的大型哺乳动物",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "藏野驴_西藏自治区阿里地区",
+    "category": "野生动物",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "藏羚羊",
+    "location": "西藏自治区阿里地区",
+    "type": "Attraction",
+    "description": "国家一级保护动物，生活在高海拔地区",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "藏羚羊_西藏自治区阿里地区",
+    "category": "野生动物",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "齐豫",
+    "location": "中国",
+    "type": "Attraction",
+    "description": "著名歌手，以圣洁歌声著称，擅长佛教音乐",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "齐豫_中国",
+    "category": "音乐人",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "仓央嘉措",
+    "location": "西藏自治区",
+    "type": "Attraction",
+    "description": "藏传佛教六世达赖喇嘛，诗人，具有广泛文化影响力",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "仓央嘉措_西藏自治区",
+    "category": "人物",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "风颜",
+    "location": "中国",
+    "type": "Attraction",
+    "description": "新生代文艺派作家，以细腻文字描写人生",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "风颜_中国",
+    "category": "作家",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "风雷塔",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "建在危崖上的古建筑，适合远观拍照",
+    "tags": [
+      "摄影点",
+      "古建筑"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "风雷塔_江西省上饶市",
+    "category": "建筑",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "玉田石",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "阳光海岸景区内的特色岩石",
+    "tags": [
+      "自然景观"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉田石_江西省上饶市",
+    "category": "岩石",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "金龟石",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "阳光海岸景区内的标志性岩石",
+    "tags": [
+      "自然景观"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "金龟石_江西省上饶市",
+    "category": "岩石",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "乾坤台",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "阳光海岸景区内的观景点",
+    "tags": [
+      "自然景观"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "乾坤台_江西省上饶市",
+    "category": "观景点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "五老拜三清",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "阳光海岸景区内的独特景观",
+    "tags": [
+      "自然景观"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "五老拜三清_江西省上饶市",
+    "category": "景观",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "珍珠黄杨群落",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "阳光海岸景区内的珍稀植物群落",
+    "tags": [
+      "自然景观"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "珍珠黄杨群落_江西省上饶市",
+    "category": "植物景观",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "母子石",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "阳光海岸景区内的特色岩石",
+    "tags": [
+      "自然景观"
+    ],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "母子石_江西省上饶市",
+    "category": "岩石",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "三清山国际青年旅舍",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Hotel",
+    "description": "世界遗产地区唯一一家国际青年旅舍",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      50,
+      50
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.5,
+    "image_url": "",
+    "graph_id": "三清山国际青年旅舍_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "Sunmars",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Restaurant",
+    "description": "售卖清明果等地方特色小吃",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "Sunmars_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "板栗烧肉",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Restaurant",
+    "description": "街头特色小吃，粉粉甜甜",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "板栗烧肉_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "熏香鸡腿",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Restaurant",
+    "description": "山下农家摊贩售卖的香鸡腿",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "熏香鸡腿_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "麻籽馃",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Restaurant",
+    "description": "畲族传统美食，冬至食用",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "麻籽馃_江西省上饶市",
+    "category": "",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "玉清台",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "适合露营，杜鹃花季时景色优美",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "玉清台_江西省上饶市",
+    "category": "观景台",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "上饶市区",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "购买三清山特产的地点之一",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "上饶市区_江西省上饶市",
+    "category": "城市",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "猴王观海",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "观景平台，视野开阔",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "猴王观海_江西省上饶市",
+    "category": "景点",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": "30分钟"
+  },
+  {
+    "name": "日上观景台",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "观赏日出和云海的好地方",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "日上观景台_江西省上饶市",
+    "category": "观景台",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "流霞台",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "三清山主要景点之一",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "流霞台_江西省上饶市",
+    "category": "景观",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  },
+  {
+    "name": "禹皇顶",
+    "location": "江西省上饶市",
+    "province": "江西省",
+    "city": "上饶市",
+    "type": "Attraction",
+    "description": "三清山主要景点之一",
+    "tags": [],
+    "best_season": [],
+    "budget_range": [
+      1000,
+      3000
+    ],
+    "suitable_for": [],
+    "features": [],
+    "rating": 4.0,
+    "image_url": "",
+    "graph_id": "禹皇顶_江西省上饶市",
+    "category": "景观",
+    "address": "",
+    "opening_hours": "",
+    "ticket_price": "",
+    "visit_duration": ""
+  }
+]

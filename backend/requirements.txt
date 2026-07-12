@@ -1,0 +1,46 @@
+# Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+
+# LLM & RAG
+langchain>=0.3.0
+langchain-community>=0.3.0
+langgraph>=0.2.0
+chromadb>=0.5.0  # 使用更新版本，包含预编译的wheel
+sentence-transformers==2.2.2
+
+# Neo4j for GraphRAG
+neo4j==5.15.0
+py2neo==2021.2.4
+
+# API & Model Integration
+openai==1.6.1
+dashscope==1.14.1  # 通义千问 API
+
+# Data Processing
+numpy>=1.26.0,<2.0
+pandas==2.1.4
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# WebSocket & SSE
+python-socketio==5.10.0
+sse-starlette==1.8.2
+
+# Cache & Storage
+redis==5.0.1
+aioredis==2.0.1
+
+# Utilities
+python-dotenv==1.0.0
+httpx==0.25.2
+loguru==0.7.2
+tenacity==8.2.3
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+
+# CORS
+fastapi-cors==0.0.6

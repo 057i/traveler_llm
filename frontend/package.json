@@ -1,0 +1,29 @@
+{
+  "name": "travel-recommender-frontend",
+  "version": "1.0.0",
+  "description": "智能旅行推荐系统前端",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "axios": "^1.6.2",
+    "echarts": "^6.1.0",
+    "element-plus": "^2.5.0",
+    "marked": "^18.0.5",
+    "pdfjs-dist": "^6.1.200",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.0",
+    "vue-echarts": "^8.0.1",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "sass": "^1.69.5",
+    "vite": "^8.1.4"
+  }
+}
