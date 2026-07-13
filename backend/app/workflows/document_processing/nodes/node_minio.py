@@ -1,37 +1,93 @@
 """
 Node: MinIO Storage
 
-上传文件到MinIO，包括原始PDF和MinerU解析后的文件
+上传文件到MinIO，包括原始PDF
 """
 from loguru import logger
 from ..state import DocumentProcessingState
 import os
 from pathlib import Path
+from app.utils.sse_utils import send_node_start, send_node_end
 
+FLOW_TYPE = "document"
+
+
+# ==================== 步骤函数 ====================
+
+def step1_prepare_paths(filename: str, file_path: str) -> dict:
+    """
+    Step 1: 准备文件路径和MinIO对象名称
+
+    Args:
+        filename: 原始文件名 (如: 三清山攻略.pdf)
+        file_path: 本地文件路径
+
+    Returns:
+        包含目录名、对象名等信息的字典
+    """
+    name_without_ext = Path(filename).stem
+    file_ext = Path(filename).suffix
+
+    # MinIO目录结构: 三清山攻略/三清山攻略_origin.pdf
+    directory = name_without_ext
+    origin_filename = f"{name_without_ext}_origin{file_ext}"
+    origin_object_name = f"{directory}/{origin_filename}"
+
+    logger.info(f"[MinIO] Directory: {directory}")
+    logger.info(f"[MinIO] Object name: {origin_object_name}")
+
+    return {
+        'directory': directory,
+        'origin_object_name': origin_object_name,
+        'file_path': file_path
+    }
+
+
+def step2_upload_original_pdf(minio, file_path: str, object_name: str):
+    """
+    Step 2: 上传原始PDF到MinIO
+
+    Args:
+        minio: MinIO客户端
+        file_path: 本地PDF文件路径
+        object_name: MinIO对象名称
+    """
+    logger.info(f"[MinIO] Uploading original PDF: {object_name}")
+    minio.save_file(file_path, object_name)
+    logger.success(f"[MinIO] Original PDF uploaded successfully")
+
+
+# ==================== 主节点函数 ====================
 
 async def save_to_minio(state: DocumentProcessingState) -> DocumentProcessingState:
     """
-    Step 1: Save file to MinIO storage
+    Node: 保存文件到MinIO存储
 
-    逻辑：
-    1. 创建同名目录（基于原文件名）
-    2. 上传原始PDF（重命名为xx_origin.pdf）
-    3. 如果有MinerU解析结果，下载并上传到同目录
+    流程:
+        1. 准备文件路径和MinIO对象名
+        2. 上传原始PDF（重命名为xx_origin.pdf）
+        3. Markdown文档将在finalize节点保存
+
+    Args:
+        state: 工作流状态
+
+    Returns:
+        更新后的状态
     """
     task_id = state.get('task_id')
 
-    # 发送 node_start 事件
+    # 发送node_start事件
     if task_id:
-        from ..utils import send_node_start
         await send_node_start(
             task_id=task_id,
+            flow_type=FLOW_TYPE,
             step_id="minio",
             step_name="MinIO存储",
             progress=15,
             message="正在保存文件到MinIO存储..."
         )
 
-    logger.info("[MinIO] Saving file to storage")
+    logger.info("[MinIO] === Starting MinIO upload ===")
 
     try:
         from app.core.minio_client import get_minio_client
@@ -39,100 +95,36 @@ async def save_to_minio(state: DocumentProcessingState) -> DocumentProcessingSta
         file_path = state.get('file_path')
         filename = state.get('filename')
 
+        # 验证必需参数
         if not file_path or not filename:
             raise ValueError("file_path and filename are required")
 
         # 获取MinIO客户端
         minio = get_minio_client()
 
-        # 1. 解析文件名，创建目录结构
-        # 例如：三清山攻略.pdf -> 三清山攻略/
-        name_without_ext = os.path.splitext(filename)[0]
-        file_ext = os.path.splitext(filename)[1]  # .pdf
+        # Step 1: 准备路径
+        paths = step1_prepare_paths(filename, file_path)
 
-        # 2. 重命名原始文件
-        # 三清山攻略.pdf -> 三清山攻略_origin.pdf
-        origin_filename = f"{name_without_ext}_origin{file_ext}"
-        origin_object_name = f"{name_without_ext}/{origin_filename}"
+        # Step 2: 上传原始PDF
+        step2_upload_original_pdf(
+            minio,
+            paths['file_path'],
+            paths['origin_object_name']
+        )
 
-        # 3. 上传原始PDF
-        logger.info(f"[MinIO] Uploading original PDF: {origin_object_name}")
-        minio.save_file(file_path, origin_object_name)
-        logger.success(f"[MinIO] Original PDF uploaded: {origin_object_name}")
-
-        # 2. 上传MinerU完整输出包
-        mineru_output_dir = state.get('mineru_output_dir')
-        mineru_has_package = state.get('mineru_has_package', False)
-
-        logger.info(f"[MinIO] mineru_output_dir: {mineru_output_dir}")
-        logger.info(f"[MinIO] mineru_has_package: {mineru_has_package}")
-
-        if mineru_output_dir and os.path.exists(mineru_output_dir):
-            logger.info(f"[MinIO] 开始上传MinerU输出包...")
-
-            # 遍历输出目录，上传所有文件
-            file_count = 0
-            for root, dirs, files in os.walk(mineru_output_dir):
-                for filename in files:
-                    local_file = os.path.join(root, filename)
-
-                    # 计算相对路径
-                    rel_path = os.path.relpath(local_file, mineru_output_dir)
-
-                    # MinIO对象名称
-                    object_name = f"{name_without_ext}/mineru/{rel_path.replace(os.sep, '/')}"
-
-                    # 上传文件
-                    try:
-                        minio.save_file(local_file, object_name)
-                        file_count += 1
-                        logger.debug(f"[MinIO] 已上传: {object_name}")
-                    except Exception as e:
-                        logger.warning(f"[MinIO] 上传失败 {object_name}: {e}")
-
-            logger.success(f"[MinIO] MinerU输出包上传完成（{file_count}个文件）")
-
-            # 清理临时目录
-            try:
-                import shutil
-                shutil.rmtree(mineru_output_dir)
-                logger.info(f"[MinIO] 已清理临时目录: {mineru_output_dir}")
-            except Exception as e:
-                logger.warning(f"[MinIO] 清理临时目录失败: {e}")
-        else:
-            if not mineru_output_dir:
-                logger.info(f"[MinIO] state中没有mineru_output_dir字段")
-            elif not os.path.exists(mineru_output_dir):
-                logger.warning(f"[MinIO] 输出目录不存在: {mineru_output_dir}")
-            else:
-                logger.info(f"[MinIO] MinerU没有返回完整输出包，只上传Markdown")
-
-        # 3. 单独上传Markdown文本（方便访问）
-        markdown_text = state.get('parsed_text')
-        if markdown_text:
-            import tempfile
-            with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', suffix='.md', delete=False) as f:
-                f.write(markdown_text)
-                temp_md_path = f.name
-
-            md_object_name = f"{name_without_ext}/{name_without_ext}.md"
-            logger.info(f"[MinIO] 上传Markdown文件: {md_object_name}")
-            minio.save_file(temp_md_path, md_object_name)
-            os.remove(temp_md_path)
-            logger.success(f"[MinIO] Markdown已上传: {md_object_name}")
-
-        # 5. 保存MinIO路径信息到state
+        # 保存结果到state
         state['minio_success'] = True
-        state['minio_path'] = origin_object_name
-        state['minio_directory'] = name_without_ext
+        state['minio_path'] = paths['origin_object_name']
+        state['minio_directory'] = paths['directory']
 
-        logger.success(f"[MinIO] All files saved to directory: {name_without_ext}/")
+        logger.success(f"[MinIO] === Upload completed: {paths['directory']}/ ===")
+        logger.info(f"[MinIO] Markdown将在finalize节点保存")
 
-        # 发送 node_end 事件
+        # 发送node_end事件
         if task_id:
-            from ..utils import send_node_end
             await send_node_end(
                 task_id=task_id,
+                flow_type=FLOW_TYPE,
                 step_id="minio",
                 step_name="MinIO存储",
                 progress=15,
@@ -140,7 +132,7 @@ async def save_to_minio(state: DocumentProcessingState) -> DocumentProcessingSta
             )
 
     except Exception as e:
-        logger.error(f"[MinIO] Save failed: {e}")
+        logger.error(f"[MinIO] Upload failed: {e}")
         import traceback
         traceback.print_exc()
         state["minio_success"] = False
@@ -150,7 +142,7 @@ async def save_to_minio(state: DocumentProcessingState) -> DocumentProcessingSta
 
 async def minio_fallback(state: DocumentProcessingState) -> DocumentProcessingState:
     """
-    Fallback: Skip MinIO storage and use original file path
+    Fallback: 跳过MinIO存储，直接使用原始文件路径
     """
     logger.warning("[MinIO] Using fallback - using original file path")
 

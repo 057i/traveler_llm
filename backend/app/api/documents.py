@@ -263,9 +263,15 @@ async def get_processing_progress(task_id: str):
                             # 收到Pub/Sub消息
                             try:
                                 data = json.loads(message['data'])
-                                event_type = data.get('type')  # 注意：Pub/Sub消息使用'type'字段
+                                # 优先使用event_type，兼容旧的type字段
+                                event_type = data.get('event_type') or data.get('type')
 
-                                # 转换为标准格式（添加event_type字段）
+                                # 如果event_type为None，跳过该消息
+                                if not event_type:
+                                    logger.warning(f"[SSE] Skipping message without event_type: {data}")
+                                    continue
+
+                                # 转换为标准格式（确保有event_type字段）
                                 if 'event_type' not in data:
                                     data['event_type'] = event_type
 

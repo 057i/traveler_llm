@@ -54,7 +54,7 @@ class MilvusHybridClient:
             raise
 
     def _create_collection(self):
-        """创建支持混合检索和丰富元数据的collection"""
+        """创建支持混合检索和丰富元数据的collection（HNSW索引）"""
         logger.info(f"[Milvus] Creating hybrid search collection with rich metadata: {self.collection_name}")
 
         # 定义字段
@@ -152,16 +152,22 @@ class MilvusHybridClient:
             schema=schema
         )
 
-        # 创建索引 - 稠密向量
+        # ========== 创建HNSW索引（高性能） ==========
+        from config.settings import settings
+
         dense_index_params = {
-            "index_type": "IVF_FLAT",
+            "index_type": settings.MILVUS_INDEX_TYPE,  # "HNSW"
             "metric_type": "COSINE",
-            "params": {"nlist": 128}
+            "params": {
+                "M": settings.MILVUS_INDEX_M,  # 16
+                "efConstruction": settings.MILVUS_INDEX_EF_CONSTRUCTION  # 200
+            }
         }
         self.collection.create_index(
             field_name="dense_vector",
             index_params=dense_index_params
         )
+        logger.success(f"[Milvus] Created HNSW index: M={settings.MILVUS_INDEX_M}, efConstruction={settings.MILVUS_INDEX_EF_CONSTRUCTION}")
 
         # 创建索引 - 稀疏向量
         sparse_index_params = {
@@ -289,6 +295,195 @@ class MilvusHybridClient:
 
         logger.info(f"[Milvus] Hybrid search returned {len(output)} results")
         return output
+
+    async def _search_dense(self, dense_vector: List[float], top_k: int = 20) -> List[Dict[str, Any]]:
+        """
+        独立的稠密向量检索（HNSW索引）
+
+        Args:
+            dense_vector: 稠密向量
+            top_k: 返回结果数量
+
+        Returns:
+            检索结果列表
+        """
+        if not self.collection:
+            raise Exception("Collection not initialized")
+
+        try:
+            from config.settings import settings
+
+            # HNSW搜索参数
+            dense_search_params = {
+                "metric_type": "COSINE",
+                "params": {"ef": settings.MILVUS_SEARCH_EF}  # 64，越大越准确
+            }
+
+            results = self.collection.search(
+                data=[dense_vector],
+                anns_field="dense_vector",
+                param=dense_search_params,
+                limit=top_k,
+                output_fields=["destination_id", "name", "province", "city", "category", "description", "full_text", "rating"]
+            )
+
+            output = []
+            for hits in results:
+                for hit in hits:
+                    output.append({
+                        "destination_id": hit.entity.get("destination_id"),
+                        "name": hit.entity.get("name"),
+                        "province": hit.entity.get("province"),
+                        "city": hit.entity.get("city"),
+                        "category": hit.entity.get("category"),
+                        "description": hit.entity.get("description"),
+                        "content": hit.entity.get("full_text"),
+                        "rating": hit.entity.get("rating"),
+                        "score": float(hit.score),
+                        "source": "milvus_dense"
+                    })
+
+            logger.info(f"[Milvus] Dense search (HNSW) returned {len(output)} results")
+            return output
+
+        except Exception as e:
+            logger.error(f"[Milvus] Dense search failed: {e}")
+            import traceback
+            traceback.print_exc()
+            return []
+
+    async def _search_sparse(self, query: str, top_k: int = 20) -> List[Dict[str, Any]]:
+        """
+        独立的稀疏向量检索（使用真实稀疏向量搜索）
+
+        使用 anns_field="sparse_vector" 进行稀疏向量搜索
+        如果失败，降级为关键词匹配
+
+        Args:
+            query: 查询文本
+            top_k: 返回结果数量
+
+        Returns:
+            检索结果列表
+        """
+        if not self.collection:
+            raise Exception("Collection not initialized")
+
+        try:
+            # 1. 生成稀疏向量
+            from app.core.embedding_service import get_embedding_service
+            embedding_service = get_embedding_service()
+
+            # 生成稀疏向量（TF-IDF）
+            sparse_vectors = embedding_service.encode_sparse([query])
+            if not sparse_vectors or not sparse_vectors[0]:
+                logger.warning(f"[Milvus] No sparse vector generated, fallback to keyword matching")
+                return await self._search_sparse_fallback(query, top_k)
+
+            sparse_vector = sparse_vectors[0]
+            logger.info(f"[Milvus] Generated sparse vector with {len(sparse_vector)} non-zero elements")
+
+            # 2. 使用稀疏向量搜索（anns_field）
+            sparse_search_params = {
+                "metric_type": "IP",  # 内积（适合稀疏向量）
+                "params": {}
+            }
+
+            results = self.collection.search(
+                data=[sparse_vector],
+                anns_field="sparse_vector",  # 使用稀疏向量字段
+                param=sparse_search_params,
+                limit=top_k,
+                output_fields=["destination_id", "name", "province", "city", "category", "description", "full_text", "rating"]
+            )
+
+            # 3. 格式化结果
+            output = []
+            for hits in results:
+                for hit in hits:
+                    output.append({
+                        "destination_id": hit.entity.get("destination_id"),
+                        "name": hit.entity.get("name"),
+                        "province": hit.entity.get("province"),
+                        "city": hit.entity.get("city"),
+                        "category": hit.entity.get("category"),
+                        "description": hit.entity.get("description"),
+                        "content": hit.entity.get("full_text"),
+                        "rating": hit.entity.get("rating"),
+                        "score": float(hit.score),
+                        "source": "milvus_sparse"
+                    })
+
+            logger.info(f"[Milvus] Sparse search (ANNS) returned {len(output)} results")
+
+            # 如果结果少，记录警告但直接返回（不再fallback到query）
+            if len(output) < top_k // 2:
+                logger.warning(f"[Milvus] Sparse ANNS returned only {len(output)} results (expected ~{top_k})")
+                logger.warning(f"[Milvus] Fallback disabled due to query issue")
+
+            return output
+
+        except Exception as e:
+            logger.warning(f"[Milvus] Sparse ANNS search failed: {e}, fallback to keyword matching")
+            # 降级为关键词匹配
+            return await self._search_sparse_fallback(query, top_k)
+
+    async def _search_sparse_fallback(self, query: str, top_k: int = 20) -> List[Dict[str, Any]]:
+        """
+        稀疏检索降级方案（关键词匹配）
+
+        当真实稀疏向量搜索失败时使用
+        """
+        try:
+            import jieba
+
+            # 分词
+            keywords = list(jieba.cut(query))
+            logger.info(f"[Milvus] Sparse fallback keywords: {keywords}")
+
+            # 查询所有数据
+            results = self.collection.query(
+                expr="",
+                output_fields=["destination_id", "name", "province", "city", "category", "description", "full_text", "rating"],
+                limit=top_k * 3
+            )
+
+            # 关键词匹配评分
+            scored_results = []
+            for result in results:
+                text = (
+                    result.get("name", "") + " " +
+                    result.get("description", "") + " " +
+                    result.get("full_text", "")
+                )
+
+                # 计算匹配分数
+                match_count = sum(1 for kw in keywords if kw in text)
+                if match_count > 0:
+                    score = match_count / len(keywords)
+                    scored_results.append({
+                        "destination_id": result.get("destination_id"),
+                        "name": result.get("name"),
+                        "province": result.get("province"),
+                        "city": result.get("city"),
+                        "category": result.get("category"),
+                        "description": result.get("description"),
+                        "content": result.get("full_text"),
+                        "rating": result.get("rating"),
+                        "score": float(score),
+                        "source": "milvus_sparse_fallback"
+                    })
+
+            # 按分数排序
+            scored_results.sort(key=lambda x: x["score"], reverse=True)
+            output = scored_results[:top_k]
+
+            logger.info(f"[Milvus] Sparse fallback returned {len(output)} results")
+            return output
+
+        except Exception as e:
+            logger.error(f"[Milvus] Sparse fallback failed: {e}")
+            return []
 
     def delete(self, filter_expr: str):
         """删除向量"""

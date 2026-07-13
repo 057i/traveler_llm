@@ -112,6 +112,25 @@ class RedisClient:
             logger.error(f"Redis LREM失败: {e}")
             return 0
 
+    def publish(self, channel: str, message: str) -> int:
+        """
+        发布消息到Redis Pub/Sub频道
+
+        Args:
+            channel: 频道名称
+            message: 消息内容
+
+        Returns:
+            接收到消息的订阅者数量
+        """
+        try:
+            if self.client:
+                return self.client.publish(channel, message)
+            return 0
+        except Exception as e:
+            logger.error(f"Redis PUBLISH失败: {e}")
+            return 0
+
 
 _redis_client: Optional[RedisClient] = None
 

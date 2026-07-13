@@ -49,12 +49,29 @@
 
                 <!-- 执行节点 -->
                 <div v-if="msg.nodes && msg.nodes.length > 0" class="workflow-details">
-                  <el-collapse>
-                    <el-collapse-item>
+                  <el-collapse :model-value="msg.workflowExpanded ? ['workflow'] : []">
+                    <el-collapse-item name="workflow">
                       <template #title>
                         <div class="workflow-title">
                           <el-icon><Operation /></el-icon>
                           <span>查看工作流执行详情 ({{ msg.nodes.length }}个节点)</span>
+                          <!-- 显示工作流状态 -->
+                          <el-tag
+                            v-if="msg.workflowStatus === 'running'"
+                            type="primary"
+                            size="small"
+                            style="margin-left: 8px;"
+                          >
+                            执行中
+                          </el-tag>
+                          <el-tag
+                            v-else
+                            type="success"
+                            size="small"
+                            style="margin-left: 8px;"
+                          >
+                            已完成
+                          </el-tag>
                         </div>
                       </template>
                       <el-timeline>
@@ -111,6 +128,36 @@
                     </el-collapse-item>
                   </el-collapse>
                 </div>
+
+                <!-- 附近推荐 -->
+                <div v-if="msg.nearby_recommendations && msg.nearby_recommendations.length > 0" class="nearby-recommendations">
+                  <el-collapse>
+                    <el-collapse-item name="nearby">
+                      <template #title>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                          <el-icon><LocationInformation /></el-icon>
+                          <span>附近推荐 ({{ msg.nearby_recommendations.length }}条)</span>
+                        </div>
+                      </template>
+                      <el-collapse accordion>
+                        <el-collapse-item
+                          v-for="(nearby, idx) in msg.nearby_recommendations"
+                          :key="idx"
+                          :title="`${nearby.name} ${nearby.city ? '- ' + nearby.city : ''}`"
+                        >
+                          <div class="source-content">
+                            <p><strong>描述：</strong>{{ nearby.description || '无描述' }}</p>
+                            <p v-if="nearby.category"><strong>类型：</strong>{{ nearby.category }}</p>
+                            <p v-if="nearby.province || nearby.city">
+                              <strong>位置：</strong>{{ nearby.province }}{{ nearby.city }}
+                            </p>
+                            <el-tag type="info" size="small">附近推荐</el-tag>
+                          </div>
+                        </el-collapse-item>
+                      </el-collapse>
+                    </el-collapse-item>
+                  </el-collapse>
+                </div>
               </div>
             </div>
 
@@ -123,13 +170,13 @@
 
           <!-- 工作流进度 -->
           <div v-if="isLoading" class="workflow-progress">
-            <el-card shadow="hover">
+            <el-card shadow="hover" class="flow_card_wrapper">
               <template #header>
                 <div class="progress-header">
                   <el-icon class="rotating"><Loading /></el-icon>
                   <span>工作流执行中</span>
                   <el-tag type="primary" size="small">
-                    {{ executedNodes.length }}/7
+                    {{ executedNodes.length }}/{{ needs_web_search ? 7 : 6 }}
                   </el-tag>
                 </div>
               </template>
@@ -208,7 +255,8 @@ import {
   InfoFilled,
   Loading,
   Operation,
-  Delete
+  Delete,
+  LocationInformation
 } from '@element-plus/icons-vue'
 import { getChatHistory, clearChatHistory } from '@/api/index'
 
@@ -222,6 +270,7 @@ const isLoading = ref(false)
 const historyLoading = ref(false)
 const executedNodes = ref([])
 const messagesRef = ref(null)
+const needs_web_search = ref(false)
 let eventSource = null
 
 // 快捷问题
@@ -234,13 +283,13 @@ const suggestions = [
 
 // 节点名称映射
 const nodeNameMap = {
-  query_rewriter: '📝 问题重写',
-  parallel_retrieval: '🔍 并行检索',
-  rrf_fusion: '🔀 RRF融合',
-  confidence_check: '📊 置信度检查',
+  query_rewriter: '🔍 查询分析',
+  parallel_retrieval: '📊 混合检索',
+  rrf_fusion: '🔀 结果融合',
+  confidence_check: '📈 置信度检查',
   tavily_search: '🌐 网络搜索',
-  rerank: '⭐ 精排优化',
-  synthesizer: '✨ 结果润色'
+  rerank: '⭐ 智能重排',
+  synthesizer: '✨ 答案生成'
 }
 
 // 初始化
@@ -273,16 +322,41 @@ async function loadChatHistory() {
   try {
     const response = await getChatHistory(sessionId.value, 50)
 
-    // 将历史消息转换为前端格式
-    messages.value = response.messages.map(msg => ({
-      type: msg.type,
-      message: msg.content,
-      timestamp: msg.timestamp,
-      sources: msg.metadata?.sources || [],
-      nodes: msg.metadata?.nodes || []
-    }))
+    // 后端返回的是 history 字段，不是 messages
+    if (response && response.history && Array.isArray(response.history)) {
+      // 将历史记录转换为对话格式（用户查询 + AI回复）
+      const historyMessages = []
+      response.history.forEach(item => {
+        // 添加用户查询
+        if (item.query) {
+          historyMessages.push({
+            type: 'user',
+            message: item.query,
+            timestamp: item.timestamp
+          })
+        }
 
-    console.log(`✅ 加载了 ${response.count} 条历史消息`)
+        // 添加AI回复
+        if (item.answer) {
+          historyMessages.push({
+            type: 'assistant',
+            message: item.answer,
+            sources: item.sources || [],
+            nearby_recommendations: item.nearby_recommendations || [],  // 新增：附近推荐
+            nodes: [],
+            workflowExpanded: false,
+            workflowStatus: 'completed',
+            timestamp: item.timestamp
+          })
+        }
+      })
+
+      messages.value = historyMessages
+    } else {
+      messages.value = []
+    }
+
+    console.log(`✅ 加载了 ${response.count} 条历史记录，转换为 ${messages.value.length} 条消息`)
 
     // 滚动到底部
     nextTick(() => {
@@ -332,7 +406,7 @@ const handleSuggestionClick = (suggestion) => {
 }
 
 // 发送消息
-const handleSend = () => {
+const handleSend = async () => {
   if (!inputMessage.value.trim()) {
     ElMessage.warning('请输入问题')
     return
@@ -351,42 +425,260 @@ const handleSend = () => {
   isLoading.value = true
   executedNodes.value = []
 
-  // 创建SSE连接，传递session_id
-  const apiUrl = `/api/ai-recommend/stream?query=${encodeURIComponent(userMessage)}&session_id=${sessionId.value}`
+  // 生成新的请求标识符（用于区分本次请求的事件）
+  const currentRequestId = Date.now()
 
-  eventSource = new EventSource(apiUrl)
+  // ========== 用于存储后端返回的task_id ==========
+  let serverTaskId = null
+  // ===============================================
 
-  console.log('EventSource已创建:', apiUrl)
+  // 使用新的events端点
+  const eventsUrl = `/api/ai-recommend/events/${sessionId.value}`
 
-  // 监听消息
-  eventSource.onmessage = (event) => {
-    console.log('收到EventSource消息:', event.data)
-    try {
-      const data = JSON.parse(event.data)
-      handleSSEMessage(data)
-    } catch (e) {
-      console.error('解析SSE消息失败:', e, 'raw data:', event.data)
+  eventSource = new EventSource(eventsUrl)
+
+  console.log('连接SSE事件流:', eventsUrl)
+  console.log('当前请求ID:', currentRequestId)
+
+  // 监听node_start事件
+  eventSource.addEventListener('node_start', (event) => {
+    const receiveTime = Date.now() / 1000  // 转换为秒
+    const data = JSON.parse(event.data)
+    const sendTime = data.timestamp || 0
+    const delay = ((receiveTime - sendTime) * 1000).toFixed(0)  // 毫秒
+
+    // ========== 使用task_id过滤（如果存在） ==========
+    if (serverTaskId && data.task_id && data.task_id !== serverTaskId) {
+      console.log(`⏭️ [SKIP] task_id不匹配 node_start | 期望: ${serverTaskId}, 实际: ${data.task_id}`)
+      return
     }
-  }
+    // ==============================================
 
-  // 监听打开
-  eventSource.onopen = (event) => {
-    console.log('EventSource连接已打开')
-  }
+    // 时间戳过滤作为降级方案
+    if (!data.task_id && sendTime * 1000 < currentRequestId - 1000) {
+      console.log(`⏭️ [SKIP] 跳过旧事件 node_start | ${data.step_name} | 时间戳: ${sendTime}`)
+      return
+    }
 
-  // 监听错误
-  eventSource.onerror = (event) => {
-    console.error('SSE连接错误:', event)
-    messages.value.push({
-      type: 'system',
-      message: '连接服务器失败，请检查后端服务是否启动'
+    console.log(`⏱️ [RECEIVE] node_start at ${receiveTime.toFixed(3)} | ${data.step_name} | Delay: ${delay}ms`)
+
+    executedNodes.value.push({
+      name: data.step_name || data.step,
+      status: 'primary',
+      icon: 'Loading',
+      color: '#409eff',
+      message: data.message || ''
     })
+
+    scrollToBottom()
+  })
+
+  // 监听node_end事件
+  eventSource.addEventListener('node_end', (event) => {
+    const receiveTime = Date.now() / 1000
+    const data = JSON.parse(event.data)
+    const sendTime = data.timestamp || 0
+    const delay = ((receiveTime - sendTime) * 1000).toFixed(0)
+
+    // ========== 使用task_id过滤（如果存在） ==========
+    if (serverTaskId && data.task_id && data.task_id !== serverTaskId) {
+      console.log(`⏭️ [SKIP] task_id不匹配 node_end | 期望: ${serverTaskId}, 实际: ${data.task_id}`)
+      return
+    }
+    // ==============================================
+
+    // 时间戳过滤作为降级方案
+    if (!data.task_id && sendTime * 1000 < currentRequestId - 1000) {
+      console.log(`⏭️ [SKIP] 跳过旧事件 node_end | ${data.step_name} | 时间戳: ${sendTime}`)
+      return
+    }
+
+    console.log(`⏱️ [RECEIVE] node_end at ${receiveTime.toFixed(3)} | ${data.step_name} | Delay: ${delay}ms`)
+
+    const lastNode = executedNodes.value[executedNodes.value.length - 1]
+    if (lastNode) {
+      lastNode.status = 'success'
+      lastNode.icon = 'Check'
+      lastNode.color = '#67c23a'
+      lastNode.message = data.message || ''
+    }
+
+    scrollToBottom()
+  })
+
+  // 监听result事件（AI生成的答案）
+  eventSource.addEventListener('result', (event) => {
+    const receiveTime = Date.now() / 1000
+    const data = JSON.parse(event.data)
+    const sendTime = data.timestamp || 0
+    const delay = ((receiveTime - sendTime) * 1000).toFixed(0)
+
+    // ========== 使用task_id过滤（如果存在） ==========
+    if (serverTaskId && data.task_id && data.task_id !== serverTaskId) {
+      console.log(`⏭️ [SKIP] task_id不匹配 result | 期望: ${serverTaskId}, 实际: ${data.task_id}`)
+      return
+    }
+    // ==============================================
+
+    console.log(`⏱️ [RECEIVE] result at ${receiveTime.toFixed(3)} | Answer: ${data.answer?.length || 0} chars | Delay: ${delay}ms`)
+
+    // 添加AI回复（包含工作流节点和附近推荐）
+    messages.value.push({
+      type: 'assistant',
+      message: data.answer || '生成答案失败',
+      sources: data.sources || [],
+      nearby_recommendations: data.nearby_recommendations || [],  // 新增：附近推荐
+      nodes: [...executedNodes.value],
+      workflowExpanded: false,  // 默认折叠
+      workflowStatus: 'completed'  // 已完成
+    })
+    scrollToBottom()
+  })
+
+  // 监听complete事件
+  eventSource.addEventListener('complete', (event) => {
+    const receiveTime = Date.now() / 1000
+    const data = JSON.parse(event.data)
+    const sendTime = data.timestamp || 0
+    const delay = ((receiveTime - sendTime) * 1000).toFixed(0)
+
+    // 详细调试日志
+    console.log('========== COMPLETE EVENT DEBUG ==========')
+    console.log('Raw event data:', event.data)
+    console.log('Parsed data:', data)
+    console.log('data.answer:', data.answer)
+    console.log('data.answer type:', typeof data.answer)
+    console.log('data.answer length:', data.answer?.length)
+    console.log('data.sources:', data.sources)
+    console.log('Condition result:', !!data.answer)
+    console.log('==========================================')
+
+    console.log(`⏱️ [RECEIVE] complete at ${receiveTime.toFixed(3)} | Delay: ${delay}ms`)
+    console.log(`📊 [SUMMARY] Workflow completed`)
+
+    // 如果complete事件包含答案，添加到消息列表
+    if (data.answer) {
+      console.log(`✅ Condition passed, adding message`)
+      console.log(`💡 Complete event contains answer: ${data.answer.length} chars`)
+
+      // 添加最终的AI回复消息（工作流自动折叠）
+      messages.value.push({
+        type: 'assistant',
+        message: data.answer,
+        sources: data.sources || [],
+        nodes: [...executedNodes.value],
+        workflowExpanded: false,  // 完成后自动折叠
+        workflowStatus: 'completed'  // 标记为已完成
+      })
+      console.log(`📝 Messages array length after push: ${messages.value.length}`)
+      scrollToBottom()
+    } else {
+      console.log(`❌ Condition failed, answer is:`, data.answer)
+    }
+
     isLoading.value = false
+    // 不清空executedNodes，保留工作流显示
+    // executedNodes.value = []
+
     if (eventSource) {
       eventSource.close()
       eventSource = null
     }
+
+    ElMessage.success('推荐完成')
+  })
+
+  // 监听error事件
+  eventSource.addEventListener('error', (event) => {
+    console.error('SSE错误:', event)
+
+    if (event.data) {
+      try {
+        const data = JSON.parse(event.data)
+        messages.value.push({
+          type: 'system',
+          message: `错误: ${data.message || '推荐失败'}`
+        })
+        ElMessage.error(data.message || '推荐失败')
+      } catch (e) {
+        console.error('解析错误消息失败')
+      }
+    }
+
+    isLoading.value = false
+    // 不清空executedNodes，保留工作流显示
+    // executedNodes.value = []
+
+    if (eventSource) {
+      eventSource.close()
+      eventSource = null
+    }
+
     scrollToBottom()
+  })
+
+  // 监听连接打开
+  eventSource.onopen = () => {
+    console.log('SSE连接已建立')
+  }
+
+  // 监听连接错误
+  eventSource.onerror = (error) => {
+    console.error('SSE连接错误:', error)
+
+    // 只在第一次错误时显示消息
+    if (isLoading.value) {
+      messages.value.push({
+        type: 'system',
+        message: '连接服务器失败，请检查后端服务'
+      })
+      ElMessage.error('连接失败')
+
+      isLoading.value = false
+      // 不清空executedNodes，保留工作流显示
+      // executedNodes.value = []
+    }
+
+    if (eventSource) {
+      eventSource.close()
+      eventSource = null
+    }
+
+    scrollToBottom()
+  }
+
+  // 触发后端工作流 - 发送查询请求
+  try {
+    const response = await fetch('/api/ai-recommend/query', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        query: userMessage,
+        session_id: sessionId.value
+      })
+    })
+
+    // ========== 获取后端返回的task_id ==========
+    if (response.ok) {
+      const result = await response.json()
+      serverTaskId = result.task_id  // 赋值给闭包变量
+      console.log(`[TASK_ID] 后端返回task_id: ${serverTaskId}`)
+    }
+    // ============================================
+  } catch (error) {
+    console.error('发送查询失败:', error)
+    messages.value.push({
+      type: 'system',
+      message: '发送请求失败'
+    })
+    isLoading.value = false
+
+    if (eventSource) {
+      eventSource.close()
+      eventSource = null
+    }
   }
 }
 
@@ -450,9 +742,10 @@ const handleSSEMessage = (data) => {
       console.log('推荐完成')
       isLoading.value = false
 
-      nextTick(() => {
-        executedNodes.value = []
-      })
+      // 不清空executedNodes，保留工作流显示
+      // nextTick(() => {
+      //   executedNodes.value = []
+      // })
 
       if (eventSource) {
         eventSource.close()
@@ -464,7 +757,8 @@ const handleSSEMessage = (data) => {
     case 'error':
       console.error('收到错误消息:', data.message)
       isLoading.value = false
-      executedNodes.value = []
+      // 不清空executedNodes，保留工作流显示
+      // executedNodes.value = []
       messages.value.push({
         type: 'system',
         message: `错误: ${data.message}`
@@ -549,6 +843,37 @@ const scrollToBottom = () => {
   font-size: 20px;
 }
 
+/* 工作流进度样式 */
+.workflow-progress {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background: #f0f9ff;
+  border-left: 3px solid #409eff;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #409eff;
+}
+
+.workflow-progress .el-icon {
+  font-size: 18px;
+  animation: rotating 2s linear infinite;
+}
+
+:deep(.workflow-progress .flow_card_wrapper){
+  width:100%!important
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* 进度状态消息样式已移除 */
 
 .chat-container {
@@ -611,7 +936,7 @@ const scrollToBottom = () => {
   justify-content: flex-start;
   align-items: flex-start;
   gap: 12px;
-  max-width: 100%;
+  max-width: 95%;
   box-sizing: border-box;
 }
 

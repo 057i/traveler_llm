@@ -1,7 +1,8 @@
 """
 Document Processing State with comprehensive fields
 """
-from typing import TypedDict, List, Dict, Any, Optional
+from typing import TypedDict, List, Dict, Any, Optional, Annotated
+from operator import add
 
 
 class Destination(TypedDict):
@@ -29,7 +30,7 @@ class Destination(TypedDict):
 class DocumentProcessingState(TypedDict):
     """State for document processing workflow"""
 
-    # Task info
+    # Task info - task_id不应该被修改，保持单值
     task_id: str
     filename: str
     file_path: str
@@ -56,5 +57,5 @@ class DocumentProcessingState(TypedDict):
     graph_vector_success: bool  # GraphRAG
     finalize_success: bool
 
-    # Error tracking
-    errors: List[str]
+    # Error tracking (使用Reducer处理并发)
+    errors: Annotated[List[str], add]  # 使用add reducer合并并发错误
