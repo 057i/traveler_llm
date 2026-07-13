@@ -59,31 +59,36 @@ async def upload_document(file: UploadFile = File(...)):
             else:
                 raise HTTPException(status_code=400, detail="文件类型不匹配")
 
-        # 生成任务ID
-        task_id = str(uuid.uuid4())
+        # 生成文档ID和任务ID
+        doc_id = str(uuid.uuid4())
+        task_id = doc_id  # 使用doc_id作为task_id
 
-        # 创建临时文件路径
-        upload_dir = "./data/uploads"
-        os.makedirs(upload_dir, exist_ok=True)
-        temp_file_path = os.path.join(upload_dir, f"{task_id}.pdf")
+        # 标准化文件名（去除扩展名）
+        filename = os.path.splitext(file.filename)[0]
 
-        # 流式保存文件
-        file_size = 0
-        with open(temp_file_path, "wb") as f:
-            while chunk := await file.read(8192):  # 8KB chunks
-                file_size += len(chunk)
+        # 使用临时文件管理器保存上传的文件
+        from app.utils.temp_file_manager import get_temp_file_manager
+        temp_manager = get_temp_file_manager()
 
-                # 检查文件大小
-                if file_size > MAX_FILE_SIZE:
-                    os.remove(temp_file_path)
-                    raise HTTPException(
-                        status_code=400,
-                        detail=f"文件大小超过限制（最大100MB）"
-                    )
+        # 读取文件内容
+        file_content = await file.read()
+        file_size = len(file_content)
 
-                f.write(chunk)
+        # 检查文件大小
+        if file_size > MAX_FILE_SIZE:
+            raise HTTPException(
+                status_code=400,
+                detail=f"文件大小超过限制（最大100MB）"
+            )
 
-        logger.info(f"文件上传完成: {file.filename}, 大小: {file_size} bytes, 任务ID: {task_id}")
+        # 保存到临时目录
+        temp_file_path = temp_manager.save_uploaded_file(
+            doc_id=doc_id,
+            file_content=file_content,
+            filename=file.filename
+        )
+
+        logger.info(f"文件上传完成: {file.filename}, 大小: {file_size} bytes, Doc ID: {doc_id}")
 
         # 获取PDF页数
         pages_count = 0
@@ -94,26 +99,46 @@ async def upload_document(file: UploadFile = File(...)):
                 pages_count = len(pdf_reader.pages)
                 logger.info(f"[Upload] PDF页数: {pages_count}")
         except Exception as e:
-            logger.warning(f"[Upload] 无法获取页数: {e}")
+            logger.warning(f"[Upload] 无法获取PDF页数: {e}")
+            pages_count = 0
 
-        # 创建处理任务
+        # 创建Redis元数据
+        from app.services.document_metadata_service import get_document_metadata_service
+        metadata_service = get_document_metadata_service()
+
+        metadata_service.create_document_metadata(
+            doc_id=doc_id,
+            filename=filename,
+            original_name=file.filename,
+            file_size=file_size,
+            minio_bucket="travel-documents",
+            minio_folder=f"{filename}/"
+        )
+
+        # 立即保存页数
+        if pages_count > 0:
+            metadata_service._update_field(doc_id, 'pages_count', pages_count)
+
+        logger.success(f"[Upload] Created metadata for {filename}, pages: {pages_count}")
+
+        # 创建旧的任务记录（兼容现有逻辑）
         await document_task_service.create_task(
             task_id=task_id,
             filename=file.filename,
-            file_path=temp_file_path,
+            file_path=str(temp_file_path),
             file_size=file_size,
             pages_count=pages_count  # 传递页数
         )
 
         # 启动后台处理任务
         asyncio.create_task(
-            process_document_background(task_id, file.filename, temp_file_path)
+            process_document_background(task_id, doc_id, filename, str(temp_file_path))
         )
 
-        # 返回响应（包含document_id以便前端关联）
+        # 返回响应
         return {
             "task_id": task_id,
-            "document_id": task_id,  # 使用task_id作为document_id
+            "document_id": doc_id,
             "filename": file.filename,
             "file_size": file_size,
             "status": "processing",
@@ -124,46 +149,51 @@ async def upload_document(file: UploadFile = File(...)):
         raise
     except Exception as e:
         logger.error(f"文档上传失败: {e}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 
-async def process_document_background(task_id: str, filename: str, file_path: str):
+async def process_document_background(task_id: str, doc_id: str, filename: str, file_path: str):
     """
     后台处理文档
 
     异步执行文档处理workflow，更新进度到Redis
+
+    Args:
+        task_id: 任务ID
+        doc_id: 文档ID（用于元数据管理）
+        filename: 文件名（不含扩展名）
+        file_path: 临时文件路径
     """
     try:
-        logger.info(f"[Background] Starting document processing for task: {task_id}")
-
-        # 获取任务信息（包含pages_count）
-        task_info = await document_task_service.get_document(task_id)
-        pages_count = task_info.get('pages_count', 0) if task_info else 0
+        logger.info(f"[Background] Starting document processing for task: {task_id}, doc: {doc_id}")
 
         # 获取workflow服务
         workflow = get_document_workflow()
 
-        # 执行处理
+        # 执行处理（传递doc_id）
         result = await workflow.process_document(
             task_id=task_id,
+            doc_id=doc_id,  # 新增
             filename=filename,
             file_path=file_path,
-            pages_count=pages_count  # 传递页数
+            pages_count=0
         )
 
         logger.success(f"[Background] Document processing completed for task: {task_id}")
-
-        # 注意：不再调用update_progress，因为：
-        # 1. workflow_service已经通过_send_sse_event发送了complete事件
-        # 2. 所有节点的进度已通过_send_step_event更新到progress key
-        # 3. 额外的update_progress会覆盖progress key，导致event_type丢失
 
     except Exception as e:
         logger.error(f"[Background] Document processing failed for task {task_id}: {e}")
         import traceback
         traceback.print_exc()
 
-        # 更新失败状态
+        # 更新元数据状态为失败
+        from app.services.document_metadata_service import get_document_metadata_service
+        metadata_service = get_document_metadata_service()
+        metadata_service.update_status(doc_id, "failed")
+
+        # 更新旧任务状态
         await document_task_service.update_progress(
             task_id=task_id,
             progress=0,
@@ -395,32 +425,43 @@ async def list_documents(
     page_size: int = Query(10, ge=1, le=100)
 ):
     """
-    获取文档列表
+    获取文档列表（从Redis元数据读取）
 
     支持分页查询
     """
     try:
-        # 将page和page_size转换为skip和limit
+        from app.services.document_metadata_service import get_document_metadata_service
+
+        metadata_service = get_document_metadata_service()
+        all_documents = metadata_service.list_all_documents()
+
+        # 分页
         skip = (page - 1) * page_size
-        limit = page_size
+        documents = all_documents[skip:skip + page_size]
+        total = len(all_documents)
 
-        documents = await document_task_service.list_documents(skip=skip, limit=limit)
-        total = await document_task_service.count_documents()
-
-        # Redis中的数据已经包含province, city, destinations_count, pages_count
-        # 如果缺少，设置默认值
+        # 格式化返回数据
+        formatted_docs = []
         for doc in documents:
-            if 'province' not in doc:
-                doc['province'] = '-'
-            if 'city' not in doc:
-                doc['city'] = '-'
-            if 'destinations_count' not in doc:
-                doc['destinations_count'] = 0
-            if 'pages_count' not in doc:
-                doc['pages_count'] = 0
+            formatted_docs.append({
+                "task_id": doc.get("doc_id"),  # 兼容前端
+                "document_id": doc.get("doc_id"),
+                "filename": doc.get("filename"),
+                "original_name": doc.get("original_name"),
+                "upload_time": doc.get("upload_time"),
+                "status": doc.get("status"),
+                "file_size": doc.get("file_size"),
+
+                # 统计信息
+                "destinations_count": doc.get("entities_count", 0),
+                "chunks_count": doc.get("chunks_count", 0),
+                "pages_count": doc.get("pages_count", 0),
+                "province": doc.get("province", "-"),
+                "city": doc.get("city", "-"),
+            })
 
         return {
-            "documents": documents,
+            "documents": formatted_docs,
             "total": total,
             "page": page,
             "page_size": page_size
@@ -428,84 +469,54 @@ async def list_documents(
 
     except Exception as e:
         logger.error(f"获取文档列表失败: {e}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.delete("/{doc_id}")
 async def delete_document(doc_id: str):
     """
-    删除文档
+    删除文档（级联删除所有资源）
 
-    清理范围：MinIO、本地文件、Redis、Neo4j、Milvus
+    删除内容：
+    1. MinIO中的所有文件（PDF + Markdown + 图片）
+    2. Milvus中的所有向量
+    3. Neo4j中的所有实体
+    4. Redis中的元数据
     """
     try:
         logger.info(f"[Delete] 开始删除文档: {doc_id}")
 
-        # 1. 获取文档信息
-        doc_info = await document_task_service.get_document(doc_id)
-        if not doc_info:
-            raise HTTPException(status_code=404, detail="文档不存在")
+        # 使用新的级联删除服务
+        from app.services.document_deletion_service import get_document_deletion_service
+        deletion_service = get_document_deletion_service()
 
-        filename = doc_info.get('filename', '')
-        minio_directory = doc_info.get('minio_directory', '')
+        result = await deletion_service.delete_document(doc_id)
 
-        # 2. 删除MinIO文件夹
-        if minio_directory:
-            try:
-                from app.core.minio_client import get_minio_client
-                minio = get_minio_client()
+        if not result["success"]:
+            logger.warning(f"[Delete] 删除部分失败: {result}")
+            return {
+                "success": False,
+                "message": "文档删除失败",
+                "details": result["deleted"],
+                "errors": result.get("errors", [])
+            }
 
-                files = minio.list_files(prefix=f"{minio_directory}/")
-                logger.info(f"[Delete] 删除MinIO: {minio_directory}/ ({len(files)}个文件)")
+        logger.success(f"[Delete] 文档删除完成: {doc_id}")
+        logger.info(f"[Delete] 删除详情: {result['deleted']}")
 
-                for file_name in files:
-                    minio.delete_file(file_name)
+        return {
+            "success": True,
+            "message": "文档及所有资源已成功删除",
+            "doc_id": doc_id,
+            "deleted": result["deleted"]
+        }
 
-                logger.success(f"[Delete] MinIO已清理")
-            except Exception as e:
-                logger.warning(f"[Delete] MinIO清理失败: {e}")
-
-        # 3. 删除本地文件
-        file_path = doc_info.get('file_path', '')
-        if file_path and os.path.exists(file_path):
-            os.remove(file_path)
-            logger.info(f"[Delete] 本地文件已删除")
-
-        # 4. 删除Neo4j节点
-        if filename:
-            try:
-                from app.core.neo4j_client import get_neo4j_client
-                neo4j = get_neo4j_client()
-                result = neo4j.query(
-                    "MATCH (n:Destination {filename: $filename}) DETACH DELETE n RETURN count(n) as deleted_count",
-                    {"filename": filename}
-                )
-                deleted_count = result[0]['deleted_count'] if result else 0
-                logger.info(f"[Delete] Neo4j已删除: {deleted_count}个节点")
-            except Exception as e:
-                logger.warning(f"[Delete] Neo4j清理失败: {e}")
-
-        # 5. 删除Milvus向量
-        if filename:
-            try:
-                from app.core.milvus_hybrid_client import get_milvus_hybrid_client
-                milvus = get_milvus_hybrid_client()
-                milvus.collection.delete(f'filename == "{filename}"')
-                logger.info(f"[Delete] Milvus向量已删除")
-            except Exception as e:
-                logger.warning(f"[Delete] Milvus清理失败: {e}")
-
-        # 6. 删除Redis记录
-        success = await document_task_service.delete_document(doc_id)
-        if success:
-            logger.success(f"[Delete] 文档删除完成: {doc_id}")
-
-        return {"message": "文档删除成功", "doc_id": doc_id, "filename": filename}
-
-    except HTTPException:
-        raise
     except Exception as e:
         logger.error(f"[Delete] 删除失败: {e}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"删除失败: {str(e)}")
 
     except HTTPException:
@@ -550,61 +561,55 @@ async def download_document(doc_id: str):
 @router.get("/statistics")
 async def get_statistics():
     """
-    获取统计信息
+    获取统计信息（从新的元数据系统读取）
 
     返回文档总数、省份数、城市数、景点数等
     """
     try:
+        from app.services.document_metadata_service import get_document_metadata_service
+
+        metadata_service = get_document_metadata_service()
+        all_documents = metadata_service.list_all_documents()
+
         # 文档统计
-        total_docs = await document_task_service.count_documents()
-        processing = await document_task_service.count_processing()
+        total_docs = len(all_documents)
+        processing = len([d for d in all_documents if d.get('status') == 'processing'])
+        completed = len([d for d in all_documents if d.get('status') == 'completed'])
 
-        # 从Milvus获取景点统计
-        total_destinations = 0
-        total_provinces = 0
-        total_cities = 0
+        # 从元数据聚合统计
+        provinces_set = set()
+        cities_set = set()
+        total_entities = 0
 
-        try:
-            from app.core.milvus_hybrid_client import get_milvus_hybrid_client
-            milvus = get_milvus_hybrid_client()
+        for doc in all_documents:
+            if doc.get('status') == 'completed':
+                # 统计景点数
+                total_entities += doc.get('entities_count', 0)
 
-            # 获取Milvus中的向量总数
-            milvus.collection.flush()  # 确保数据已刷新
-            total_destinations = milvus.collection.num_entities
+                # 收集省份和城市
+                province = doc.get('province')
+                city = doc.get('city')
 
-            logger.info(f"[Statistics] Milvus count: {total_destinations}")
+                logger.debug(f"[Statistics] Doc {doc.get('filename')}: province={province}, city={city}")
 
-        except Exception as e:
-            logger.error(f"[Statistics] 获取Milvus统计失败: {e}")
-            import traceback
-            traceback.print_exc()
-            total_destinations = 0
-            total_provinces = 0
-            total_cities = 0
+                if province and province != '-':
+                    provinces_set.add(province)
 
-        # 从Neo4j获取图谱统计
+                if city and city != '-':
+                    cities_set.add(city)
+
+        total_provinces = len(provinces_set)
+        total_cities = len(cities_set)
+
+        logger.info(f"[Statistics] Docs: {total_docs}, Entities: {total_entities}, Provinces: {total_provinces}, Cities: {total_cities}")
+        logger.info(f"[Statistics] Provinces list: {list(provinces_set)}")
+        logger.info(f"[Statistics] Cities list: {list(cities_set)}")
+
+        # 从Neo4j获取图谱统计（用于验证）
         graph_destinations = 0
         try:
             from app.core.neo4j_client import get_neo4j_client
             neo4j = get_neo4j_client()
-
-            # 统计省份数（从Destination节点中去重）
-            result = neo4j.query("""
-                MATCH (n:Destination)
-                WHERE n.province IS NOT NULL AND n.province <> ''
-                RETURN count(DISTINCT n.province) as count
-            """)
-            if result and len(result) > 0:
-                total_provinces = result[0].get('count', 0)
-
-            # 统计城市数（从Destination节点中去重）
-            result = neo4j.query("""
-                MATCH (n:Destination)
-                WHERE n.city IS NOT NULL AND n.city <> ''
-                RETURN count(DISTINCT n.city) as count
-            """)
-            if result and len(result) > 0:
-                total_cities = result[0].get('count', 0)
 
             # 统计景点数
             result = neo4j.query("MATCH (n:Destination) RETURN count(n) as count")
@@ -613,19 +618,17 @@ async def get_statistics():
 
         except Exception as e:
             logger.error(f"[Statistics] 获取Neo4j统计失败: {e}")
-            import traceback
-            traceback.print_exc()
             graph_destinations = 0
 
         return {
             "totalDocs": total_docs,
             "processing": processing,
-            "completed": total_docs - processing,
+            "completed": completed,
             "totalProvinces": total_provinces,
             "totalCities": total_cities,
-            "totalDestinations": total_destinations,
-            "textRAG": total_destinations,
-            "graphRAG": graph_destinations
+            "totalDestinations": total_entities,  # 从元数据统计
+            "textRAG": total_entities,
+            "graphRAG": graph_destinations  # Neo4j中的景点数
         }
 
     except Exception as e:

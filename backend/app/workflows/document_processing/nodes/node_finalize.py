@@ -1,137 +1,28 @@
 """
 Node: Finalize
 
-Complete the workflow and update statistics
+完成工作流：
+1. 保存元数据到Redis
+2. 清理临时文件
+3. 发送完成通知
 """
 from loguru import logger
 from ..state import DocumentProcessingState
 from app.utils.sse_utils import send_node_start, send_node_end
+from app.services.document_metadata_service import get_document_metadata_service
+from app.utils.temp_file_manager import get_temp_file_manager
 
 FLOW_TYPE = "document"
 
 
-# ==================== 步骤函数 ====================
-
-def step1_calculate_statistics(destinations: list) -> dict:
-    """
-    Step 1: 计算统计信息
-
-    Args:
-        destinations: 景点列表
-
-    Returns:
-        统计信息字典
-    """
-    provinces = set()
-    cities = set()
-    first_province = None
-    first_city = None
-
-    for dest in destinations:
-        if dest.get('province'):
-            provinces.add(dest['province'])
-            if not first_province:
-                first_province = dest['province']
-        if dest.get('city'):
-            cities.add(dest['city'])
-            if not first_city:
-                first_city = dest['city']
-
-    stats = {
-        'destinations_count': len(destinations),
-        'provinces_count': len(provinces),
-        'cities_count': len(cities),
-        'first_province': first_province or '-',
-        'first_city': first_city or '-',
-        'provinces_list': list(provinces),
-        'cities_list': list(cities)
-    }
-
-    logger.info(f"[Finalize] Statistics:")
-    logger.info(f"  - Destinations: {stats['destinations_count']}")
-    logger.info(f"  - Provinces: {stats['provinces_count']}")
-    logger.info(f"  - Cities: {stats['cities_count']}")
-
-    return stats
-
-
-def step2_update_redis(task_id: str, stats: dict, pages_count: int, minio_directory: str):
-    """
-    Step 2: 更新Redis中的任务信息
-
-    Args:
-        task_id: 任务ID
-        stats: 统计信息
-        pages_count: 页数
-        minio_directory: MinIO目录名
-    """
-    from app.core.redis_client import get_redis_client
-    import json
-
-    redis_client = get_redis_client()
-    task_key = f"document:task:{task_id}"
-    task_data = redis_client.get(task_key)
-
-    if task_data:
-        task_info = json.loads(task_data)
-        task_info['destinations_count'] = stats['destinations_count']
-        task_info['province'] = stats['first_province']
-        task_info['city'] = stats['first_city']
-        task_info['pages_count'] = pages_count
-        task_info['status'] = 'completed'
-        task_info['minio_directory'] = minio_directory
-
-        redis_client.set(task_key, json.dumps(task_info), ex=86400)  # 24小时
-        logger.success(
-            f"[Finalize] Updated Redis: {stats['destinations_count']} destinations, "
-            f"{pages_count} pages"
-        )
-
-
-def step3_save_markdown_to_minio(minio_directory: str, parsed_text: str):
-    """
-    Step 3: 保存Markdown文档到MinIO
-
-    Args:
-        minio_directory: MinIO目录名
-        parsed_text: Markdown文本内容
-    """
-    from app.core.minio_client import get_minio_client
-    import os
-
-    minio = get_minio_client()
-
-    # Markdown文件名
-    md_object_name = f"{minio_directory}/{minio_directory}.md"
-
-    # 创建临时文件
-    temp_dir = "./data/temp"
-    os.makedirs(temp_dir, exist_ok=True)
-    temp_md_path = os.path.join(temp_dir, f"{minio_directory}.md")
-
-    # 写入markdown内容
-    with open(temp_md_path, 'w', encoding='utf-8') as f:
-        f.write(parsed_text)
-
-    # 上传到MinIO
-    minio.save_file(temp_md_path, md_object_name)
-
-    # 删除临时文件
-    os.remove(temp_md_path)
-
-    logger.success(f"[Finalize] Markdown saved to MinIO: {md_object_name}")
-
-
-# ==================== 主节点函数 ====================
-
 async def finalize(state: DocumentProcessingState) -> DocumentProcessingState:
     """
-    Node: 完成处理并更新统计
+    Node: 完成处理
 
     流程:
-        1. 计算统计信息（景点数、省份数、城市数等）
-        2. 更新Redis中的任务信息
-        3. 保存Markdown文档到MinIO
+        1. 保存文档元数据到Redis
+        2. 清理临时文件
+        3. 发送完成通知
 
     Args:
         state: 工作流状态
@@ -140,6 +31,7 @@ async def finalize(state: DocumentProcessingState) -> DocumentProcessingState:
         更新后的状态
     """
     task_id = state.get('task_id')
+    doc_id = state.get('doc_id')
 
     # 发送node_start事件
     if task_id:
@@ -155,41 +47,70 @@ async def finalize(state: DocumentProcessingState) -> DocumentProcessingState:
     logger.info("[Finalize] === Finalizing workflow ===")
 
     try:
+        # Step 1: 保存元数据到Redis
+        metadata_service = get_document_metadata_service()
+
+        # 更新Milvus chunk IDs
+        milvus_chunk_ids = state.get('milvus_chunk_ids', [])
+        if milvus_chunk_ids:
+            metadata_service.update_milvus_chunks(doc_id, milvus_chunk_ids)
+            logger.info(f"[Finalize] Updated Milvus chunks: {len(milvus_chunk_ids)}")
+
+        # 更新Neo4j实体名称
         destinations = state.get('destinations', [])
+        entity_names = [d.get('name') for d in destinations if d.get('name')]
+        if entity_names:
+            metadata_service.update_neo4j_entities(doc_id, entity_names)
+            logger.info(f"[Finalize] Updated Neo4j entities: {len(entity_names)}")
+
+        # 更新图片数量
+        images_count = state.get('images_count', 0)
+        if images_count > 0:
+            metadata_service.update_images_count(doc_id, images_count)
+
+        # 更新页数
+        pages_count = state.get('pages_count', 0)
+        if pages_count > 0:
+            metadata_service._update_field(doc_id, 'pages_count', pages_count)
+
+        # 提取省份和城市（从第一个实体）
+        if destinations:
+            first_dest = destinations[0]
+            province = first_dest.get('province', '-')
+            city = first_dest.get('city', '-')
+            metadata_service._update_field(doc_id, 'province', province)
+            metadata_service._update_field(doc_id, 'city', city)
+            logger.info(f"[Finalize] Updated location: {province} - {city}")
+
+        # 更新状态为completed
+        metadata_service.update_status(doc_id, "completed")
+
+        logger.success(f"[Finalize] ✅ Metadata saved to Redis")
+
+        # Step 2: 清理临时文件
+        temp_manager = get_temp_file_manager()
+        cleanup_success = temp_manager.cleanup_temp_dir(doc_id)
+
+        if cleanup_success:
+            logger.success(f"[Finalize] ✅ Cleaned up temp files")
+        else:
+            logger.warning(f"[Finalize] ⚠️ Failed to cleanup temp files")
+
+        # 统计信息
         chunks_count = len(state.get('chunks', []))
+        stats = {
+            'destinations_count': len(destinations),
+            'chunks_count': chunks_count,
+            'images_count': images_count,
+            'pages_count': pages_count
+        }
 
-        # Step 1: 计算统计信息
-        stats = step1_calculate_statistics(destinations)
-
-        # Step 2: 更新Redis
-        if task_id:
-            try:
-                step2_update_redis(
-                    task_id,
-                    stats,
-                    state.get('pages_count', 0),
-                    state.get('minio_directory', '')
-                )
-
-                # Step 3: 保存Markdown到MinIO
-                minio_directory = state.get('minio_directory')
-                parsed_text = state.get('parsed_text', '')
-
-                if minio_directory and parsed_text:
-                    try:
-                        step3_save_markdown_to_minio(minio_directory, parsed_text)
-                    except Exception as md_err:
-                        logger.warning(f"[Finalize] Failed to save markdown: {md_err}")
-
-            except Exception as e:
-                logger.warning(f"[Finalize] Failed to update Redis: {e}")
-
-        # 保存统计信息到state
         state['finalize_success'] = True
         state['statistics'] = stats
 
         logger.success(
-            f"[Finalize] === Workflow completed: {stats['destinations_count']} destinations ==="
+            f"[Finalize] === Workflow completed: {stats['destinations_count']} destinations, "
+            f"{stats['chunks_count']} chunks, {stats['pages_count']} pages ==="
         )
 
         # 发送node_end事件
@@ -200,7 +121,7 @@ async def finalize(state: DocumentProcessingState) -> DocumentProcessingState:
                 step_id="finalize",
                 step_name="完成",
                 progress=100,
-                message=f"处理完成 ({stats['destinations_count']} 个景点)"
+                message=f"处理完成 ({stats['destinations_count']} 个景点, {stats['chunks_count']} 个文本块)"
             )
 
     except Exception as e:

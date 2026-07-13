@@ -64,7 +64,10 @@ class DocumentMetadataService:
                 # 统计信息
                 "chunks_count": 0,
                 "entities_count": 0,
-                "images_count": 0
+                "images_count": 0,
+                "pages_count": 0,  # 新增
+                "province": "-",   # 新增
+                "city": "-"        # 新增
             }
 
             # 保存到Redis

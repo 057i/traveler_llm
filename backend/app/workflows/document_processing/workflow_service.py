@@ -13,12 +13,14 @@ from .graph_builder import build_document_processing_workflow
 class DocumentProcessingWorkflow:
     """6-step document processing workflow with real-time SSE progress"""
 
-    # Map workflow nodes to frontend step IDs (6 steps)
+    # Map workflow nodes to frontend step IDs (7 steps)
     STEP_MAPPING = {
         "save_to_minio": "minio",
         "minio_fallback": "minio",
         "parse_pdf_mineru": "parse",
         "parse_fallback": "parse",
+        "upload_to_minio_after_parse": "minio_upload",  # 新增
+        "minio_upload_fallback": "minio_upload",  # 新增
         "chunk_text": "chunk",
         "extract_entities": "extract",
         "extract_fallback": "extract",
@@ -29,10 +31,11 @@ class DocumentProcessingWorkflow:
         "finalize": "finalize"
     }
 
-    # Chinese names for each step (7 steps including finalize)
+    # Chinese names for each step (8 steps)
     STEP_NAMES = {
         "minio": "MinIO存储",
         "parse": "PDF解析",
+        "minio_upload": "上传MinIO",  # 新增
         "chunk": "文本分块",
         "extract": "实体提取",
         "vectorize_traditional": "传统向量化",
@@ -40,13 +43,14 @@ class DocumentProcessingWorkflow:
         "finalize": "完成"
     }
 
-    # Progress percentage for each step (6 steps)
+    # Progress percentage for each step (8 steps)
     STEP_PROGRESS = {
-        "minio": 15,
-        "parse": 30,
-        "chunk": 45,
-        "extract": 60,
-        "vectorize_traditional": 75,
+        "minio": 10,
+        "parse": 25,
+        "minio_upload": 35,  # 新增
+        "chunk": 50,
+        "extract": 65,
+        "vectorize_traditional": 80,
         "vectorize_graph": 90,
         "finalize": 100
     }
@@ -57,6 +61,7 @@ class DocumentProcessingWorkflow:
     async def process_document(
         self,
         task_id: str,
+        doc_id: str,  # 新增
         filename: str,
         file_path: str,
         pages_count: int = 0
@@ -75,6 +80,7 @@ class DocumentProcessingWorkflow:
 
         Args:
             task_id: Task ID
+            doc_id: Document ID (用于元数据管理)
             filename: Original filename
             file_path: File path
             pages_count: PDF页数
@@ -82,7 +88,7 @@ class DocumentProcessingWorkflow:
         Returns:
             Processing result
         """
-        logger.info(f"[Workflow] Starting 6-step workflow: {filename}")
+        logger.info(f"[Workflow] Starting 6-step workflow: {filename}, doc_id: {doc_id}")
 
         try:
             # Send start event
@@ -94,9 +100,11 @@ class DocumentProcessingWorkflow:
             # Initialize state
             initial_state = {
                 "task_id": task_id,
+                "doc_id": doc_id,  # 新增
                 "filename": filename,
                 "file_path": file_path,
                 "pages_count": pages_count,  # 传递页数到state
+                "original_filename": filename + ".pdf",  # 新增
                 "raw_text": "",
                 "markdown_text": "",
                 "parsed_text": "",

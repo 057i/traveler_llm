@@ -452,6 +452,45 @@ const handleStreamMessage = (data) => {
       currentProgress.value = data.message
       break
 
+    case 'node_start':
+      // 节点开始 - 添加新步骤
+      const stepName = data.step_name || data.step || 'Unknown Step'
+      const existingStartStep = agentSteps.value.find(s => s.agent === stepName)
+
+      if (!existingStartStep) {
+        agentSteps.value.push({
+          agent: stepName,
+          status: 'running',
+          message: data.message || '处理中...'
+        })
+      }
+
+      currentProgress.value = data.message || `[${stepName}] 处理中...`
+      scrollToBottom()
+      break
+
+    case 'node_end':
+      // 节点完成 - 更新步骤状态
+      const completedStepName = data.step_name || data.step || 'Unknown Step'
+      const existingEndStep = agentSteps.value.find(s => s.agent === completedStepName)
+
+      if (existingEndStep) {
+        existingEndStep.status = 'completed'
+        existingEndStep.message = data.message || '完成'
+      } else {
+        // 如果没找到，添加一个已完成的步骤
+        agentSteps.value.push({
+          agent: completedStepName,
+          status: 'completed',
+          message: data.message || '完成'
+        })
+      }
+
+      activeAgentStep.value = agentSteps.value.filter(s => s.status === 'completed').length
+      currentProgress.value = data.message || `[${completedStepName}] 完成`
+      scrollToBottom()
+      break
+
     case 'progress':
       // 进度更新消息 - 更新步骤
       const agentName = data.agent || 'Unknown Agent'

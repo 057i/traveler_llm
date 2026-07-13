@@ -120,16 +120,20 @@ class DocumentDeletionService:
 
             logger.info(f"[DocumentDeletion] Deleting MinIO folder: {bucket}/{folder}")
 
-            # 列出文件夹中的所有对象
-            objects = minio_client.list_objects(bucket, prefix=folder, recursive=True)
+            # 列出文件夹中的所有文件
+            files = minio_client.list_files(prefix=folder)
+
+            if not files:
+                logger.warning(f"[DocumentDeletion] No files found in MinIO folder: {folder}")
+                return True
 
             deleted_count = 0
-            for obj in objects:
-                minio_client.remove_object(bucket, obj.object_name)
-                deleted_count += 1
+            for file_path in files:
+                if minio_client.delete_file(file_path):
+                    deleted_count += 1
 
-            logger.success(f"[DocumentDeletion] ✅ Deleted {deleted_count} files from MinIO")
-            return True
+            logger.success(f"[DocumentDeletion] ✅ Deleted {deleted_count}/{len(files)} files from MinIO")
+            return deleted_count == len(files)
 
         except Exception as e:
             logger.error(f"[DocumentDeletion] ❌ MinIO deletion failed: {e}")

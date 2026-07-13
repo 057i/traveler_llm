@@ -1,13 +1,13 @@
 """
 Document Processing Workflow Graph Builder
 
-6-step workflow for document processing pipeline:
-1. MinIO存储
-2. PDF解析 (MinerU)
+7-step workflow for document processing pipeline:
+1. PDF解析 (MinerU) - 先解析
+2. MinIO存储 - 上传解析结果
 3. 文本分块
 4. 实体提取
 5. RAG向量化 (Milvus) + GraphRAG (Neo4j) - 并行执行
-6. 完成
+6. 完成 - 保存元数据和清理临时文件
 """
 from langgraph.graph import StateGraph, END
 from loguru import logger
@@ -18,6 +18,8 @@ from .nodes import (
     minio_fallback,
     parse_pdf_mineru,
     parse_fallback,
+    upload_to_minio_after_parse,
+    minio_upload_fallback,
     chunk_text,
     extract_entities,
     extract_fallback,
@@ -30,32 +32,36 @@ from .nodes import (
 
 
 class DocumentProcessingGraphBuilder:
-    """6-step document processing workflow graph builder with parallel vectorization"""
+    """7-step document processing workflow graph builder with parallel vectorization"""
 
     def __init__(self):
         self.graph = StateGraph(DocumentProcessingState)
 
     def build(self):
         """
-        Build 6-step document processing workflow
+        Build 7-step document processing workflow
 
         Flow:
-        1. save_to_minio → MinIO存储
-        2. parse_pdf_mineru → PDF解析 (MinerU API)
+        1. parse_pdf_mineru → PDF解析 (MinerU API)
+        2. upload_to_minio_after_parse → 上传到MinIO
         3. chunk_text → 文本分块 (LangChain)
         4. extract_entities → 实体提取 (Qwen LLM)
         5. vectorize_traditional + vectorize_graph → RAG向量化和GraphRAG并行
-        6. finalize → 完成并统计
+        6. finalize → 完成并保存元数据
         """
-        logger.info("[GraphBuilder] Building workflow with parallel vectorization")
+        logger.info("[GraphBuilder] Building workflow with new MinIO upload order")
 
-        # Step 1: MinIO存储
-        self.graph.add_node("save_to_minio", save_to_minio)
-        self.graph.add_node("minio_fallback", minio_fallback)
-
-        # Step 2: PDF解析
+        # Step 1: PDF解析（移到第一步）
         self.graph.add_node("parse_pdf_mineru", parse_pdf_mineru)
         self.graph.add_node("parse_fallback", parse_fallback)
+
+        # Step 2: MinIO存储（移到解析之后）
+        self.graph.add_node("upload_to_minio_after_parse", upload_to_minio_after_parse)
+        self.graph.add_node("minio_upload_fallback", minio_upload_fallback)
+
+        # 保留旧的save_to_minio节点（但不使用）
+        self.graph.add_node("save_to_minio", save_to_minio)
+        self.graph.add_node("minio_fallback", minio_fallback)
 
         # Step 3: 文本分块
         self.graph.add_node("chunk_text", chunk_text)
@@ -75,31 +81,31 @@ class DocumentProcessingGraphBuilder:
         # Step 6: 完成
         self.graph.add_node("finalize", finalize)
 
-        # 设置入口点
-        self.graph.set_entry_point("save_to_minio")
+        # 设置入口点 - 改为PDF解析
+        self.graph.set_entry_point("parse_pdf_mineru")
 
         # 连接节点
-        # Step 1: MinIO存储
-        self.graph.add_conditional_edges(
-            "save_to_minio",
-            self._check_minio_result,
-            {
-                "success": "parse_pdf_mineru",
-                "fallback": "minio_fallback"
-            }
-        )
-        self.graph.add_edge("minio_fallback", "parse_pdf_mineru")
-
-        # Step 2: PDF解析
+        # Step 1: PDF解析
         self.graph.add_conditional_edges(
             "parse_pdf_mineru",
             self._check_parse_result,
             {
-                "success": "chunk_text",
+                "success": "upload_to_minio_after_parse",  # 成功后上传MinIO
                 "fallback": "parse_fallback"
             }
         )
-        self.graph.add_edge("parse_fallback", "chunk_text")
+        self.graph.add_edge("parse_fallback", "upload_to_minio_after_parse")
+
+        # Step 2: 上传MinIO
+        self.graph.add_conditional_edges(
+            "upload_to_minio_after_parse",
+            self._check_minio_upload_result,
+            {
+                "success": "chunk_text",
+                "fallback": "minio_upload_fallback"
+            }
+        )
+        self.graph.add_edge("minio_upload_fallback", "chunk_text")
 
         # Step 3: 文本分块 → Step 4: 实体提取
         self.graph.add_edge("chunk_text", "extract_entities")
@@ -148,13 +154,17 @@ class DocumentProcessingGraphBuilder:
 
         # 编译图
         compiled_graph = self.graph.compile()
-        logger.success("[GraphBuilder] Workflow with parallel vectorization compiled successfully")
+        logger.success("[GraphBuilder] Workflow with new MinIO upload order compiled successfully")
 
         return compiled_graph
 
     def _check_minio_result(self, state: DocumentProcessingState) -> str:
-        """Check MinIO save result"""
+        """Check MinIO save result (旧的，保留兼容)"""
         return "success" if state.get("minio_success") else "fallback"
+
+    def _check_minio_upload_result(self, state: DocumentProcessingState) -> str:
+        """Check MinIO upload result (新的，解析后上传)"""
+        return "success" if state.get("minio_upload_success") else "fallback"
 
     def _check_parse_result(self, state: DocumentProcessingState) -> str:
         """Check PDF parse result"""

@@ -8,7 +8,7 @@ from loguru import logger
 import sys
 
 from config.settings import settings
-from app.api import documents, chat, ai_recommend, team_recommend_ws, integrated_search
+from app.api import documents, chat, ai_recommend, team_recommend_ws, integrated_search, document_management
 
 # 配置日志
 logger.remove()
@@ -144,6 +144,7 @@ app.add_middleware(
 # 注册路由
 app.include_router(integrated_search.router)
 app.include_router(documents.router)
+app.include_router(document_management.router)  # 新增：文档管理
 app.include_router(chat.router)
 app.include_router(ai_recommend.router)
 app.include_router(team_recommend_ws.router)

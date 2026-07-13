@@ -66,6 +66,18 @@ async def synthesizer_node(state: AIRecommendState) -> AIRecommendState:
         logger.info("=" * 80)
         logger.success("[Synthesizer] Node completed with knowledge gap message")
         logger.info("=" * 80)
+
+        # 发送node_end事件
+        if session_id:
+            await send_node_end(
+                task_id=session_id,
+                flow_type=FLOW_TYPE,
+                step_id="synthesize",
+                step_name="答案生成",
+                progress=100,
+                message="答案生成完成 (知识缺口)"
+            )
+
         return state
 
     try:

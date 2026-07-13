@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <!-- 工作流图 - 使用 CSS 实现 -->
+    <!-- 工作流图 - 新的7步流程 -->
     <div class="workflow-graph">
       <svg class="workflow-svg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
         <!-- 定义渐变和滤镜 -->
@@ -39,10 +39,10 @@
         </defs>
 
         <!-- 连接线 -->
-        <!-- 第一行：MinIO存储 -> PDF解析 -->
-        <line x1="180" y1="60" x2="320" y2="60" :class="['link', getLinkClass('parse')]" />
+        <!-- PDF解析 -> 上传MinIO -->
+        <line x1="180" y1="60" x2="320" y2="60" :class="['link', getLinkClass('minio_upload')]" />
 
-        <!-- PDF解析 → 文本分块 -->
+        <!-- 上传MinIO → 文本分块 -->
         <path d="M 350 90 Q 350 125, 250 130" :class="['link', 'curved', getLinkClass('chunk')]" fill="none" />
 
         <!-- 文本分块 → 实体提取 -->
@@ -59,32 +59,32 @@
         <path d="M 490 310 Q 430 350, 400 390" :class="['link', 'curved', getLinkClass('finalize')]" fill="none" />
 
         <!-- 节点 -->
-        <!-- 第一行 -->
-        <g class="node" :class="getNodeClass('minio')">
+        <!-- 第一行：PDF解析 -> 上传MinIO -->
+        <g class="node" :class="getNodeClass('parse')">
           <circle cx="150" cy="60" r="30" class="node-bg" />
           <circle cx="150" cy="60" r="28" class="node-circle" />
-          <g v-if="steps.minio === 'completed'" class="status-icon">
+          <g v-if="steps.parse === 'completed'" class="status-icon">
             <text x="150" y="67" class="check-icon">✓</text>
           </g>
-          <g v-else-if="steps.minio === 'processing'" class="status-icon">
+          <g v-else-if="steps.parse === 'processing'" class="status-icon">
             <circle cx="150" cy="60" r="8" fill="white" opacity="0.9" />
           </g>
-          <text x="150" y="95" class="node-label">MinIO存储</text>
+          <text x="150" y="95" class="node-label">PDF解析</text>
         </g>
 
-        <g class="node" :class="getNodeClass('parse')">
+        <g class="node" :class="getNodeClass('minio_upload')">
           <circle cx="350" cy="60" r="30" class="node-bg" />
           <circle cx="350" cy="60" r="28" class="node-circle" />
-          <g v-if="steps.parse === 'completed'" class="status-icon">
+          <g v-if="steps.minio_upload === 'completed'" class="status-icon">
             <text x="350" y="67" class="check-icon">✓</text>
           </g>
-          <g v-else-if="steps.parse === 'processing'" class="status-icon">
+          <g v-else-if="steps.minio_upload === 'processing'" class="status-icon">
             <circle cx="350" cy="60" r="8" fill="white" opacity="0.9" />
           </g>
-          <text x="350" y="95" class="node-label">PDF解析</text>
+          <text x="350" y="95" class="node-label">上传MinIO</text>
         </g>
 
-        <!-- 第二行 -->
+        <!-- 第二行：文本分块 -> 实体提取 -->
         <g class="node" :class="getNodeClass('chunk')">
           <circle cx="250" cy="160" r="30" class="node-bg" />
           <circle cx="250" cy="160" r="28" class="node-circle" />
@@ -209,13 +209,13 @@ const completed = ref(false)
 const logsExpanded = ref(false)
 
 const steps = ref({
-  minio: 'pending',
-  parse: 'pending',
-  chunk: 'pending',
-  extract: 'pending',
-  vectorize_traditional: 'pending',
-  vectorize_graph: 'pending',
-  finalize: 'pending'
+  parse: 'pending',           // 1. PDF解析
+  minio_upload: 'pending',    // 2. 上传MinIO（新增）
+  chunk: 'pending',           // 3. 文本分块
+  extract: 'pending',         // 4. 实体提取
+  vectorize_traditional: 'pending',  // 5. 传统向量化
+  vectorize_graph: 'pending',        // 6. 图向量化
+  finalize: 'pending'         // 7. 完成
 })
 
 const logs = ref([])

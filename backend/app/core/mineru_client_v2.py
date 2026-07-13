@@ -178,8 +178,15 @@ class MinerUClientV2:
                     logger.error(f"[MinerU] 解析失败: {err_msg}")
                     raise RuntimeError(f"MinerU解析失败: {err_msg}")
 
-                elif state in ["processing", "queue", "waiting"]:
-                    logger.info(f"[MinerU] [{int(elapsed)}s] {state}中...")
+                elif state in ["processing", "queue", "waiting", "running"]:
+                    # 显示进度
+                    progress = result.get("extract_progress", {})
+                    if progress:
+                        extracted = progress.get("extracted_pages", 0)
+                        total = progress.get("total_pages", 0)
+                        logger.info(f"[MinerU] [{int(elapsed)}s] 进度: {extracted}/{total} 页")
+                    else:
+                        logger.info(f"[MinerU] [{int(elapsed)}s] {state}中...")
                     continue
 
                 else:
