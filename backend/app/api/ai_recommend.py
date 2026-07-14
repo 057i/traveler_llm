@@ -12,7 +12,7 @@ from loguru import logger
 import json
 import asyncio
 
-from app.workflows.ai_recommend.service import get_ai_recommend_service
+from app.services.ai_recommend_service import get_ai_recommend_service
 from app.services.progress_tracker import get_progress_tracker
 from app.core.redis_client import get_redis_client
 from config.settings import settings

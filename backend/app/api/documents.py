@@ -16,7 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from app.services.document_task import DocumentTaskService
 from app.core.redis_client import get_redis_client
-from app.workflows.document_processing.workflow_service import get_document_workflow
+from app.services.document_processing_service import get_document_workflow
 import asyncio
 
 router = APIRouter(prefix="/api/documents", tags=["文档管理"])

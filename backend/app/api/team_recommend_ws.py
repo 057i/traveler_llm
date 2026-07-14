@@ -45,7 +45,7 @@ async def team_recommend_websocket(websocket: WebSocket):
 
             # Import and use the service
             try:
-                from app.workflows.team_recommend.service import get_team_recommend_service
+                from app.services.team_recommend_service import get_team_recommend_service
 
                 service = get_team_recommend_service()
 

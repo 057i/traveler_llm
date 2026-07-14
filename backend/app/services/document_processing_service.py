@@ -7,7 +7,7 @@ from typing import Dict, Any
 from loguru import logger
 import asyncio
 
-from .graph_builder import build_document_processing_workflow
+from app.workflows.document_processing.graph_builder import build_document_processing_workflow
 
 
 class DocumentProcessingWorkflow:

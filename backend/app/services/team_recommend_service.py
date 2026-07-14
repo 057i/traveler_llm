@@ -6,7 +6,7 @@ from typing import Dict, Any, AsyncGenerator, List, Optional
 from loguru import logger
 import asyncio
 
-from .team_manager import get_team_manager
+from app.workflows.team_recommend.team_manager import get_team_manager
 
 
 class TeamRecommendService:

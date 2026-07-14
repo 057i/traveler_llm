@@ -17,6 +17,7 @@ py2neo==2021.2.4
 # API & Model Integration
 openai==1.6.1
 dashscope==1.14.1  # 通义千问 API
+tavily-python==0.3.0  # Tavily Search API
 
 # Data Processing
 numpy>=1.26.0,<2.0
@@ -27,6 +28,10 @@ pydantic-settings==2.1.0
 # WebSocket & SSE
 python-socketio==5.10.0
 sse-starlette==1.8.2
+
+# Vector Database & Storage
+pymilvus==2.3.4
+minio==7.2.0
 
 # Cache & Storage
 redis==5.0.1

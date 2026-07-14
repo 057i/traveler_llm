@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import MainLayout from '@/layouts/MainLayout.vue'
 import AIRecommend from '@/views/AIRecommend.vue'
 import AITeamRecommend from '@/views/AITeamRecommend.vue'
-import RRFRecommend from '@/views/RRFRecommend.vue'
+import Recommend from '@/views/Recommend.vue'
 import DocumentManager from '@/views/DocumentManager.vue'
 
 const routes = [
@@ -47,8 +47,8 @@ const routes = [
           },
           {
             path: '/recommend',
-            name: 'RRFRecommend',
-            component: RRFRecommend,
+            name: 'Recommend',
+            component: Recommend,
             meta: {
               title: '综合搜索',
               icon: 'Connection',

@@ -12,7 +12,7 @@ from loguru import logger
 
 from app.services.document_metadata_service import get_document_metadata_service
 from app.core.minio_client import get_minio_client
-from app.core.milvus_client import get_milvus_client
+from app.core.milvus_hybrid_client import get_milvus_hybrid_client
 from app.core.neo4j_client import get_neo4j_client
 
 
@@ -150,7 +150,7 @@ class DocumentDeletionService:
 
             logger.info(f"[DocumentDeletion] Deleting {len(chunk_ids)} chunks from Milvus")
 
-            milvus_client = get_milvus_client()
+            milvus_client = get_milvus_hybrid_client()
 
             # 使用chunk_ids删除
             # 注意：Milvus的delete需要表达式，假设有doc_id字段

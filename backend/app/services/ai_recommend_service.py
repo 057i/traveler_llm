@@ -7,8 +7,8 @@ import json
 import time
 import asyncio
 
-from .state import AIRecommendState
-from .graph_builder import get_ai_recommend_workflow
+from app.workflows.ai_recommend.state import AIRecommendState
+from app.workflows.ai_recommend.graph_builder import get_ai_recommend_workflow
 from app.core.redis_client import get_redis_client
 
 

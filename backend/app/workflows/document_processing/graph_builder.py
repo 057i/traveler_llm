@@ -14,8 +14,6 @@ from loguru import logger
 
 from .state import DocumentProcessingState
 from .nodes import (
-    save_to_minio,
-    minio_fallback,
     parse_pdf_mineru,
     parse_fallback,
     upload_to_minio_after_parse,
@@ -58,10 +56,6 @@ class DocumentProcessingGraphBuilder:
         # Step 2: MinIO存储（移到解析之后）
         self.graph.add_node("upload_to_minio_after_parse", upload_to_minio_after_parse)
         self.graph.add_node("minio_upload_fallback", minio_upload_fallback)
-
-        # 保留旧的save_to_minio节点（但不使用）
-        self.graph.add_node("save_to_minio", save_to_minio)
-        self.graph.add_node("minio_fallback", minio_fallback)
 
         # Step 3: 文本分块
         self.graph.add_node("chunk_text", chunk_text)
