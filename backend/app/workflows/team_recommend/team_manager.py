@@ -24,7 +24,8 @@ class TeamManager:
         self,
         query: str,
         chat_history: Optional[List[Dict[str, str]]] = None,
-        progress_callback = None
+        progress_callback = None,
+        session_id: str = None
     ) -> Dict[str, Any]:
         """
         Execute team recommendation workflow
@@ -33,6 +34,7 @@ class TeamManager:
             query: User query
             chat_history: Previous conversation history
             progress_callback: Callback function for progress updates
+            session_id: Session ID for history retrieval
 
         Returns:
             Recommendation result with answer, sources, and agent logs
@@ -46,9 +48,9 @@ class TeamManager:
             if progress_callback:
                 await progress_callback({
                     'type': 'progress',
-                    'agent': 'Team Manager',
+                    'agent': '主智能体',
                     'status': 'started',
-                    'message': 'AI Team is analyzing your request',
+                    'message': 'AI团队正在分析您的请求',
                     'progress': 0
                 })
 
@@ -56,7 +58,8 @@ class TeamManager:
             result = await self.master_agent.coordinate(
                 query=query,
                 chat_history=chat_history or [],
-                progress_callback=progress_callback
+                progress_callback=progress_callback,
+                session_id=session_id
             )
 
             logger.info("=" * 80)

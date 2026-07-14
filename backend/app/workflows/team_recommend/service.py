@@ -48,7 +48,8 @@ class TeamRecommendService:
                 result = await self.team_manager.run(
                     query=query,
                     chat_history=chat_history or [],
-                    progress_callback=progress_callback
+                    progress_callback=progress_callback,
+                    session_id=session_id
                 )
                 await progress_queue.put({'_type': 'result', 'data': result})
             except Exception as e:
@@ -93,9 +94,9 @@ class TeamRecommendService:
                             try:
                                 from app.services.chat_history import get_chat_history_service
                                 chat_service = get_chat_history_service()
-                                chat_service.add_message(
+                                await chat_service.add_message(
                                     session_id=session_id,
-                                    message_type="assistant",
+                                    role="assistant",
                                     content=final_answer,
                                     metadata={
                                         "sources": result.get('sources', []),

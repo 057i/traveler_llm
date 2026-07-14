@@ -5,10 +5,10 @@ from .base import BaseSubAgent
 
 
 class BudgetExpert(BaseSubAgent):
-    """Budget Expert - estimates travel costs"""
+    """预算专家 - 估算旅行费用"""
 
     def __init__(self):
         super().__init__(
-            name="Budget Expert",
-            system_prompt="You are a budget expert that estimates travel costs."
+            name="预算专家",
+            system_prompt="你是一个预算专家，负责估算旅行费用。"
         )

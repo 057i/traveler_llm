@@ -39,7 +39,7 @@ async def team_recommend_websocket(websocket: WebSocket):
             # Send initialization message
             await websocket.send_json({
                 "type": "start",
-                "message": "AI Team is analyzing your request",
+                "message": "AI团队正在分析您的需求",
                 "timestamp": None
             })
 
@@ -93,7 +93,7 @@ async def team_recommend_websocket(websocket: WebSocket):
                         # Completion message
                         await websocket.send_json({
                             "type": "complete",
-                            "message": "AI Team recommendation completed successfully",
+                            "message": "AI团队推荐完成",
                             "progress": 100
                         })
 

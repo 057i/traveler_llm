@@ -67,7 +67,7 @@
                         <div class="timeline-card-header">
                           <div class="agent-info">
                             <span class="agent-icon">{{ getAgentIcon(log.agent) }}</span>
-                            <strong class="agent-name">{{ log.agent }}</strong>
+                            <strong class="agent-name">{{ translateAgentName(log.agent) }}</strong>
                           </div>
                           <el-tag
                             :type="log.status === 'completed' ? 'success' : 'info'"
@@ -276,9 +276,37 @@ const getAgentIcon = (agentName) => {
     '行程规划师': '📅',
     '交通助手': '🚗',
     '美食助手': '🍜',
-    '预算专家': '💰'
+    '预算专家': '💰',
+    '查询重写助手': '🔍',
+    // 英文名称映射
+    'Team Manager': '🎯',
+    'RAG Knowledge Assistant': '📚',
+    'RAG Assistant': '📚',
+    'Graph RAG Assistant': '🗺️',
+    'Itinerary Planner': '📅',
+    'Transport Assistant': '🚗',
+    'Food Assistant': '🍜',
+    'Budget Expert': '💰',
+    'Query Rewriter': '🔍'
   }
   return iconMap[agentName] || '🤖'
+}
+
+// 将英文Agent名称翻译为中文
+const translateAgentName = (agentName) => {
+  const nameMap = {
+    'Team Manager': '主智能体',
+    'RAG Knowledge Assistant': 'RAG知识库助手',
+    'RAG Assistant': 'RAG知识库助手',
+    'Graph RAG Assistant': '图RAG知识库助手',
+    'Itinerary Planner': '行程规划师',
+    'Transport Assistant': '交通助手',
+    'Food Assistant': '美食助手',
+    'Budget Expert': '预算专家',
+    'Query Rewriter': '查询重写助手',
+    '查询重写助手': '查询重写助手'
+  }
+  return nameMap[agentName] || agentName
 }
 
 // 初始化
@@ -311,15 +339,27 @@ async function loadChatHistory() {
   try {
     const response = await getChatHistory(sessionId.value, 50)
 
-    messages.value = response.messages.map(msg => ({
-      type: msg.type,
-      message: msg.content,
-      timestamp: msg.timestamp,
-      sources: msg.metadata?.sources || [],
-      agent_logs: msg.metadata?.agent_logs || []
-    }))
+    console.log('历史记录响应:', response)
 
-    console.log(`✅ 加载了 ${response.count} 条历史消息`)
+    // 验证响应数据
+    if (!response || !response.messages || !Array.isArray(response.messages)) {
+      console.warn('历史记录格式错误或为空:', response)
+      messages.value = []
+      return
+    }
+
+    messages.value = response.messages.map(msg => {
+      // 确保每条消息都有正确的结构
+      return {
+        type: msg.type || 'user',
+        message: msg.content || msg.message || '',
+        timestamp: msg.timestamp,
+        sources: (msg.metadata?.sources || []),
+        agent_logs: (msg.metadata?.agent_logs || [])
+      }
+    })
+
+    console.log(`✅ 加载了 ${response.count || messages.value.length} 条历史消息`)
 
     nextTick(() => {
       scrollToBottom()
@@ -327,6 +367,7 @@ async function loadChatHistory() {
 
   } catch (error) {
     console.error('加载聊天历史失败:', error)
+    messages.value = []
     // Redis未启动时不报错
   } finally {
     historyLoading.value = false
@@ -494,6 +535,7 @@ const handleStreamMessage = (data) => {
     case 'progress':
       // 进度更新消息 - 更新步骤
       const agentName = data.agent || 'Unknown Agent'
+      const translatedName = translateAgentName(agentName)
       const existingStep = agentSteps.value.find(s => s.agent === agentName)
 
       if (existingStep) {
@@ -511,7 +553,7 @@ const handleStreamMessage = (data) => {
         activeAgentStep.value = agentSteps.value.filter(s => s.status === 'completed').length
       }
 
-      currentProgress.value = data.message || `[${agentName}] 处理中...`
+      currentProgress.value = data.message || `[${translatedName}] 处理中...`
       scrollToBottom()
       break
 
