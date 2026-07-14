@@ -135,6 +135,40 @@ class MilvusHybridClient:
             FieldSchema(
                 name="rating",
                 dtype=DataType.FLOAT
+            ),
+
+            # === 扩展字段（结构化筛选） ===
+            FieldSchema(
+                name="estimated_budget",
+                dtype=DataType.INT32,
+                description="Estimated budget per person (CNY)"
+            ),
+            FieldSchema(
+                name="recommended_days",
+                dtype=DataType.INT32,
+                description="Recommended travel days"
+            ),
+            FieldSchema(
+                name="travel_type",
+                dtype=DataType.VARCHAR,
+                max_length=50,
+                description="Travel type category"
+            ),
+            FieldSchema(
+                name="tags",
+                dtype=DataType.ARRAY,
+                element_type=DataType.VARCHAR,
+                max_capacity=20,
+                max_length=50,
+                description="Feature tags"
+            ),
+            FieldSchema(
+                name="best_season",
+                dtype=DataType.ARRAY,
+                element_type=DataType.VARCHAR,
+                max_capacity=4,
+                max_length=20,
+                description="Best seasons to visit"
             )
         ]
 
@@ -179,7 +213,20 @@ class MilvusHybridClient:
             index_params=sparse_index_params
         )
 
-        logger.success(f"[Milvus] Collection created with rich metadata support")
+        # 创建标量字段索引（加速筛选）
+        logger.info("[Milvus] Creating scalar indexes for filters...")
+
+        self.collection.create_index(
+            field_name="estimated_budget",
+            index_params={"index_type": "STL_SORT"}
+        )
+
+        self.collection.create_index(
+            field_name="recommended_days",
+            index_params={"index_type": "STL_SORT"}
+        )
+
+        logger.success(f"[Milvus] Collection created with rich metadata support and scalar indexes")
 
     def insert(self, data: List[Dict[str, Any]]) -> List[str]:
         """
@@ -219,7 +266,13 @@ class MilvusHybridClient:
             [item.get("filename", "") for item in data],
             [item.get("entity_json", "{}") for item in data],
             [item["full_text"] for item in data],
-            [item.get("rating", 0.0) for item in data]
+            [item.get("rating", 0.0) for item in data],
+            # 扩展字段（5个新字段）
+            [item.get("estimated_budget", 200) for item in data],
+            [item.get("recommended_days", 1) for item in data],
+            [item.get("travel_type", "景点") for item in data],
+            [item.get("tags", []) for item in data],
+            [item.get("best_season", []) for item in data]
         ]
 
         # 插入数据
@@ -296,7 +349,7 @@ class MilvusHybridClient:
         logger.info(f"[Milvus] Hybrid search returned {len(output)} results")
         return output
 
-    async def _search_dense(self, dense_vector: List[float], top_k: int = 20) -> List[Dict[str, Any]]:
+    async def _search_dense(self, dense_vector: List[float], top_k: int = 20, expr: str = "") -> List[Dict[str, Any]]:
         """
         独立的稠密向量检索（HNSW索引）
 
@@ -319,13 +372,26 @@ class MilvusHybridClient:
                 "params": {"ef": settings.MILVUS_SEARCH_EF}  # 64，越大越准确
             }
 
-            results = self.collection.search(
-                data=[dense_vector],
-                anns_field="dense_vector",
-                param=dense_search_params,
-                limit=top_k,
-                output_fields=["destination_id", "name", "province", "city", "category", "description", "full_text", "rating"]
-            )
+            # 构建搜索参数
+            search_params = {
+                "data": [dense_vector],
+                "anns_field": "dense_vector",
+                "param": dense_search_params,
+                "limit": top_k,
+                "output_fields": [
+                    "destination_id", "name", "province", "city", "category",
+                    "description", "full_text", "rating",
+                    "estimated_budget", "recommended_days", "travel_type",
+                    "tags", "best_season"
+                ]
+            }
+
+            # 如果有过滤表达式，添加expr
+            if expr:
+                search_params["expr"] = expr
+                logger.info(f"[Milvus] Dense search with filter: {expr}")
+
+            results = self.collection.search(**search_params)
 
             output = []
             for hits in results:
@@ -339,6 +405,11 @@ class MilvusHybridClient:
                         "description": hit.entity.get("description"),
                         "content": hit.entity.get("full_text"),
                         "rating": hit.entity.get("rating"),
+                        "estimated_budget": hit.entity.get("estimated_budget", 0),
+                        "recommended_days": hit.entity.get("recommended_days", 1),
+                        "travel_type": hit.entity.get("travel_type", ""),
+                        "tags": list(hit.entity.get("tags", [])),  # 转换为list
+                        "best_season": list(hit.entity.get("best_season", [])),  # 转换为list
                         "score": float(hit.score),
                         "source": "milvus_dense"
                     })
@@ -352,7 +423,7 @@ class MilvusHybridClient:
             traceback.print_exc()
             return []
 
-    async def _search_sparse(self, query: str, top_k: int = 20) -> List[Dict[str, Any]]:
+    async def _search_sparse(self, query: str, top_k: int = 20, expr: str = "") -> List[Dict[str, Any]]:
         """
         独立的稀疏向量检索（使用真实稀疏向量搜索）
 
@@ -389,13 +460,26 @@ class MilvusHybridClient:
                 "params": {}
             }
 
-            results = self.collection.search(
-                data=[sparse_vector],
-                anns_field="sparse_vector",  # 使用稀疏向量字段
-                param=sparse_search_params,
-                limit=top_k,
-                output_fields=["destination_id", "name", "province", "city", "category", "description", "full_text", "rating"]
-            )
+            # 构建搜索参数
+            search_params = {
+                "data": [sparse_vector],
+                "anns_field": "sparse_vector",
+                "param": sparse_search_params,
+                "limit": top_k,
+                "output_fields": [
+                    "destination_id", "name", "province", "city", "category",
+                    "description", "full_text", "rating",
+                    "estimated_budget", "recommended_days", "travel_type",
+                    "tags", "best_season"
+                ]
+            }
+
+            # 如果有过滤表达式，添加expr
+            if expr:
+                search_params["expr"] = expr
+                logger.info(f"[Milvus] Sparse search with filter: {expr}")
+
+            results = self.collection.search(**search_params)
 
             # 3. 格式化结果
             output = []
@@ -410,6 +494,11 @@ class MilvusHybridClient:
                         "description": hit.entity.get("description"),
                         "content": hit.entity.get("full_text"),
                         "rating": hit.entity.get("rating"),
+                        "estimated_budget": hit.entity.get("estimated_budget", 0),
+                        "recommended_days": hit.entity.get("recommended_days", 1),
+                        "travel_type": hit.entity.get("travel_type", ""),
+                        "tags": list(hit.entity.get("tags", [])),  # 转换为list
+                        "best_season": list(hit.entity.get("best_season", [])),  # 转换为list
                         "score": float(hit.score),
                         "source": "milvus_sparse"
                     })

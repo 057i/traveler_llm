@@ -593,9 +593,19 @@ Format the response with clear sections and bullet points."""
             context_parts.append("=== 主要推荐景点 ===\n")
             for i, r in enumerate(rag_results[:5], 1):
                 context_parts.append(f"{i}. **{r.get('name', '未知景点')}**")
-                context_parts.append(f"   - 类别: {r.get('category', '未分类')}")
+
+                # 类别：只有非空时才显示
+                category = r.get('category', '').strip()
+                if category:
+                    context_parts.append(f"   - 类别: {category}")
+
                 context_parts.append(f"   - 城市: {r.get('city', '未知')}")
-                context_parts.append(f"   - 描述: {r.get('description', '暂无描述')[:150]}...")
+
+                # 描述：完整显示，不截断
+                description = r.get('description', '').strip()
+                if description:
+                    context_parts.append(f"   - 描述: {description}")
+
                 context_parts.append("")
         
         # 图RAG结果
@@ -604,7 +614,17 @@ Format the response with clear sections and bullet points."""
             for i, r in enumerate(graph_results[:5], 1):
                 context_parts.append(f"{i}. **{r.get('name')}**")
                 context_parts.append(f"   - 位置: {r.get('city')}")
-                context_parts.append(f"   - 类别: {r.get('category', '未分类')}")
+
+                # 类别：只有非空时才显示
+                category = r.get('category', '').strip()
+                if category:
+                    context_parts.append(f"   - 类别: {category}")
+
+                # 描述：完整显示，不截断
+                description = r.get('description', '').strip()
+                if description:
+                    context_parts.append(f"   - 描述: {description}")
+
                 context_parts.append("")
         
         context = "\n".join(context_parts)
@@ -628,13 +648,14 @@ Format the response with clear sections and bullet points."""
             response = Generation.call(
                 model=self.llm,
                 messages=[{'role': 'user', 'content': prompt}],
-                result_format='message'
+                result_format='message',
+                api_key=settings.DASHSCOPE_API_KEY
             )
-            
+
             final_answer = response.output.choices[0].message.content
             logger.success("[Master] Simple recommendation generated")
             return final_answer
-            
+
         except Exception as e:
             logger.error(f"[Master] LLM synthesis failed: {e}")
             # 回退：返回原始context

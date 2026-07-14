@@ -7,6 +7,7 @@ from loguru import logger
 from ..state import DocumentProcessingState
 from typing import List
 import json
+import asyncio
 from app.utils.sse_utils import send_node_start, send_node_end
 
 FLOW_TYPE = "document"
@@ -105,6 +106,39 @@ def step4_insert_to_milvus(milvus, destinations: list, dense_vectors: list,
     """
     data = []
     for i, dest in enumerate(destinations):
+        # 处理预算字段
+        budget_range = dest.get('budget_range', [0, 0])
+        estimated_budget = int((budget_range[0] + budget_range[1]) / 2) if budget_range and len(budget_range) == 2 else 200
+
+        # 处理天数字段（从visit_duration提取）
+        visit_duration = dest.get('visit_duration', '')
+        recommended_days = 1  # 默认1天
+        if '天' in visit_duration:
+            try:
+                import re
+                days_match = re.search(r'(\d+)', visit_duration)
+                if days_match:
+                    recommended_days = int(days_match.group(1))
+            except:
+                pass
+
+        # 处理旅行类型（优先用category，否则用type）
+        travel_type = dest.get('category', dest.get('type', '景点'))
+
+        # 处理标签（确保是列表）
+        tags = dest.get('tags', [])
+        if not isinstance(tags, list):
+            tags = [tags] if tags else []
+        if not tags:
+            tags = [travel_type] if travel_type else ['景点']
+
+        # 处理季节（确保是列表）
+        best_season = dest.get('best_season', [])
+        if not isinstance(best_season, list):
+            best_season = [best_season] if best_season else []
+        if not best_season:
+            best_season = ['春', '夏', '秋', '冬']
+
         data.append({
             "destination_id": dest.get('graph_id', f"dest_{i}"),
             "dense_vector": dense_vectors[i],
@@ -117,10 +151,24 @@ def step4_insert_to_milvus(milvus, destinations: list, dense_vectors: list,
             "filename": filename,
             "entity_json": json.dumps(dest, ensure_ascii=False),
             "full_text": full_texts[i],
-            "rating": dest.get('rating', 0.0)
+            "rating": dest.get('rating', 0.0),
+            # 扩展字段（从提取的数据智能转换）
+            "estimated_budget": estimated_budget,
+            "recommended_days": recommended_days,
+            "travel_type": travel_type,
+            "tags": tags,
+            "best_season": best_season
         })
 
     logger.info(f"[RAG] Inserting {len(data)} entries to Milvus")
+
+    # 调试：打印第一条数据的字段（使用info级别确保显示）
+    if data:
+        first_entry = data[0]
+        logger.info(f"[RAG] First entry fields: {list(first_entry.keys())}")
+        logger.info(f"[RAG] First entry field count: {len(first_entry)}")
+        logger.info(f"[RAG] Expected: 17 fields")
+
     milvus.insert(data)
     logger.success(f"[RAG] Successfully inserted to Milvus")
 
@@ -177,13 +225,26 @@ async def vectorize_traditional(state: DocumentProcessingState) -> DocumentProce
         # Step 1: 准备文本
         texts, full_texts = step1_prepare_texts(destinations, filename)
 
-        # Step 2: 生成稠密向量
-        dense_vectors = step2_generate_dense_vectors(embedding_service, texts)
+        # Step 2: 生成稠密向量（在线程池中执行，避免阻塞事件循环）
+        logger.info("[RAG] Running dense vectorization in thread pool...")
+        loop = asyncio.get_event_loop()
+        dense_vectors = await loop.run_in_executor(
+            None,  # 使用默认线程池
+            step2_generate_dense_vectors,
+            embedding_service,
+            texts
+        )
 
-        # Step 3: 生成稀疏向量
-        sparse_vectors = step3_generate_sparse_vectors(embedding_service, texts)
+        # Step 3: 生成稀疏向量（在线程池中执行）
+        logger.info("[RAG] Running sparse vectorization in thread pool...")
+        sparse_vectors = await loop.run_in_executor(
+            None,
+            step3_generate_sparse_vectors,
+            embedding_service,
+            texts
+        )
 
-        # Step 4: 插入到Milvus
+        # Step 4: 插入到Milvus（IO操作，可以直接调用）
         step4_insert_to_milvus(
             milvus, destinations, dense_vectors,
             sparse_vectors, full_texts, filename
@@ -225,5 +286,5 @@ async def vector_fallback(state: DocumentProcessingState) -> DocumentProcessingS
     Fallback: 跳过RAG向量化
     """
     logger.warning("[RAG] Using fallback - skipping RAG vectorization")
-    state['vector_success'] = True
-    return state
+    # 只返回修改的字段，避免并发冲突
+    return {"vector_success": True}

@@ -21,8 +21,10 @@ class RedisClient:
                 db=settings.REDIS_DB,
                 password=settings.REDIS_PASSWORD if settings.REDIS_PASSWORD else None,
                 decode_responses=True,
-                socket_connect_timeout=5,
-                socket_timeout=5
+                socket_connect_timeout=2,  # 连接超时2秒
+                socket_timeout=1,  # 读写超时1秒（之前是5秒）
+                socket_keepalive=True,  # 保持连接
+                health_check_interval=30  # 健康检查
             )
             self.client.ping()
             logger.info(f"Redis连接成功: {settings.REDIS_HOST}:{settings.REDIS_PORT}")
@@ -48,6 +50,12 @@ class RedisClient:
         except Exception as e:
             logger.error(f"Redis SET失败: {e}")
             return False
+
+    def pipeline(self):
+        """返回Redis pipeline对象用于批量操作"""
+        if self.client:
+            return self.client.pipeline()
+        return None
 
     def delete(self, *keys: str) -> int:
         try:

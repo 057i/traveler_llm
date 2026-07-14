@@ -155,7 +155,7 @@
     <div v-if="logs.length > 0" class="logs-section">
       <div class="logs-header" @click="logsExpanded = !logsExpanded">
         <el-icon><Document /></el-icon>
-        <span>11处理日志</span>
+        <span>处理日志</span>
         <el-icon class="expand-icon" :class="{ expanded: logsExpanded }">
           <ArrowDown />
         </el-icon>

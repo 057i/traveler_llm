@@ -128,6 +128,7 @@ async def finalize(state: DocumentProcessingState) -> DocumentProcessingState:
         logger.error(f"[Finalize] Finalization failed: {e}")
         import traceback
         traceback.print_exc()
-        state['finalize_success'] = False
+        return {"finalize_success": False}
 
-    return state
+    # 只返回修改的字段，避免并发冲突
+    return {"finalize_success": True}

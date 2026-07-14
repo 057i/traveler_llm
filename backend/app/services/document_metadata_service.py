@@ -163,16 +163,34 @@ class DocumentMetadataService:
             return None
 
     def list_all_documents(self) -> List[Dict[str, Any]]:
-        """列出所有文档"""
+        """列出所有文档（优化版：批量查询）"""
         try:
+            # 获取所有文档ID
             doc_ids = self.redis.lrange("docs:list", 0, -1)
 
-            documents = []
-            for doc_id in doc_ids:
-                metadata = self.get_document_metadata(doc_id)
-                if metadata:
-                    documents.append(metadata)
+            if not doc_ids:
+                return []
 
+            # 使用pipeline批量查询，避免N+1问题
+            pipe = self.redis.pipeline()
+            for doc_id in doc_ids:
+                key = f"doc:metadata:{doc_id}"
+                pipe.get(key)
+
+            # 一次性获取所有结果
+            results = pipe.execute()
+
+            # 解析结果
+            documents = []
+            for doc_id, data in zip(doc_ids, results):
+                if data:
+                    try:
+                        metadata = json.loads(data)
+                        documents.append(metadata)
+                    except Exception as e:
+                        logger.warning(f"[DocMetadata] Failed to parse metadata for {doc_id}: {e}")
+
+            logger.debug(f"[DocMetadata] Listed {len(documents)} documents (pipeline)")
             return documents
 
         except Exception as e:

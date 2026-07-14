@@ -93,14 +93,14 @@
     <el-empty v-if="!loading && recommendations.length === 0" description="暂无推荐结果" />
 
     <!-- 详情弹窗 -->
-    <el-dialog
+    <el-dialog v-if="detailVisible"
       v-model="detailVisible"
       :title="currentDetail?.name"
       width="800px"
-      :close-on-click-modal="true"
       center
       destroy-on-close
-      top="1vh"
+      append-to-body
+      class="recommand_detail_dialog"
     >
       <div v-if="currentDetail" class="detail-content">
         <!-- 图片展示 -->
@@ -450,13 +450,15 @@ const getScoreColor = (score) => {
 
 /* 弹窗样式优化 */
 :deep(.el-dialog) {
-  margin-top: 5vh !important;  /* 增加顶部距离，避免被遮挡 */
-  max-height: 90vh;  /* 限制最大高度 */
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  margin-top: 15vh !important;  /* 距离顶部15%，让弹窗居中显示 */
 }
 
 :deep(.el-dialog__body) {
   padding: 20px;
-  max-height: 70vh;  /* 限制body高度 */
-  overflow-y: auto;  /* 超出滚动 */
+  max-height: 70vh;
+  overflow-y: auto;
 }
 </style>

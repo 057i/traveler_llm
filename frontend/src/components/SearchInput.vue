@@ -83,11 +83,11 @@
 
 
         <el-col :span="12">
-          <el-form-item label="兴趣爱好">
+          <el-form-item label="其他偏好">
             <el-select
               v-model="form.interests"
               multiple
-              placeholder="选择兴趣"
+              placeholder="选择偏好"
               style="width: 100%"
             >
               <el-option label="自然风光" value="自然" />

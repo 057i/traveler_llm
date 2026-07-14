@@ -11,6 +11,8 @@ from loguru import logger
 import os
 import uuid
 from datetime import datetime
+from asyncio import Semaphore
+from concurrent.futures import ThreadPoolExecutor
 
 from app.services.document_task import DocumentTaskService
 from app.core.redis_client import get_redis_client
@@ -18,6 +20,16 @@ from app.workflows.document_processing.workflow_service import get_document_work
 import asyncio
 
 router = APIRouter(prefix="/api/documents", tags=["文档管理"])
+
+# 全局并发限制：最多2个文档同时处理
+processing_semaphore = Semaphore(2)
+
+# 全局线程池：用于CPU密集型操作（向量化）
+vector_executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="vector_worker")
+
+# 列表查询缓存（2秒）
+list_cache = {"data": None, "timestamp": 0}
+CACHE_TTL = 2  # 缓存2秒
 
 # 初始化服务
 document_task_service = DocumentTaskService()
@@ -61,7 +73,7 @@ async def upload_document(file: UploadFile = File(...)):
 
         # 生成文档ID和任务ID
         doc_id = str(uuid.uuid4())
-        task_id = doc_id  # 使用doc_id作为task_id
+        task_id = doc_id
 
         # 标准化文件名（去除扩展名）
         filename = os.path.splitext(file.filename)[0]
@@ -81,7 +93,7 @@ async def upload_document(file: UploadFile = File(...)):
                 detail=f"文件大小超过限制（最大100MB）"
             )
 
-        # 保存到临时目录
+        # 保存到临时目录（快速操作）
         temp_file_path = temp_manager.save_uploaded_file(
             doc_id=doc_id,
             file_content=file_content,
@@ -90,7 +102,7 @@ async def upload_document(file: UploadFile = File(...)):
 
         logger.info(f"文件上传完成: {file.filename}, 大小: {file_size} bytes, Doc ID: {doc_id}")
 
-        # 获取PDF页数
+        # 快速获取PDF页数（可选，如果太慢可以移到后台）
         pages_count = 0
         try:
             import PyPDF2
@@ -102,7 +114,7 @@ async def upload_document(file: UploadFile = File(...)):
             logger.warning(f"[Upload] 无法获取PDF页数: {e}")
             pages_count = 0
 
-        # 创建Redis元数据
+        # 创建Redis元数据（快速操作）
         from app.services.document_metadata_service import get_document_metadata_service
         metadata_service = get_document_metadata_service()
 
@@ -115,19 +127,19 @@ async def upload_document(file: UploadFile = File(...)):
             minio_folder=f"{filename}/"
         )
 
-        # 立即保存页数
+        # 保存页数
         if pages_count > 0:
             metadata_service._update_field(doc_id, 'pages_count', pages_count)
 
         logger.success(f"[Upload] Created metadata for {filename}, pages: {pages_count}")
 
-        # 创建旧的任务记录（兼容现有逻辑）
+        # 创建任务记录（快速操作）
         await document_task_service.create_task(
             task_id=task_id,
             filename=file.filename,
             file_path=str(temp_file_path),
             file_size=file_size,
-            pages_count=pages_count  # 传递页数
+            pages_count=pages_count
         )
 
         # 启动后台处理任务
@@ -135,7 +147,9 @@ async def upload_document(file: UploadFile = File(...)):
             process_document_background(task_id, doc_id, filename, str(temp_file_path))
         )
 
-        # 返回响应
+        logger.info(f"[Upload] Background task created for {filename}")
+
+        # 立即返回响应
         return {
             "task_id": task_id,
             "document_id": doc_id,
@@ -156,9 +170,9 @@ async def upload_document(file: UploadFile = File(...)):
 
 async def process_document_background(task_id: str, doc_id: str, filename: str, file_path: str):
     """
-    后台处理文档
+    后台处理文档（带并发限制）
 
-    异步执行文档处理workflow，更新进度到Redis
+    使用Semaphore限制同时处理的文档数量，避免资源耗尽
 
     Args:
         task_id: 任务ID
@@ -166,40 +180,43 @@ async def process_document_background(task_id: str, doc_id: str, filename: str, 
         filename: 文件名（不含扩展名）
         file_path: 临时文件路径
     """
-    try:
-        logger.info(f"[Background] Starting document processing for task: {task_id}, doc: {doc_id}")
+    # 使用信号量限制并发（最多2个文档同时处理）
+    async with processing_semaphore:
+        try:
+            logger.info(f"[Background] Starting document processing for task: {task_id}, doc: {doc_id}")
+            logger.info(f"[Background] Semaphore acquired, concurrent tasks: {2 - processing_semaphore._value}")
 
-        # 获取workflow服务
-        workflow = get_document_workflow()
+            # 获取workflow服务
+            workflow = get_document_workflow()
 
-        # 执行处理（传递doc_id）
-        result = await workflow.process_document(
-            task_id=task_id,
-            doc_id=doc_id,  # 新增
-            filename=filename,
-            file_path=file_path,
-            pages_count=0
-        )
+            # 执行处理（传递doc_id）
+            result = await workflow.process_document(
+                task_id=task_id,
+                doc_id=doc_id,
+                filename=filename,
+                file_path=file_path,
+                pages_count=0
+            )
 
-        logger.success(f"[Background] Document processing completed for task: {task_id}")
+            logger.success(f"[Background] Document processing completed for task: {task_id}")
 
-    except Exception as e:
-        logger.error(f"[Background] Document processing failed for task {task_id}: {e}")
-        import traceback
-        traceback.print_exc()
+        except Exception as e:
+            logger.error(f"[Background] Document processing failed for task {task_id}: {e}")
+            import traceback
+            traceback.print_exc()
 
-        # 更新元数据状态为失败
-        from app.services.document_metadata_service import get_document_metadata_service
-        metadata_service = get_document_metadata_service()
-        metadata_service.update_status(doc_id, "failed")
+            # 更新元数据状态为失败
+            from app.services.document_metadata_service import get_document_metadata_service
+            metadata_service = get_document_metadata_service()
+            metadata_service.update_status(doc_id, "failed")
 
-        # 更新旧任务状态
-        await document_task_service.update_progress(
-            task_id=task_id,
-            progress=0,
-            status="failed",
-            message=f"Processing failed: {str(e)}"
-        )
+            # 更新旧任务状态
+            await document_task_service.update_progress(
+                task_id=task_id,
+                progress=0,
+                status="failed",
+                message=f"Processing failed: {str(e)}"
+            )
 
 
 @router.get("/progress/{task_id}")
@@ -425,11 +442,24 @@ async def list_documents(
     page_size: int = Query(10, ge=1, le=100)
 ):
     """
-    获取文档列表（从Redis元数据读取）
+    获取文档列表（从Redis元数据读取，带2秒缓存）
 
-    支持分页查询
+    支持分页查询，使用缓存减少Redis查询压力
     """
     try:
+        import time
+
+        # 检查缓存（带分页key）
+        cache_key = f"{page}_{page_size}"
+        current_time = time.time()
+
+        if (list_cache.get("key") == cache_key and
+            current_time - list_cache.get("timestamp", 0) < CACHE_TTL):
+            logger.debug(f"[List] Cache hit for page {page}")
+            return list_cache["data"]
+
+        # 缓存未命中，查询Redis
+        logger.debug(f"[List] Cache miss, querying Redis...")
         from app.services.document_metadata_service import get_document_metadata_service
 
         metadata_service = get_document_metadata_service()
@@ -460,12 +490,20 @@ async def list_documents(
                 "city": doc.get("city", "-"),
             })
 
-        return {
+        result = {
             "documents": formatted_docs,
             "total": total,
             "page": page,
             "page_size": page_size
         }
+
+        # 更新缓存
+        list_cache["key"] = cache_key
+        list_cache["data"] = result
+        list_cache["timestamp"] = current_time
+        logger.debug(f"[List] Cache updated for page {page}")
+
+        return result
 
     except Exception as e:
         logger.error(f"获取文档列表失败: {e}")

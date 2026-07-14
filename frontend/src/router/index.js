@@ -53,7 +53,7 @@ const routes = [
               title: '综合搜索',
               icon: 'Connection',
               hideInMenu: false,
-              description: 'RAG向量检索 + 结构化筛选'
+              description: 'RAG多路检索 + 结构化筛选'
             }
           },
         ]
