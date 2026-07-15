@@ -1,12 +1,20 @@
 import axios from 'axios'
 
+// 根据环境变量决定API基础URL
+// 生产环境使用环境变量，开发环境使用相对路径（通过Vite代理）
+const baseURL = import.meta.env.VITE_API_BASE_URL || '/api'
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: baseURL,
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json'
   }
 })
+
+// WebSocket基础URL（用于AI团队推荐）
+export const WS_BASE_URL = import.meta.env.VITE_WS_BASE_URL ||
+  (window.location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + window.location.host
 
 // 请求拦截器
 api.interceptors.request.use(

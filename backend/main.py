@@ -29,6 +29,12 @@ async def lifespan(app: FastAPI):
     logger.info("[SYSTEM] 智能旅行推荐系统启动中...")
     logger.info("=" * 80)
 
+    # 打印关键配置（调试用）
+    logger.info(f"[CONFIG] MINERU_API_TOKEN: {'已配置' if settings.MINERU_API_TOKEN else '未配置'}")
+    logger.info(f"[CONFIG] MINIO_ENDPOINT: {settings.MINIO_ENDPOINT}")
+    logger.info(f"[CONFIG] Redis: {settings.REDIS_HOST}:{settings.REDIS_PORT}")
+    logger.info("=" * 80)
+
     # 服务健康检查
     await check_services()
 

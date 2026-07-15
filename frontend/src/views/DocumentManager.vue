@@ -178,6 +178,7 @@
               type="primary"
               link
               @click="viewDocument(row)"
+              :disabled="row.status === 'processing'"
             >
               <el-icon><View /></el-icon>
               查看
@@ -186,6 +187,7 @@
               type="danger"
               link
               @click="deleteDocument(row)"
+              :disabled="row.status === 'processing'"
             >
               <el-icon><Delete /></el-icon>
               删除
@@ -461,7 +463,15 @@ const handleUploadDialogClose = () => {
 
 // 查看文档
 const viewDocument = (row) => {
-  ElMessage.info('查看文档功能开发中...')
+  // 直接从列表数据中读取查看URL
+  const viewUrl = row.view_url || row.minio_public_url
+
+  if (viewUrl) {
+    // 在新窗口中打开文档
+    window.open(viewUrl, '_blank')
+  } else {
+    ElMessage.warning('该文档暂无查看链接，请重新上传')
+  }
 }
 
 // 删除文档

@@ -4,6 +4,42 @@
 用于清洗和标准化从文档中提取的景点数据
 """
 from loguru import logger
+import re
+
+
+def clean_text_for_rag(text: str) -> str:
+    """
+    清洗文本用于RAG向量化
+
+    功能：
+    - 去除多余的空格和换行符
+    - 去除特殊字符
+    - 标准化文本格式
+
+    Args:
+        text: 原始文本
+
+    Returns:
+        str: 清洗后的文本
+    """
+    if not text or not isinstance(text, str):
+        return ""
+
+    try:
+        # 去除多余的空白字符
+        text = ' '.join(text.split())
+
+        # 去除特殊控制字符
+        text = re.sub(r'[\x00-\x1f\x7f-\x9f]', '', text)
+
+        # 标准化标点符号
+        text = text.replace('　', ' ')  # 全角空格
+
+        return text.strip()
+
+    except Exception as e:
+        logger.warning(f"[TextCleaner] 清洗文本失败: {e}")
+        return text
 
 
 def clean_destination_data(destination: dict) -> dict:

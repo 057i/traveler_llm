@@ -34,7 +34,7 @@ class MinIOClient:
         初始化MinIO客户端
 
         从环境变量读取配置：
-        - MINIO_ENDPOINT: MinIO服务器地址（如：localhost:9000）
+        - MINIO_ENDPOINT: MinIO服务器地址（如：103.236.98.149:26766）
         - MINIO_ACCESS_KEY: 访问密钥
         - MINIO_SECRET_KEY: 密钥
         - MINIO_BUCKET: 存储桶名称
@@ -94,14 +94,35 @@ class MinIOClient:
             # 确定对象名称
             object_name = destination_name or os.path.basename(file_path)
 
-            # 上传文件
+            # 检测文件类型
+            import mimetypes
+            content_type, _ = mimetypes.guess_type(file_path)
+            if not content_type:
+                # 如果无法检测，根据扩展名设置
+                if file_path.lower().endswith('.pdf'):
+                    content_type = 'application/pdf'
+                elif file_path.lower().endswith('.md'):
+                    content_type = 'text/markdown'
+                else:
+                    content_type = 'application/octet-stream'
+
+            logger.info(f"[MinIO] Uploading file: {file_path}")
+            logger.info(f"[MinIO] Target path: {self.bucket_name}/{object_name}")
+            logger.info(f"[MinIO] Content-Type: {content_type}")
+
+            # 上传文件，设置content_type以支持浏览器内预览
             self.client.fput_object(
                 self.bucket_name,
                 object_name,
-                file_path
+                file_path,
+                content_type=content_type,
+                metadata={
+                    'Content-Disposition': 'inline'  # 设置为inline以在浏览器中预览
+                }
             )
 
             logger.success(f"[MinIO] File uploaded: {object_name}")
+            logger.info(f"[MinIO] Public URL: http://{self.endpoint}/{self.bucket_name}/{object_name}")
             return object_name
 
         except S3Error as e:

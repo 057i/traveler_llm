@@ -32,40 +32,40 @@ class DocumentProcessingState(TypedDict):
 
     # Task info - 使用Annotated避免并发更新冲突
     task_id: Annotated[str, lambda x, y: y if y else x]  # 保留最新值
-    doc_id: str  # 新增：文档ID（用于元数据管理）
-    filename: str
-    file_path: str
-    pages_count: int  # PDF页数
-    original_filename: str  # 原始文件名（含扩展名）
+    doc_id: Annotated[str, lambda x, y: y if y else x]  # 文档ID，保留最新值
+    filename: Annotated[str, lambda x, y: y if y else x]  # 文件名，保留最新值
+    file_path: Annotated[str, lambda x, y: y if y else x]  # 文件路径，保留最新值
+    pages_count: Annotated[int, lambda x, y: y if y else x]  # PDF页数，保留最新值
+    original_filename: Annotated[str, lambda x, y: y if y else x]  # 原始文件名，保留最新值
 
-    # Processing steps
-    raw_text: str  # Raw text from MinerU
-    markdown_text: str  # Markdown format from MinerU
-    parsed_text: str  # Final parsed text
-    chunks: List[str]  # Text chunks
-    destinations: List[Destination]  # Extracted destinations
+    # Processing steps - 使用Annotated处理并发
+    raw_text: Annotated[str, lambda x, y: y if y else x]  # Raw text from MinerU
+    markdown_text: Annotated[str, lambda x, y: y if y else x]  # Markdown format from MinerU
+    parsed_text: Annotated[str, lambda x, y: y if y else x]  # Final parsed text
+    chunks: Annotated[List[str], lambda x, y: y if y else x]  # Text chunks
+    destinations: Annotated[List[Destination], lambda x, y: y if y else x]  # Extracted destinations
 
-    # MinIO info
-    minio_directory: str  # MinIO目录名
-    minio_bucket: str  # MinIO桶名
-    minio_folder: str  # MinIO文件夹路径
-    minio_uploaded_files: List[str]  # 已上传的文件列表
-    mineru_output_dir: Optional[str]  # MinerU输出目录
-    mineru_has_package: bool  # 是否有MinerU输出包
+    # MinIO info - 使用Annotated处理并发
+    minio_directory: Annotated[str, lambda x, y: y if y else x]  # MinIO目录名
+    minio_bucket: Annotated[str, lambda x, y: y if y else x]  # MinIO桶名
+    minio_folder: Annotated[str, lambda x, y: y if y else x]  # MinIO文件夹路径
+    minio_uploaded_files: Annotated[List[str], lambda x, y: y if y else x]  # 已上传的文件列表
+    mineru_output_dir: Annotated[Optional[str], lambda x, y: y if y else x]  # MinerU输出目录
+    mineru_has_package: Annotated[bool, lambda x, y: y if y else x]  # 是否有MinerU输出包
 
-    # Vectorization resource IDs
-    milvus_chunk_ids: List[str]  # Milvus中的chunk IDs
-    images_count: int  # 图片数量
+    # Vectorization resource IDs - 使用Annotated处理并发
+    milvus_chunk_ids: Annotated[List[str], lambda x, y: y if y else x]  # Milvus中的chunk IDs
+    images_count: Annotated[int, lambda x, y: y if y else x]  # 图片数量
 
-    # Step success flags
-    minio_success: bool
-    minio_upload_success: bool  # 新增：解析后MinIO上传成功标志
-    parse_success: bool
-    chunk_success: bool
-    extract_success: bool
-    vector_success: bool  # RAG vectorization
-    graph_vector_success: bool  # GraphRAG
-    finalize_success: bool
+    # Step success flags - 使用Annotated处理并发
+    minio_success: Annotated[bool, lambda x, y: y if y else x]
+    minio_upload_success: Annotated[bool, lambda x, y: y if y else x]  # 解析后MinIO上传成功标志
+    parse_success: Annotated[bool, lambda x, y: y if y else x]
+    chunk_success: Annotated[bool, lambda x, y: y if y else x]
+    extract_success: Annotated[bool, lambda x, y: y if y else x]
+    vector_success: Annotated[bool, lambda x, y: y if y else x]  # RAG vectorization
+    graph_vector_success: Annotated[bool, lambda x, y: y if y else x]  # GraphRAG
+    finalize_success: Annotated[bool, lambda x, y: y if y else x]
 
-    # Error tracking (使用Reducer处理并发)
+    # Error tracking (使用add reducer合并并发错误)
     errors: Annotated[List[str], add]  # 使用add reducer合并并发错误

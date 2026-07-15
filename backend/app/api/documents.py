@@ -491,6 +491,10 @@ async def list_documents(
                 "pages_count": doc.get("pages_count", 0),
                 "province": doc.get("province", "-"),
                 "city": doc.get("city", "-"),
+
+                # MinIO查看URL
+                "view_url": doc.get("view_url", ""),
+                "minio_public_url": doc.get("minio_public_url", ""),
             })
 
         result = {

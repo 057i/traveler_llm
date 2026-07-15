@@ -187,7 +187,7 @@
         </div>
 
         <!-- 快捷问题 -->
-        <div v-if="!isLoading && messages.length === 0" class="suggestions">
+        <div v-if="!isLoading" class="suggestions">
           <el-tag
             v-for="(suggestion, index) in suggestions"
             :key="index"

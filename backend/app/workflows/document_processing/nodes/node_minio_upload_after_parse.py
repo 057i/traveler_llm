@@ -95,6 +95,97 @@ async def upload_to_minio_after_parse(state: DocumentProcessingState) -> Documen
         state['minio_folder'] = folder
         state['minio_uploaded_files'] = uploaded_files
 
+        # ==================== 自动设置MinIO访问策略 ====================
+        try:
+            logger.info(f"[UploadMinIO] 正在设置文件夹访问策略: {folder}")
+
+            # 设置该文件夹为公共只读
+            policy = {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": {"AWS": ["*"]},
+                        "Action": ["s3:GetObject"],
+                        "Resource": [f"arn:aws:s3:::{bucket}/{folder}*"]
+                    }
+                ]
+            }
+
+            import json
+            from minio.commonconfig import ENABLED
+            from minio.api import Minio
+
+            # 获取MinIO客户端实例
+            minio_instance = minio_client.client
+
+            # 获取当前桶策略
+            try:
+                current_policy = minio_instance.get_bucket_policy(bucket)
+                if current_policy:
+                    current_policy_dict = json.loads(current_policy)
+                else:
+                    current_policy_dict = {"Version": "2012-10-17", "Statement": []}
+            except Exception:
+                # 如果没有策略，创建新的
+                current_policy_dict = {"Version": "2012-10-17", "Statement": []}
+
+            # 添加新的语句（如果不存在）
+            folder_resource = f"arn:aws:s3:::{bucket}/{folder}*"
+            already_exists = any(
+                stmt.get("Resource") == [folder_resource]
+                for stmt in current_policy_dict.get("Statement", [])
+            )
+
+            if not already_exists:
+                current_policy_dict["Statement"].append(policy["Statement"][0])
+                minio_instance.set_bucket_policy(bucket, json.dumps(current_policy_dict))
+                logger.success(f"[UploadMinIO] ✅ 已设置文件夹 {folder} 为公共只读")
+            else:
+                logger.info(f"[UploadMinIO] 文件夹 {folder} 访问策略已存在")
+
+        except Exception as policy_error:
+            logger.warning(f"[UploadMinIO] 设置访问策略失败（不影响上传）: {policy_error}")
+        # ================================================================
+
+        # ==================== 保存MinIO查看URL到Redis ====================
+        try:
+            logger.info(f"[UploadMinIO] 正在保存文档查看URL到Redis...")
+
+            from app.services.document_metadata_service import get_document_metadata_service
+
+            # 获取文件名（不含扩展名）
+            filename = state.get('filename', 'unknown')
+
+            # 构建MinIO公共访问URL
+            # 确保URL包含 http:// 前缀
+            minio_endpoint = settings.MINIO_ENDPOINT
+            if not minio_endpoint.startswith('http://') and not minio_endpoint.startswith('https://'):
+                minio_public_url = f"http://{minio_endpoint}"
+            else:
+                minio_public_url = minio_endpoint
+
+            logger.info(f"[UploadMinIO] 文档名: {filename}")
+            logger.info(f"[UploadMinIO] MinIO公共URL: {minio_public_url}")
+            logger.info(f"[UploadMinIO] 存储桶: {bucket}")
+            logger.info(f"[UploadMinIO] 文件夹: {folder}")
+
+            # 生成完整的view_url（minio_public_url已包含http://前缀）
+            view_url = f"{minio_public_url}/{bucket}/{folder}{filename}_origin.pdf"
+
+            logger.info(f"[UploadMinIO] 生成的查看URL: {view_url}")
+
+            # 更新Redis元数据
+            metadata_service = get_document_metadata_service()
+            metadata_service._update_field(doc_id, 'view_url', view_url)
+            metadata_service._update_field(doc_id, 'minio_public_url', view_url)
+
+            logger.success(f"[UploadMinIO] ✅ 已保存查看URL到Redis: {view_url}")
+
+        except Exception as url_error:
+            logger.warning(f"[UploadMinIO] 保存查看URL失败（不影响上传）: {url_error}")
+        # ================================================================
+
         logger.success(f"[UploadMinIO] === MinIO upload completed: {len(uploaded_files)} files ===")
 
         # 发送node_end事件
