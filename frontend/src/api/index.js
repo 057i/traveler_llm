@@ -119,6 +119,18 @@ export const healthCheck = () => {
   return api.get('/ai-recommend/health')
 }
 
+// ==================== AI团队推荐历史记录 ====================
+
+// 获取AI团队推荐聊天历史
+export const getTeamChatHistory = (sessionId, limit = 50) => {
+  return api.get(`/team-recommend-ws/history/${sessionId}`, { params: { limit } })
+}
+
+// 清除AI团队推荐聊天历史
+export const clearTeamChatHistory = (sessionId) => {
+  return api.delete(`/team-recommend-ws/history/${sessionId}`)
+}
+
 // ==================== 文档管理 API ====================
 
 // 获取文档列表

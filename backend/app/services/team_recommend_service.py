@@ -5,6 +5,7 @@ Multi-agent collaboration for travel recommendations
 from typing import Dict, Any, AsyncGenerator, List, Optional
 from loguru import logger
 import asyncio
+import json
 
 from app.workflows.team_recommend.team_manager import get_team_manager
 
@@ -118,24 +119,42 @@ class TeamRecommendService:
                         # Save to chat history if needed
                         if session_id and final_answer:
                             try:
-                                from app.services.chat_history import get_chat_history_service
-                                chat_service = get_chat_history_service()
-                                await chat_service.add_message(
-                                    session_id=session_id,
-                                    role="assistant",
-                                    content=final_answer,
-                                    metadata={
+                                from app.core.redis_client import get_redis_client
+                                import time
+
+                                redis_client = get_redis_client()
+                                history_key = f"team_recommend:history:{session_id}"
+
+                                # 保存用户查询
+                                user_history_item = {
+                                    "type": "user",
+                                    "content": query,
+                                    "timestamp": time.time()
+                                }
+                                redis_client.rpush(history_key, json.dumps(user_history_item, ensure_ascii=False))
+
+                                # 保存AI回复
+                                assistant_history_item = {
+                                    "type": "assistant",
+                                    "content": final_answer,
+                                    "timestamp": time.time(),
+                                    "metadata": {
                                         "sources": result.get('sources', []),
                                         "agent_logs": [
                                             {
                                                 "agent": log.get("agent"),
                                                 "status": log.get("status"),
-                                                "message": log.get("message", "")[:100]
+                                                "summary": log.get("message", "")[:200],
+                                                "result_count": log.get("result_count")
                                             }
-                                            for log in agent_logs[:5]
+                                            for log in agent_logs[:10]
                                         ]
                                     }
-                                )
+                                }
+                                redis_client.rpush(history_key, json.dumps(assistant_history_item, ensure_ascii=False))
+                                redis_client.expire(history_key, 86400 * 7)  # 7天过期
+
+                                logger.info(f"[TeamRecommend] 历史记录已保存到: {history_key}")
                             except Exception as e:
                                 logger.warning(f"[TeamRecommend] Failed to save chat history: {e}")
 

@@ -66,6 +66,9 @@
           <div>
             <el-icon><List /></el-icon>
             <span>文档列表</span>
+            <span style="color: #df1515;font-size: 14px;font-weight: 300;">
+              （tips:上传文档为避免失败请等待完成后再离开）
+            </span>
           </div>
           <div style="display: flex; gap: 10px;">
             <el-button

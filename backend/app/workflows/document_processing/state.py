@@ -30,8 +30,8 @@ class Destination(TypedDict):
 class DocumentProcessingState(TypedDict):
     """State for document processing workflow"""
 
-    # Task info - task_id不应该被修改，保持单值
-    task_id: str
+    # Task info - 使用Annotated避免并发更新冲突
+    task_id: Annotated[str, lambda x, y: y if y else x]  # 保留最新值
     doc_id: str  # 新增：文档ID（用于元数据管理）
     filename: str
     file_path: str

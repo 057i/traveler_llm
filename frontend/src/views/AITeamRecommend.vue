@@ -241,7 +241,7 @@ import {
   Setting,
   Delete
 } from '@element-plus/icons-vue'
-import { getChatHistory, clearChatHistory } from '@/api/index'
+import { getTeamChatHistory, clearTeamChatHistory } from '@/api/index'
 
 // Session ID
 const sessionId = ref('')
@@ -337,7 +337,7 @@ function generateSessionId() {
 async function loadChatHistory() {
   historyLoading.value = true
   try {
-    const response = await getChatHistory(sessionId.value, 50)
+    const response = await getTeamChatHistory(sessionId.value, 50)
 
     console.log('历史记录响应:', response)
 
@@ -387,7 +387,7 @@ async function handleClearHistory() {
       }
     )
 
-    await clearChatHistory(sessionId.value)
+    await clearTeamChatHistory(sessionId.value)
     messages.value = []
 
     ElMessage.success('聊天历史已清除')

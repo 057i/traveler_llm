@@ -206,3 +206,110 @@ async def health():
         "service": "team_recommend_ws",
         "version": "1.0.0"
     }
+
+
+@router.get("/history/{session_id}")
+async def get_team_recommend_history(session_id: str):
+    """
+    获取AI团队推荐历史记录
+
+    功能：
+        - 查询指定会话的历史记录
+        - 返回用户查询和AI回复的消息列表
+
+    参数：
+        session_id: 会话ID
+
+    返回：
+        dict: 包含历史记录的字典
+            - session_id: 会话ID
+            - messages: 消息列表
+            - count: 消息数量
+    """
+    try:
+        from app.core.redis_client import get_redis_client
+
+        logger.info(f"[团队推荐] 获取历史记录 - 会话: {session_id}")
+
+        redis_client = get_redis_client()
+        history_key = f"team_recommend:history:{session_id}"
+
+        # 从Redis List获取历史记录
+        history_items = redis_client.lrange(history_key, 0, -1)
+
+        if history_items:
+            # 解析每条历史记录
+            messages = []
+            for item in history_items:
+                try:
+                    if isinstance(item, bytes):
+                        item = item.decode('utf-8')
+                    messages.append(json.loads(item))
+                except json.JSONDecodeError as e:
+                    logger.warning(f"[团队推荐] 解析历史记录失败: {e}")
+                    continue
+
+            return {
+                "session_id": session_id,
+                "messages": messages,
+                "count": len(messages),
+                "message": f"成功加载{len(messages)}条历史记录"
+            }
+        else:
+            return {
+                "session_id": session_id,
+                "messages": [],
+                "count": 0,
+                "message": "该会话暂无历史记录"
+            }
+
+    except Exception as e:
+        logger.error(f"[团队推荐] 获取历史失败: {e}")
+        return {
+            "session_id": session_id,
+            "messages": [],
+            "count": 0,
+            "message": f"获取历史失败: {str(e)}"
+        }
+
+
+@router.delete("/history/{session_id}")
+async def delete_team_recommend_history(session_id: str):
+    """
+    删除AI团队推荐历史记录
+
+    功能：
+        - 删除指定会话的所有历史记录
+
+    参数：
+        session_id: 会话ID
+
+    返回：
+        dict: 删除结果
+    """
+    try:
+        from app.core.redis_client import get_redis_client
+
+        logger.info(f"[团队推荐] 删除历史记录 - 会话: {session_id}")
+
+        redis_client = get_redis_client()
+        history_key = f"team_recommend:history:{session_id}"
+
+        deleted_count = redis_client.delete(history_key)
+
+        logger.success(f"[团队推荐] 已删除 {deleted_count} 个键 - 会话: {session_id}")
+
+        return {
+            "success": True,
+            "session_id": session_id,
+            "deleted_keys": deleted_count,
+            "message": f"成功删除会话 {session_id} 的历史记录"
+        }
+
+    except Exception as e:
+        logger.error(f"[团队推荐] 删除历史失败: {e}")
+        return {
+            "success": False,
+            "session_id": session_id,
+            "message": f"删除历史失败: {str(e)}"
+        }
