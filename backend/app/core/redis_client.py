@@ -8,6 +8,22 @@ from config.settings import settings
 
 
 class RedisClient:
+    """
+    Redis客户端 - 缓存和消息队列服务
+
+    功能：
+    - KV存储（GET/SET）
+    - 列表操作（LPUSH/RPUSH/LRANGE）
+    - 发布订阅（Pub/Sub）
+    - 过期时间设置
+    - Pipeline批量操作
+
+    使用场景：
+    - 文档元数据缓存
+    - SSE事件推送（Pub/Sub）
+    - 任务进度追踪
+    - 会话数据存储
+    """
 
     def __init__(self):
         self.client: Optional[redis.Redis] = None
@@ -124,12 +140,17 @@ class RedisClient:
         """
         发布消息到Redis Pub/Sub频道
 
+        用于实时推送事件到前端（如SSE流式传输）
+
         Args:
-            channel: 频道名称
-            message: 消息内容
+            channel: 频道名称（如：document:events:{task_id}）
+            message: 消息内容（通常是JSON格式）
 
         Returns:
-            接收到消息的订阅者数量
+            接收到消息的订阅者数量（0表示无订阅者）
+
+        示例：
+            >>> redis_client.publish("events:123", json.dumps({"type": "progress", "value": 50}))
         """
         try:
             if self.client:
@@ -144,6 +165,14 @@ _redis_client: Optional[RedisClient] = None
 
 
 def get_redis_client() -> RedisClient:
+    """
+    获取Redis客户端单例
+
+    使用单例模式确保全局共享一个连接池
+
+    Returns:
+        RedisClient: 全局唯一的Redis客户端实例
+    """
     global _redis_client
     if _redis_client is None:
         _redis_client = RedisClient()

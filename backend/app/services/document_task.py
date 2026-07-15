@@ -14,7 +14,37 @@ from app.core.redis_client import get_redis_client
 
 
 class DocumentTaskService:
-    """文档任务服务"""
+    """
+    文档任务服务 - 文档处理任务管理
+
+    功能：
+    - 创建文档处理任务
+    - 更新任务进度和状态
+    - 查询任务信息（单个/列表）
+    - 统计任务数量
+    - 删除任务
+
+    存储结构（Redis）：
+    - document:task:{task_id}: 任务详细信息
+    - document:tasks: 任务ID列表（LPUSH）
+    - document:progress:{task_id}: 最新进度信息
+
+    任务信息：
+    - task_id: 任务唯一ID
+    - filename: 文件名
+    - file_path: 文件路径
+    - file_size: 文件大小
+    - pages_count: PDF页数
+    - status: 状态（pending/processing/completed/failed）
+    - progress: 进度值（0-100）
+    - destinations_count: 提取的景点数量
+    - created_at: 创建时间
+    - updated_at: 更新时间
+
+    优化：
+    - 使用Pipeline批量查询（避免N+1问题）
+    - 24小时自动过期
+    """
 
     def __init__(self):
         self.redis_client = get_redis_client()

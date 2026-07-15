@@ -172,9 +172,12 @@ async def process_document_background(task_id: str, doc_id: str, filename: str, 
     """
     后台处理文档（带并发限制）
 
-    使用Semaphore限制同时处理的文档数量，避免资源耗尽
+    功能：
+        - 使用Semaphore限制同时处理的文档数量，避免资源耗尽
+        - 调用文档处理工作流执行PDF解析、分块、向量化等操作
+        - 处理失败时更新元数据状态
 
-    Args:
+    参数：
         task_id: 任务ID
         doc_id: 文档ID（用于元数据管理）
         filename: 文件名（不含扩展名）

@@ -7,7 +7,22 @@ from config.settings import settings
 
 
 class RerankClient:
-    """Client for reranking using local BGE Reranker model"""
+    """
+    重排序客户端 - 基于BGE Reranker模型
+
+    功能：
+    - 使用CrossEncoder模型对检索结果重排序
+    - 计算query与候选文档的相关性分数
+    - 基于阈值过滤低质量结果
+    - 智能控制返回结果数量
+
+    模型：bge-reranker-base（本地部署）
+
+    使用场景：
+    - 提升检索精度（在召回后精排）
+    - 过滤不相关结果
+    - 多路检索结果的最终排序
+    """
 
     def __init__(self):
         """Initialize rerank client with local model"""
@@ -32,18 +47,32 @@ class RerankClient:
         max_results: int = 7
     ) -> List[Dict[str, Any]]:
         """
-        Rerank candidates using local BGE Reranker with threshold filtering
+        重排序候选结果（带智能过滤）
+
+        工作流程：
+        1. 构建query-candidate对
+        2. 使用CrossEncoder计算相关性分数
+        3. 按分数降序排序
+        4. 应用阈值过滤（>= threshold的保留）
+        5. 控制返回数量（min_results ~ max_results）
 
         Args:
-            query: User query
-            candidates: List of candidate results (dicts)
-            top_n: Maximum number of candidates to rerank
-            threshold: Minimum rerank score threshold
-            min_results: Minimum number of results to return
-            max_results: Maximum number of results to return
+            query: 用户查询
+            candidates: 候选结果列表（每项包含name, description, tags等）
+            top_n: 最多对多少个候选重排序（性能优化）
+            threshold: 最低分数阈值（默认0.5，低于此分数的过滤掉）
+            min_results: 最少返回结果数（如果过滤后不足，返回空列表触发知识缺口）
+            max_results: 最多返回结果数
 
         Returns:
-            Reranked and filtered list of candidates
+            重排序并过滤后的结果列表，每项新增 rerank_score 字段
+
+        示例：
+            >>> results = await rerank_client.rerank(
+            ...     query="北京有什么好玩的",
+            ...     candidates=[{"name": "故宫", "description": "..."}, ...],
+            ...     threshold=0.6
+            ... )
         """
         if not self.model or not candidates:
             logger.warning("[Rerank] No model or no candidates, returning original")

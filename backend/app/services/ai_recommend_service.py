@@ -17,7 +17,34 @@ _processing_sessions = set()
 
 
 class AIRecommendService:
-    """AI Recommendation Service with streaming support"""
+    """
+    AI推荐服务 - 基于LangGraph工作流
+
+    功能：
+    - 查询改写和扩展
+    - 多路RAG检索（Milvus混合检索 + Neo4j图谱检索）
+    - 置信度评估（决定是否触发网络搜索）
+    - Tavily网络搜索（补充最新信息）
+    - RRF结果融合
+    - 重排序（BGE Reranker）
+    - LLM综合生成答案
+    - SSE流式推送进度
+
+    工作流节点：
+    1. query_rewriter: 查询改写
+    2. milvus_hybrid: Milvus混合检索
+    3. neo4j_nearby: Neo4j附近景点检索
+    4. confidence_check: 置信度评估
+    5. tavily_search: 网络搜索（条件触发）
+    6. rrf_fusion: RRF融合
+    7. rerank: 重排序
+    8. synthesizer: 生成答案
+
+    使用场景：
+    - 旅游目的地推荐
+    - 攻略问答
+    - 智能客服
+    """
 
     def __init__(self):
         self.workflow = get_ai_recommend_workflow()

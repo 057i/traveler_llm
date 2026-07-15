@@ -10,7 +10,25 @@ import os
 
 
 class MinerUClientV2:
-    """MinerU API v4 客户端（重写版）"""
+    """
+    MinerU客户端 - PDF解析服务（API v4）
+
+    功能：
+    - 上传PDF文件到MinerU
+    - 轮询解析进度
+    - 下载解析结果（Markdown + 图片）
+    - 支持VLM模型（视觉语言模型）
+
+    工作流程：
+    1. 上传文件获取batch_id
+    2. 轮询进度直到完成
+    3. 下载并解压结果ZIP
+    4. 提取Markdown内容
+
+    使用场景：
+    - 旅游攻略PDF文档解析
+    - 提取结构化文本和图片
+    """
 
     def __init__(self):
         self.token = os.getenv("MINERU_API_TOKEN")
@@ -34,12 +52,29 @@ class MinerUClientV2:
         """
         解析PDF文件（完整流程）
 
+        流程：
+        1. 上传文件 -> 获取batch_id
+        2. 轮询进度 -> 等待解析完成
+        3. 下载结果 -> 提取Markdown
+
         Args:
-            file_path: PDF文件路径
-            timeout: 超时时间（秒）
+            file_path: PDF文件路径（本地路径）
+            timeout: 超时时间（秒，默认10分钟）
 
         Returns:
-            {"markdown": str, "pages_count": int, "raw_text": str}
+            解析结果字典：
+            - markdown: 解析后的Markdown文本
+            - pages_count: PDF页数
+            - raw_text: 原始文本（可选）
+
+        Raises:
+            RuntimeError: 上传失败、解析失败
+            TimeoutError: 解析超时
+
+        示例：
+            >>> client = MinerUClientV2()
+            >>> result = client.parse_by_file("travel.pdf", timeout=300)
+            >>> print(result["markdown"])
         """
         try:
             # Step 1: 上传文件获取batch_id

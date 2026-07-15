@@ -9,18 +9,34 @@ import math
 
 
 class FusionStrategy:
-    """Base fusion strategy class"""
+    """
+    融合策略基类
+
+    提供多种结果融合算法：
+    1. RRF融合（Reciprocal Rank Fusion）
+    2. 加权融合（Weighted Fusion）
+    3. MAX融合（取最大分数）
+
+    适用场景：
+    - 多模型检索结果融合
+    - 多数据源结果合并
+    - 提升检索准确率
+    """
 
     @staticmethod
     def normalize_scores(scores: Dict[int, float]) -> Dict[int, float]:
         """
-        Normalize scores to [0, 1] using Min-Max normalization
+        分数归一化（Min-Max归一化）
+
+        将分数缩放到[0, 1]区间，消除不同模型分数尺度差异
+
+        公式：normalized = (score - min) / (max - min)
 
         Args:
-            scores: Dictionary mapping doc_id to score
+            scores: 文档ID到分数的映射 {doc_id: score}
 
         Returns:
-            Normalized scores dictionary
+            归一化后的分数字典 {doc_id: normalized_score}
         """
         if not scores:
             return {}
@@ -43,14 +59,21 @@ class FusionStrategy:
         k: int = 60
     ) -> List[Tuple[int, float]]:
         """
-        Reciprocal Rank Fusion (RRF)
+        RRF融合（Reciprocal Rank Fusion）
+
+        核心思想：基于排名而非绝对分数
+        - 不受不同模型分数尺度影响
+        - 排名靠前的结果权重更高
+        - 在多个榜单中都出现的结果权重累加
+
+        公式：RRF_score(d) = Σ (1 / (k + rank(d)))
 
         Args:
-            rankings: List of ranking results, each is [(doc_id, score), ...]
-            k: RRF parameter, default 60
+            rankings: 多个排序列表 [[(doc_id, score), ...], ...]
+            k: 平滑参数（默认60，避免首位优势过大）
 
         Returns:
-            Fused ranking results
+            融合后的排序结果 [(doc_id, rrf_score), ...]
         """
         rrf_scores = {}
 

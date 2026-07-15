@@ -11,9 +11,40 @@ from app.workflows.document_processing.graph_builder import build_document_proce
 
 
 class DocumentProcessingWorkflow:
-    """6-step document processing workflow with real-time SSE progress"""
+    """
+    文档处理工作流 - 8步处理流程
 
-    # Map workflow nodes to frontend step IDs (7 steps)
+    功能：
+    - PDF文档上传、解析、向量化、入库
+    - 实时SSE进度推送
+    - 支持失败重试（fallback节点）
+
+    工作流程（8步）：
+    1. MinIO存储：上传原始PDF到对象存储
+    2. PDF解析：使用MinerU解析为Markdown
+    3. 上传MinIO：上传解析结果（Markdown + 图片）
+    4. 文本分块：使用LangChain分割文本
+    5. 实体提取：使用Qwen提取景点实体
+    6. 传统向量化：向量化到Milvus（稠密+稀疏向量）
+    7. 图向量化：构建Neo4j知识图谱
+    8. 完成：更新元数据状态
+
+    技术栈：
+    - LangGraph：工作流编排
+    - MinerU：PDF解析
+    - Qwen：实体提取（结构化输出）
+    - Milvus：向量存储
+    - Neo4j：知识图谱
+    - Redis Pub/Sub：SSE实时推送
+
+    进度推送：
+    - node_start事件：节点开始
+    - node_end事件：节点完成
+    - complete事件：流程完成
+    - error事件：流程失败
+    """
+
+    # 节点到前端步骤的映射（8步）
     STEP_MAPPING = {
         "save_to_minio": "minio",
         "minio_fallback": "minio",

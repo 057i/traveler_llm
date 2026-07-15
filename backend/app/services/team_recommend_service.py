@@ -10,7 +10,33 @@ from app.workflows.team_recommend.team_manager import get_team_manager
 
 
 class TeamRecommendService:
-    """Team recommendation service with streaming support"""
+    """
+    多智能体团队推荐服务
+
+    架构：
+    - Team Manager: 协调器，分配任务
+    - Search Agent: 检索专家，负责多路RAG检索
+    - Analysis Agent: 分析专家，评估结果质量
+    - Synthesis Agent: 综合专家，生成最终答案
+
+    工作流程：
+    1. Team Manager 接收用户查询
+    2. 分配给 Search Agent 执行检索
+    3. Analysis Agent 评估检索结果
+    4. Synthesis Agent 综合生成答案
+    5. 实时推送各Agent的工作进度
+
+    优势：
+    - 专业分工，各司其职
+    - 并行执行，提升效率
+    - 可追溯决策过程
+    - 支持多轮对话
+
+    使用场景：
+    - 复杂旅游规划
+    - 多条件筛选推荐
+    - 需要深度分析的场景
+    """
 
     def __init__(self):
         self.team_manager = get_team_manager()

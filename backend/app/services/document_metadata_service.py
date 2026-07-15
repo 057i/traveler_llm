@@ -12,7 +12,28 @@ from app.core.redis_client import get_redis_client
 
 
 class DocumentMetadataService:
-    """文档元数据服务"""
+    """
+    文档元数据服务
+
+    功能：
+    - 创建文档元数据（基本信息 + MinIO路径 + 向量化资源ID）
+    - 更新文档状态和统计信息
+    - 查询文档元数据
+    - 删除文档元数据
+
+    数据结构（Redis存储）：
+    - doc:metadata:{doc_id}: 文档完整元数据
+    - docs:list: 文档ID列表
+    - docs:filename:{filename}: 文件名到doc_id的映射
+
+    元数据字段：
+    - 基本信息：doc_id, filename, original_name, upload_time, file_size
+    - 状态：status（processing/completed/failed）
+    - MinIO路径：minio_bucket, minio_folder, minio_paths
+    - 向量化资源：milvus_chunk_ids, neo4j_entity_names
+    - 统计信息：chunks_count, entities_count, images_count, pages_count
+    - 地理信息：province, city
+    """
 
     def __init__(self):
         self.redis = get_redis_client()

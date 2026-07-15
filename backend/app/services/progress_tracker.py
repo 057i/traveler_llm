@@ -13,7 +13,34 @@ from app.core.redis_client import get_redis_client
 
 
 class ProgressTracker:
-    """进度追踪器"""
+    """
+    进度追踪器 - 异步任务进度管理
+
+    功能：
+    - 开始进度追踪
+    - 更新进度值和消息
+    - 完成/失败标记
+    - 查询当前进度
+    - 删除过期进度
+
+    存储结构（Redis）：
+    - Key: progress:{session_id}
+    - Value: JSON {
+        session_id, task_name, progress, status,
+        started_at, updated_at, message
+      }
+    - 过期时间：1小时
+
+    状态：
+    - processing: 处理中
+    - completed: 已完成
+    - failed: 失败
+
+    使用场景：
+    - 文档处理进度追踪
+    - 长时间任务监控
+    - 前端进度条展示
+    """
 
     def __init__(self):
         self.redis_client = get_redis_client()

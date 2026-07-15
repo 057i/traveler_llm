@@ -17,7 +17,25 @@ from app.core.neo4j_client import get_neo4j_client
 
 
 class DocumentDeletionService:
-    """文档删除服务 - 级联删除所有资源"""
+    """
+    文档删除服务 - 级联删除所有资源
+
+    功能：
+    - 级联删除文档的所有关联资源
+    - 确保数据一致性（不留孤立数据）
+
+    删除流程：
+    1. 获取文档元数据（包含所有资源ID）
+    2. 删除MinIO文件（原始PDF + Markdown + 图片）
+    3. 删除Milvus向量（根据chunk_ids）
+    4. 删除Neo4j实体（根据entity_names）
+    5. 删除Redis元数据
+
+    错误处理：
+    - 部分删除失败不中断流程
+    - 记录每个步骤的结果
+    - 返回详细的删除报告
+    """
 
     def __init__(self):
         self.metadata_service = get_document_metadata_service()

@@ -371,8 +371,6 @@ async function loadChatHistory() {
   }
 }
 
-// 进度轮询已移除，使用SSE实时接收进度信息
-
 // 清除历史
 async function handleClearHistory() {
   try {
@@ -425,38 +423,65 @@ const handleSend = async () => {
   isLoading.value = true
   executedNodes.value = []
 
-  // 生成新的请求标识符（用于区分本次请求的事件）
-  const currentRequestId = Date.now()
+  // 关闭之前的SSE连接（如果存在）
+  if (eventSource) {
+    eventSource.close()
+    eventSource = null
+  }
 
-  // ========== 用于存储后端返回的task_id ==========
+  // 用于存储后端返回的task_id
   let serverTaskId = null
-  // ===============================================
 
-  // 使用新的events端点
+  // 先发送查询请求，获取task_id
+  try {
+    const response = await fetch('/api/ai-recommend/query', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        query: userMessage,
+        session_id: sessionId.value
+      })
+    })
+
+    if (response.ok) {
+      const result = await response.json()
+      serverTaskId = result.task_id
+      console.log(`[TASK_ID] 后端返回task_id: ${serverTaskId}`)
+    } else {
+      throw new Error('发送查询请求失败')
+    }
+  } catch (error) {
+    console.error('发送查询失败:', error)
+    messages.value.push({
+      type: 'system',
+      message: '发送请求失败'
+    })
+    isLoading.value = false
+    return
+  }
+
+  // 等待一小段时间，确保后端清空旧事件
+  await new Promise(resolve => setTimeout(resolve, 100))
+
+  // 建立新的SSE连接
   const eventsUrl = `/api/ai-recommend/events/${sessionId.value}`
-
   eventSource = new EventSource(eventsUrl)
 
   console.log('连接SSE事件流:', eventsUrl)
-  console.log('当前请求ID:', currentRequestId)
+  console.log('期望task_id:', serverTaskId)
 
   // 监听node_start事件
   eventSource.addEventListener('node_start', (event) => {
-    const receiveTime = Date.now() / 1000  // 转换为秒
+    const receiveTime = Date.now() / 1000
     const data = JSON.parse(event.data)
     const sendTime = data.timestamp || 0
-    const delay = ((receiveTime - sendTime) * 1000).toFixed(0)  // 毫秒
+    const delay = ((receiveTime - sendTime) * 1000).toFixed(0)
 
-    // ========== 使用task_id过滤（如果存在） ==========
+    // 使用task_id过滤
     if (serverTaskId && data.task_id && data.task_id !== serverTaskId) {
       console.log(`⏭️ [SKIP] task_id不匹配 node_start | 期望: ${serverTaskId}, 实际: ${data.task_id}`)
-      return
-    }
-    // ==============================================
-
-    // 时间戳过滤作为降级方案
-    if (!data.task_id && sendTime * 1000 < currentRequestId - 1000) {
-      console.log(`⏭️ [SKIP] 跳过旧事件 node_start | ${data.step_name} | 时间戳: ${sendTime}`)
       return
     }
 
@@ -480,16 +505,9 @@ const handleSend = async () => {
     const sendTime = data.timestamp || 0
     const delay = ((receiveTime - sendTime) * 1000).toFixed(0)
 
-    // ========== 使用task_id过滤（如果存在） ==========
+    // 使用task_id过滤
     if (serverTaskId && data.task_id && data.task_id !== serverTaskId) {
       console.log(`⏭️ [SKIP] task_id不匹配 node_end | 期望: ${serverTaskId}, 实际: ${data.task_id}`)
-      return
-    }
-    // ==============================================
-
-    // 时间戳过滤作为降级方案
-    if (!data.task_id && sendTime * 1000 < currentRequestId - 1000) {
-      console.log(`⏭️ [SKIP] 跳过旧事件 node_end | ${data.step_name} | 时间戳: ${sendTime}`)
       return
     }
 
@@ -506,31 +524,30 @@ const handleSend = async () => {
     scrollToBottom()
   })
 
-  // 监听result事件（AI生成的答案）
+  // 监听result事件
   eventSource.addEventListener('result', (event) => {
     const receiveTime = Date.now() / 1000
     const data = JSON.parse(event.data)
     const sendTime = data.timestamp || 0
     const delay = ((receiveTime - sendTime) * 1000).toFixed(0)
 
-    // ========== 使用task_id过滤（如果存在） ==========
+    // 使用task_id过滤
     if (serverTaskId && data.task_id && data.task_id !== serverTaskId) {
       console.log(`⏭️ [SKIP] task_id不匹配 result | 期望: ${serverTaskId}, 实际: ${data.task_id}`)
       return
     }
-    // ==============================================
 
     console.log(`⏱️ [RECEIVE] result at ${receiveTime.toFixed(3)} | Answer: ${data.answer?.length || 0} chars | Delay: ${delay}ms`)
 
-    // 添加AI回复（包含工作流节点和附近推荐）
+    // 添加AI回复
     messages.value.push({
       type: 'assistant',
       message: data.answer || '生成答案失败',
       sources: data.sources || [],
-      nearby_recommendations: data.nearby_recommendations || [],  // 新增：附近推荐
+      nearby_recommendations: data.nearby_recommendations || [],
       nodes: [...executedNodes.value],
-      workflowExpanded: false,  // 默认折叠
-      workflowStatus: 'completed'  // 已完成
+      workflowExpanded: false,
+      workflowStatus: 'completed'
     })
     scrollToBottom()
   })
@@ -542,43 +559,11 @@ const handleSend = async () => {
     const sendTime = data.timestamp || 0
     const delay = ((receiveTime - sendTime) * 1000).toFixed(0)
 
-    // 详细调试日志
-    console.log('========== COMPLETE EVENT DEBUG ==========')
-    console.log('Raw event data:', event.data)
-    console.log('Parsed data:', data)
-    console.log('data.answer:', data.answer)
-    console.log('data.answer type:', typeof data.answer)
-    console.log('data.answer length:', data.answer?.length)
-    console.log('data.sources:', data.sources)
-    console.log('Condition result:', !!data.answer)
-    console.log('==========================================')
-
     console.log(`⏱️ [RECEIVE] complete at ${receiveTime.toFixed(3)} | Delay: ${delay}ms`)
     console.log(`📊 [SUMMARY] Workflow completed`)
 
-    // 如果complete事件包含答案，添加到消息列表
-    if (data.answer) {
-      console.log(`✅ Condition passed, adding message`)
-      console.log(`💡 Complete event contains answer: ${data.answer.length} chars`)
-
-      // 添加最终的AI回复消息（工作流自动折叠）
-      messages.value.push({
-        type: 'assistant',
-        message: data.answer,
-        sources: data.sources || [],
-        nodes: [...executedNodes.value],
-        workflowExpanded: false,  // 完成后自动折叠
-        workflowStatus: 'completed'  // 标记为已完成
-      })
-      console.log(`📝 Messages array length after push: ${messages.value.length}`)
-      scrollToBottom()
-    } else {
-      console.log(`❌ Condition failed, answer is:`, data.answer)
-    }
-
+    // 结束加载状态并关闭连接
     isLoading.value = false
-    // 不清空executedNodes，保留工作流显示
-    // executedNodes.value = []
 
     if (eventSource) {
       eventSource.close()
@@ -606,8 +591,6 @@ const handleSend = async () => {
     }
 
     isLoading.value = false
-    // 不清空executedNodes，保留工作流显示
-    // executedNodes.value = []
 
     if (eventSource) {
       eventSource.close()
@@ -626,7 +609,6 @@ const handleSend = async () => {
   eventSource.onerror = (error) => {
     console.error('SSE连接错误:', error)
 
-    // 只在第一次错误时显示消息
     if (isLoading.value) {
       messages.value.push({
         type: 'system',
@@ -635,8 +617,6 @@ const handleSend = async () => {
       ElMessage.error('连接失败')
 
       isLoading.value = false
-      // 不清空executedNodes，保留工作流显示
-      // executedNodes.value = []
     }
 
     if (eventSource) {
@@ -645,134 +625,6 @@ const handleSend = async () => {
     }
 
     scrollToBottom()
-  }
-
-  // 触发后端工作流 - 发送查询请求
-  try {
-    const response = await fetch('/api/ai-recommend/query', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        query: userMessage,
-        session_id: sessionId.value
-      })
-    })
-
-    // ========== 获取后端返回的task_id ==========
-    if (response.ok) {
-      const result = await response.json()
-      serverTaskId = result.task_id  // 赋值给闭包变量
-      console.log(`[TASK_ID] 后端返回task_id: ${serverTaskId}`)
-    }
-    // ============================================
-  } catch (error) {
-    console.error('发送查询失败:', error)
-    messages.value.push({
-      type: 'system',
-      message: '发送请求失败'
-    })
-    isLoading.value = false
-
-    if (eventSource) {
-      eventSource.close()
-      eventSource = null
-    }
-  }
-}
-
-// 处理SSE消息
-const handleSSEMessage = (data) => {
-  console.log('收到SSE消息:', data.type, data)
-
-  switch (data.type) {
-    case 'start':
-      console.log('推荐开始:', data.message)
-      break
-
-    case 'node_start':
-      executedNodes.value.push({
-        name: nodeNameMap[data.node] || data.node,
-        status: 'primary',
-        icon: 'Loading',
-        color: '#409eff',
-        message: ''
-      })
-      scrollToBottom()
-      break
-
-    case 'progress':
-      const lastNode = executedNodes.value[executedNodes.value.length - 1]
-      if (lastNode) {
-        lastNode.message = data.message
-      }
-      break
-
-    case 'node_complete':
-      const completeNode = executedNodes.value[executedNodes.value.length - 1]
-      if (completeNode) {
-        completeNode.status = 'success'
-        completeNode.icon = 'Check'
-        completeNode.color = '#67c23a'
-      }
-      break
-
-    case 'result':
-      console.log('收到结果消息:', data.answer ? '有答案' : '无答案', 'sources:', data.sources?.length)
-
-      const answer = data.answer || '抱歉，没有找到相关的旅游信息。'
-
-      const newMessage = {
-        type: 'assistant',
-        message: answer,
-        sources: data.sources || [],
-        nodes: [...executedNodes.value]
-      }
-
-      console.log('添加消息到messages数组:', newMessage)
-      messages.value.push(newMessage)
-
-      nextTick(() => {
-        scrollToBottom()
-      })
-      break
-
-    case 'complete':
-      console.log('推荐完成')
-      isLoading.value = false
-
-      // 不清空executedNodes，保留工作流显示
-      // nextTick(() => {
-      //   executedNodes.value = []
-      // })
-
-      if (eventSource) {
-        eventSource.close()
-        eventSource = null
-      }
-      ElMessage.success(data.message || '推荐完成')
-      break
-
-    case 'error':
-      console.error('收到错误消息:', data.message)
-      isLoading.value = false
-      // 不清空executedNodes，保留工作流显示
-      // executedNodes.value = []
-      messages.value.push({
-        type: 'system',
-        message: `错误: ${data.message}`
-      })
-      if (eventSource) {
-        eventSource.close()
-        eventSource = null
-      }
-      ElMessage.error(data.message)
-      scrollToBottom()
-      break
-
-    default:
-      console.warn('未知消息类型:', data.type)
   }
 }
 

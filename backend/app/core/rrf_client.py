@@ -9,14 +9,34 @@ import numpy as np
 
 
 class RRFEngine:
-    """RRF融合引擎"""
+    """
+    RRF融合引擎 - Reciprocal Rank Fusion
+
+    功能：
+    - 多源检索结果融合（稠密向量 + 稀疏向量 + 图谱）
+    - 分数归一化（Min-Max）
+    - RRF算法融合（基于排名的倒数加权）
+    - 加权融合（支持不同来源权重）
+    - 多路融合（3+路）
+
+    算法原理：
+    RRF Score = Σ (weight / (k + rank))
+    - k: 平滑参数（默认60）
+    - rank: 结果在该来源中的排名（1-based）
+    - weight: 来源权重
+
+    优势：
+    - 不依赖绝对分数（不同模型分数尺度不同）
+    - 基于排名更鲁棒
+    - 自然融合多源结果
+    """
 
     def __init__(self, k: int = 60):
         """
         初始化RRF引擎
 
         Args:
-            k: RRF参数，通常设为60，用于平滑排名
+            k: RRF平滑参数（默认60，越大越平滑）
         """
         self.k = k
         logger.info(f"[RRF] Initialized with k={k}")
@@ -165,18 +185,29 @@ class RRFEngine:
         """
         融合稠密和稀疏检索结果（专用方法）
 
-        步骤：
-        1. 分别归一化稠密和稀疏结果
-        2. 对归一化后的结果应用RRF
-        3. 返回融合结果
+        工作流程：
+        1. 分别归一化稠密和稀疏结果的分数（Min-Max归一化到[0,1]）
+        2. 按归一化分数排序，计算每个来源的RRF分数
+        3. 同一item在多个来源出现，累加RRF分数
+        4. 按最终RRF分数排序
+
+        为什么要归一化？
+        - 稠密向量分数（余弦相似度）范围：[-1, 1]
+        - 稀疏向量分数（TF-IDF内积）范围：[0, +∞)
+        - 归一化后统一到[0, 1]，便于比较
 
         Args:
-            dense_results: 稠密向量检索结果
-            sparse_results: 稀疏向量检索结果
+            dense_results: 稠密向量检索结果（语义相似度）
+            sparse_results: 稀疏向量检索结果（关键词匹配）
             top_k: 返回Top K结果
 
         Returns:
-            融合后的结果列表
+            融合后的结果列表，每项包含：
+            - rrf_score: RRF融合分数
+            - dense_rank: 在稠密结果中的排名
+            - sparse_rank: 在稀疏结果中的排名
+            - dense_score: 归一化后的稠密分数
+            - sparse_score: 归一化后的稀疏分数
         """
         logger.info(f"[RRF] Fusing dense-sparse: dense={len(dense_results)}, sparse={len(sparse_results)}")
 

@@ -19,7 +19,28 @@ from config.settings import settings
 
 
 class MilvusHybridClient:
-    """Milvus混合检索客户端 - 支持稀疏+稠密向量 + 完整元数据"""
+    """
+    Milvus混合检索客户端
+
+    功能：
+    - 稠密向量检索（语义相似度，HNSW索引）
+    - 稀疏向量检索（关键词匹配，倒排索引）
+    - 混合检索（RRF融合）
+    - 结构化筛选（预算、天数、标签等）
+    - 完整元数据存储
+
+    数据结构：
+    - destination_id: 主键（景点唯一ID）
+    - dense_vector: 768维稠密向量（bge-base-zh-v1.5）
+    - sparse_vector: 稀疏向量（TF-IDF）
+    - 元数据字段：name, province, city, category, description, rating
+    - 扩展字段：estimated_budget, recommended_days, travel_type, tags, best_season
+
+    索引类型：
+    - 稠密向量：HNSW（高性能近似最近邻）
+    - 稀疏向量：倒排索引（SPARSE_INVERTED_INDEX）
+    - 标量字段：STL_SORT（支持范围筛选）
+    """
 
     def __init__(self):
         self.host = settings.MILVUS_HOST
@@ -353,12 +374,18 @@ class MilvusHybridClient:
         """
         独立的稠密向量检索（HNSW索引）
 
+        HNSW（Hierarchical Navigable Small World）优势：
+        - 高速近似最近邻搜索
+        - 支持大规模数据（百万级）
+        - 准确率高（通过调整ef参数）
+
         Args:
-            dense_vector: 稠密向量
+            dense_vector: 稠密向量（768维）
             top_k: 返回结果数量
+            expr: 过滤表达式（如：estimated_budget >= 100 && estimated_budget <= 500）
 
         Returns:
-            检索结果列表
+            检索结果列表，每项包含完整元数据和score
         """
         if not self.collection:
             raise Exception("Collection not initialized")
@@ -425,14 +452,22 @@ class MilvusHybridClient:
 
     async def _search_sparse(self, query: str, top_k: int = 20, expr: str = "") -> List[Dict[str, Any]]:
         """
-        独立的稀疏向量检索（使用真实稀疏向量搜索）
+        独立的稀疏向量检索（真实稀疏向量搜索）
 
-        使用 anns_field="sparse_vector" 进行稀疏向量搜索
-        如果失败，降级为关键词匹配
+        工作流程：
+        1. 使用jieba分词 + TF-IDF生成查询的稀疏向量
+        2. 使用倒排索引进行稀疏向量检索（anns_field="sparse_vector"）
+        3. 如果失败，降级为关键词匹配
+
+        优势：
+        - 精确匹配关键词
+        - 补充语义检索的不足
+        - 适合专有名词查询
 
         Args:
-            query: 查询文本
+            query: 查询文本（如："北京故宫"）
             top_k: 返回结果数量
+            expr: 过滤表达式（可选）
 
         Returns:
             检索结果列表

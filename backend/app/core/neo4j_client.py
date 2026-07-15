@@ -8,7 +8,21 @@ import os
 
 
 class Neo4jClient:
-    """Neo4j client wrapper"""
+    """
+    Neo4j客户端 - 图数据库服务
+
+    功能：
+    - 创建节点（景点、城市等）
+    - 创建关系（位于、附近等）
+    - Cypher查询执行
+    - 图谱查询（附近景点推荐）
+
+    使用场景：
+    - 存储景点地理关系
+    - 查询附近景点
+    - 构建知识图谱
+    - 基于关系的推荐
+    """
 
     def __init__(self, uri: str = None, user: str = None, password: str = None):
         """
@@ -108,14 +122,27 @@ class Neo4jClient:
         metadata: Optional[Dict[str, Any]] = None
     ) -> str:
         """
-        Create a Destination node in Neo4j
+        创建景点节点
+
+        使用MERGE确保节点唯一性（相同名称不重复创建）
 
         Args:
-            name: Destination name
-            location: Location (province/city)
+            name: 景点名称（唯一标识）
+            location: 位置信息
+            category: 分类（如：自然景观、历史遗迹）
+            description: 描述信息
+            metadata: 额外元数据（province, city, filename等）
 
         Returns:
-            Node ID
+            节点ID（element ID）
+
+        示例：
+            >>> client.create_destination_node(
+            ...     name="故宫",
+            ...     location="北京市",
+            ...     category="历史遗迹",
+            ...     metadata={"province": "北京", "city": "北京市"}
+            ... )
         """
         if metadata is None:
             metadata = {}
