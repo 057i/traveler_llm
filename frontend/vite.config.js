@@ -15,11 +15,11 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'http://103.236.98.149:64042',  // 线上后端
         changeOrigin: true
       },
       '/ws': {
-        target: 'ws://localhost:8000',
+        target: 'ws://103.236.98.149:64042',  // 线上WebSocket
         ws: true,
         changeOrigin: true
       }
