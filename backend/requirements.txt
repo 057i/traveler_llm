@@ -1,51 +1,68 @@
+# ============================================
 # Web Framework
+# ============================================
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 python-multipart==0.0.6
 
-# LLM & RAG
-langchain>=0.3.0
-langchain-community>=0.3.0
-langgraph>=0.2.0
-chromadb>=0.5.0  # 使用更新版本，包含预编译的wheel
-sentence-transformers==2.2.2
+# ============================================
+# LLM & RAG Framework
+# ============================================
+langchain==0.3.7
+langchain-community==0.3.7
+langgraph==0.2.34
 
-# Neo4j for GraphRAG
+# ============================================
+# Vector Database & Embeddings
+# ============================================
+pymilvus==2.3.4
+sentence-transformers==2.2.2
+chromadb==0.5.23
+
+# ============================================
+# Graph Database
+# ============================================
 neo4j==5.15.0
 py2neo==2021.2.4
 
-# API & Model Integration
+# ============================================
+# LLM API Integration
+# ============================================
 openai==1.6.1
-dashscope==1.14.1  # 通义千问 API
-tavily-python==0.3.0  # Tavily Search API
+dashscope==1.14.1
+tavily-python==0.3.0
 
+# ============================================
+# Storage & Cache
+# ============================================
+minio==7.2.0
+redis==5.0.1
+
+# ============================================
 # Data Processing
-numpy>=1.26.0,<2.0
+# ============================================
+numpy==1.26.4
 pandas==2.1.4
-pydantic==2.5.3
+pydantic==2.7.4
 pydantic-settings==2.1.0
 
+# ============================================
 # WebSocket & SSE
+# ============================================
 python-socketio==5.10.0
 sse-starlette==1.8.2
 
-# Vector Database & Storage
-pymilvus==2.3.4
-minio==7.2.0
-
-# Cache & Storage
-redis==5.0.1
-aioredis==2.0.1
-
+# ============================================
 # Utilities
+# ============================================
 python-dotenv==1.0.0
 httpx==0.25.2
 loguru==0.7.2
 tenacity==8.2.3
 
-# Testing
+# ============================================
+# Testing (Development Only)
+# ============================================
 pytest==7.4.3
 pytest-asyncio==0.21.1
 
-# CORS
-fastapi-cors==0.0.6

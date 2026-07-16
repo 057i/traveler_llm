@@ -118,7 +118,13 @@ class Settings(BaseSettings):
     CHROMA_COLLECTION_NAME: str = "travel_destinations"
 
     # CORS 配置
-    CORS_ORIGINS: List[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
+    CORS_ORIGINS: List[str] = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://103.236.98.149:12580",  # 生产环境前端地址
+        "http://103.236.98.149:64042",  # 生产环境后端地址（如果需要）
+        "*"  # 允许所有来源（仅开发/测试环境，生产环境应删除）
+    ]
 
     # 日志配置
     LOG_LEVEL: str = "INFO"

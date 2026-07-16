@@ -187,7 +187,6 @@
               type="danger"
               link
               @click="deleteDocument(row)"
-              :disabled="row.status === 'processing'"
             >
               <el-icon><Delete /></el-icon>
               删除
@@ -227,8 +226,8 @@
         :on-change="handleFileChange"
         :file-list="fileList"
         :auto-upload="false"
+        :limit="1"
         accept=".pdf"
-        multiple
       >
         <el-icon class="el-icon--upload"><UploadFilled /></el-icon>
         <div class="el-upload__text">
@@ -236,7 +235,7 @@
         </div>
         <template #tip>
           <div class="el-upload__tip">
-            支持格式：PDF (最大 100MB)，支持批量上传<br>
+            支持格式：PDF (最大 100MB)，单次只能上传1个文件<br>
             <span style="color: #67C23A;">✓ 自动执行传统向量化（ChromaDB）和图向量化（Neo4j）</span>
           </div>
         </template>
@@ -252,7 +251,7 @@
             :loading="uploading"
             :disabled="fileList.length === 0"
           >
-            开始上传 ({{ fileList.length }} 个文件)
+            {{ uploading ? '上传中...' : '开始上传' }}
           </el-button>
         </span>
       </template>

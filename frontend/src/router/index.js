@@ -4,6 +4,9 @@ import AIRecommend from '@/views/AIRecommend.vue'
 import AITeamRecommend from '@/views/AITeamRecommend.vue'
 import Recommend from '@/views/Recommend.vue'
 import DocumentManager from '@/views/DocumentManager.vue'
+import AboutMe from '@/views/AboutMe.vue'
+
+
 
 const routes = [
   {
@@ -68,6 +71,17 @@ const routes = [
           icon: 'Document',
           hideInMenu: false,
           description: '管理知识库文档'
+        }
+      },
+      {
+        path: '/about_me',
+        name: 'about_me',
+        component: AboutMe,
+        meta: {
+          title: '关于',
+          icon: 'Document',
+          hideInMenu: false,
+          description: '关于'
         }
       }
     ]

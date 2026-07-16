@@ -77,8 +77,9 @@ export const createSSERecommend = async (params) => {
     }
   })
 
-  // 使用POST方法
-  const response = await fetch('/api/ai-recommend/stream', {
+  // 使用POST方法，使用baseURL
+  const url = `${baseURL}/ai-recommend/stream`
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
